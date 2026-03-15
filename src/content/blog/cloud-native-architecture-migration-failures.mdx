@@ -1,0 +1,64 @@
+---
+title: "Your Cloud Migration Failed Because You Skipped the Hard Part"
+description: "Cloud-native isn't an infrastructure problem. It's a development problem. Most migrations fail because they treat it like the former."
+publishDate: 2025-12-25
+author: "Sunny Kolattukudy"
+tags: ["cloud", "architecture", "azure", "migration"]
+---
+
+Every failed cloud migration I've seen has the same story. The company decides to move to the cloud. Ops teams lift the VMs, update the configs, and declare victory. Six months later, costs are higher than on-premise and nothing performs better. Leadership blames the cloud.
+
+The cloud didn't fail. The migration strategy failed. And it failed at step one, before a single server moved.
+
+## Cloud-Native Is a Development Problem
+
+Here's the thing nobody says clearly enough: *cloud-native is about how you write software, not where you run it.*
+
+If you'd build an application differently for mobile than for desktop — and you would — then you need to build it differently for cloud than for on-premise. The deployment target shapes the architecture. This isn't a preference; it's a consequence of how cloud infrastructure works.
+
+Lift-and-shift treats migration as an ops task. Move the VMs, change the billing. Done. This is why it fails. You're taking software designed for owned hardware running 24/7 and running it on rented hardware running 24/7. You get all the costs of cloud and none of the benefits.
+
+Cloud-native applications are stateless. They scale horizontally. They fail gracefully. They use managed services instead of maintaining their own. These aren't infrastructure choices — they're development choices. Your infrastructure can't make your app stateless if your developers built it with state baked in.
+
+The refactoring has to happen first. That means developers, not just ops people. And that's exactly why organizations skip it.
+
+## The Real Cost of Getting This Wrong
+
+The numbers are stark for a mid-sized application:
+
+| Component | On-Premise | Lift-and-Shift | Cloud-Native |
+|-----------|------------|----------------|--------------|
+| Web Servers | $0/month* | $1,200/month | $200/month (avg) |
+| Database | $0/month* | $800/month | $400/month (auto-scale) |
+| Storage | $0/month* | $200/month | $50/month |
+| Maintenance | 40 hrs/month | 40 hrs/month | 5 hrs/month |
+| **Total** | **$0/month*** | **$2,200/month** | **$650/month** |
+
+*Excludes sunk hardware costs, power, cooling, facilities
+
+Lift-and-shift doesn't just fail to deliver savings. It costs more than on-premise while delivering fewer benefits. Cloud-native costs 70% less than lift-and-shift — but only if you've done the development work to get there.
+
+Skipping the refactoring doesn't save time. It defers the bill, adds interest, and guarantees a second migration later.
+
+## What Successful Migration Actually Requires
+
+Start with an honest question: can this application scale horizontally? If the answer is no, migration hasn't started. Refactoring has to happen first.
+
+That means stateless services. It means moving session state out of memory and into distributed cache. It means designing for transient failures — cloud instances disappear in ways that on-premise servers don't. It means connection pooling. It means using managed services (Azure SQL, Azure Functions, Azure Service Bus) instead of running your own infrastructure that happens to live in someone else's data center.
+
+None of this is the ops team's job. They weren't hired to refactor application code, and the failure mode is predictable when you ask them to own a migration without pulling developers in from the start.
+
+## The Honest Assessment
+
+Before any infrastructure moves, ask these questions about each application:
+
+- Is state stored externally, not in memory?
+- Can it handle the sudden failure of any single instance?
+- Does it use connection pooling?
+- Can it scale by running more copies instead of getting a bigger server?
+
+If the answers are no, you're not in the migration phase. You're in the refactoring phase. The sooner you acknowledge that, the cheaper it gets.
+
+Treat cloud migration as a development project that happens to involve infrastructure — not an infrastructure project that might require some code changes on the side.
+
+That's the hard part most organizations skip. It's also the only part that determines whether the migration works.

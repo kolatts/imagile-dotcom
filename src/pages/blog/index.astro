@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BlogPostCard from '../../components/blog/BlogPostCard.astro';
+
+// Get all blog posts and sort by date (newest first)
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+// Get tag filter from URL query params
+const url = new URL(Astro.request.url);
+const tagFilter = url.searchParams.get('tag');
+
+// Filter posts by tag if specified
+const posts = tagFilter 
+  ? sortedPosts.filter(post => post.data.tags.includes(tagFilter))
+  : sortedPosts;
+
+// Pagination settings
+const postsPerPage = 12;
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const totalPages = Math.ceil(posts.length / postsPerPage);
+const startIndex = (currentPage - 1) * postsPerPage;
+const endIndex = startIndex + postsPerPage;
+const paginatedPosts = posts.slice(startIndex, endIndex);
+
+// Get all unique tags from all posts
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
+---
+
+<Layout 
+  title="Blog - Imagile" 
+  description="Insights, tutorials, and updates from the Imagile team on AI-powered development, cloud solutions, and software engineering best practices."
+>
+  <Header />
+  <main>
+    <section class="blog-header">
+      <div class="container">
+        <h1 class="blog-title">Blog</h1>
+        <p class="blog-subtitle">
+          Insights, tutorials, and updates from the Imagile team
+        </p>
+      </div>
+    </section>
+
+    {tagFilter && (
+      <div class="container" style="padding-top: var(--space-md);">
+        <p style="text-align: center; color: var(--color-text-secondary);">
+          Filtering by tag: <span style="color: var(--color-primary); font-weight: 600;">{tagFilter}</span>
+          <a href="/blog" style="margin-left: 1rem; text-decoration: underline;">Clear filter</a>
+        </p>
+      </div>
+    )}
+
+    <section class="container">
+      {paginatedPosts.length > 0 ? (
+        <div class="blog-grid">
+          {paginatedPosts.map(post => (
+            <BlogPostCard
+              title={post.data.title}
+              description={post.data.description}
+              publishDate={post.data.publishDate}
+              author={post.data.author}
+              tags={post.data.tags}
+              slug={post.slug}
+              image={post.data.image}
+            />
+          ))}
+        </div>
+      ) : (
+        <div style="text-align: center; padding: var(--space-xl) 0;">
+          <p style="color: var(--color-text-secondary); font-size: 1.25rem;">
+            No blog posts found for this tag.
+          </p>
+          <a href="/blog" class="btn" style="margin-top: var(--space-md);">View All Posts</a>
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div class="pagination">
+          <a 
+            href={currentPage > 1 ? `/blog?page=${currentPage - 1}${tagFilter ? `&tag=${tagFilter}` : ''}` : '#'}
+            class={`pagination-button ${currentPage === 1 ? 'disabled' : ''}`}
+            aria-disabled={currentPage === 1}
+          >
+            Previous
+          </a>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            <a
+              href={`/blog?page=${page}${tagFilter ? `&tag=${tagFilter}` : ''}`}
+              class={`pagination-button ${page === currentPage ? 'active' : ''}`}
+            >
+              {page}
+            </a>
+          ))}
+          
+          <a
+            href={currentPage < totalPages ? `/blog?page=${currentPage + 1}${tagFilter ? `&tag=${tagFilter}` : ''}` : '#'}
+            class={`pagination-button ${currentPage === totalPages ? 'disabled' : ''}`}
+            aria-disabled={currentPage === totalPages}
+          >
+            Next
+          </a>
+        </div>
+      )}
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  @import '../../styles/blog.css';
+</style>

@@ -1,0 +1,17 @@
+{
+  "name": "imagile-dotcom",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/rss": "^4.0.14",
+    "@microsoft/applicationinsights-web": "^3.3.10",
+    "astro": "^5.16.6"
+  }
+}

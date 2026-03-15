@@ -1,0 +1,64 @@
+---
+title: "Azure and .NET: The Boring Stack That Wins"
+description: "Performance, talent pool, and secretless authentication. Why we default to Azure and .NET for almost every client project."
+publishDate: 2025-12-28
+author: "Sunny Kolattukudy"
+tags: ["azure", "dotnet", "architecture", "cloud"]
+---
+
+Every few years someone asks why we don't use the more interesting stack. The exciting one. The one with the blog posts.
+
+The answer is boring, which is kind of the point.
+
+We use Azure and .NET because they win on the metrics that matter for the clients we work with: performance, people, and security. Not because we're fans. Because when we pick a stack, we're picking something a client's team will live with for five to ten years.
+
+## It's Fast
+
+.NET consistently ranks at or near the top of the TechEmpower Framework Benchmarks — the most rigorous independent web framework performance comparison that exists. ASP.NET Core outperforms Node.js, Spring Boot, and Django in most benchmark categories. Minimal APIs hit millions of requests per second on commodity hardware.
+
+Performance isn't theoretical in production. Faster responses mean lower compute costs, better user experience, and more headroom before you need to scale. Choosing a framework that's measurably slower is choosing to pay for that later. The TechEmpower numbers aren't opinions; they're measurements, and .NET leads them.
+
+## It's Easy to Hire For
+
+.NET is everywhere in enterprise software. That means there's a large talent pool, and it's not concentrated in a few expensive tech hubs. When a client needs to grow their team after we've handed off the project, they can find .NET developers who already know the patterns.
+
+This matters more than people admit. Every niche technology decision is a future hiring constraint. Every framework that requires its own certification pipeline is a future bottleneck. The interesting stack that only fifty thousand developers know is less interesting when you're posting a job listing two years later.
+
+.NET is the boring choice that doesn't become someone else's problem.
+
+## The Authentication Story Is Actually Good
+
+This one is underappreciated. Azure's integration with .NET through Managed Identity and `DefaultAzureCredential` means you can build production applications with no connection strings in code and no secrets to rotate.
+
+It looks like this:
+
+```csharp
+var credential = new DefaultAzureCredential();
+var client = new SecretClient(new Uri("https://myvault.vault.azure.net/"), credential);
+```
+
+No password. No secret stored in an environment variable that someone will eventually commit to source control. The application authenticates to Azure services using its managed identity. Locally, it falls back to your Azure CLI credentials. In production, the identity is assigned permissions directly — no credentials change hands anywhere.
+
+This is how authentication should work. The fact that Azure makes it this easy with .NET is a genuine security advantage for teams that care about what "secure" actually means in practice, not just on paper.
+
+## What It Costs
+
+The numbers here are real:
+
+| Component | AWS + Java | Azure + .NET | Savings |
+|-----------|-----------|--------------|---------|
+| Compute | EC2: $800/mo | App Service: $500/mo | 38% |
+| Database | RDS: $600/mo | Azure SQL: $400/mo | 33% |
+| Functions | Lambda: $200/mo | Azure Functions: $150/mo | 25% |
+| Monitoring | CloudWatch: $100/mo | App Insights: Included | 100% |
+| **Total** | **$1,700/mo** | **$1,050/mo** | **38%** |
+
+With Azure Hybrid Benefit and Reserved Instances, the gap widens further. Application Insights being included in the platform — not a separate metered service — is the kind of detail that compounds across multiple projects.
+
+## When We'd Use Something Else
+
+We're not evangelists. If a client has a team with deep Go expertise or their data science infrastructure is on GCP, we work with that. If a project is purely a static site, Azure Static Web Apps and Astro aren't controversial choices (it's what runs this blog). If the client is already deep in AWS and the switching cost is real, we don't manufacture a reason to switch.
+
+But when we're starting fresh and the client doesn't have a strong existing preference, the default is Azure and .NET. Not exciting. Deliberately so.
+
+The boring stack that performs, hires well, and keeps secrets actually secure is exactly what most enterprise software should be built on. "Exciting" is a fine thing to optimize for when you're experimenting. "Reliable for a decade" is what you want when you're shipping.

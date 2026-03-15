@@ -1,0 +1,51 @@
+---
+title: "AI in Your Product vs. AI in Your Toolbox"
+description: "The distinction between integrating LLMs into applications and using GenAI to build applications faster — and why confusing the two costs you."
+publishDate: 2025-12-20
+author: "Sunny Kolattukudy"
+tags: ["ai", "machine-learning", "llm", "genai"]
+---
+
+There's a conversation I have with almost every client who comes to us wanting to "do AI." It usually starts with "we want to use AI in our product." Sometimes they mean that. Often they mean something else entirely.
+
+Here's the distinction that matters.
+
+## Two Completely Different Things
+
+Think about electricity when we built modern homes. Electricians used power tools to frame, wire, and finish the house. That's one use of electricity. Then they wired the house itself, so you can turn on lights and charge your phone. Same underlying technology. Completely different purpose. Confusing them would be absurd — you wouldn't call an electrician to install ceiling fans and expect them to also wire the structure.
+
+AI works the same way.
+
+**AI in your toolbox** means using tools like GitHub Copilot, Cursor, or Claude Code to write software faster. The AI helps your developers. It never touches production. Your users have no idea it exists. The output is just regular code — fast to produce, but nothing special at runtime.
+
+**AI in your product** means embedding an LLM into what you're shipping. Your users interact with it. It affects latency. It costs money per query. It requires careful prompt engineering and fallback handling. If it hallucinates, your customers see it.
+
+Both are legitimate. Both are valuable. They are not the same thing, and mixing up which one you're doing will cost you.
+
+## Why the Confusion Happens
+
+The word "AI" covers all of it, so conversations about strategy tend to blur the two together. A team gets GitHub Copilot licenses, ships faster, and calls that their "AI strategy." Another team builds a chatbot nobody asked for because their product needs to "use AI." Both are confusing the category.
+
+The questions are simple: Is the AI helping your developers ship faster, or is it something your customers experience directly?
+
+For most companies, the answer should be *both* — and they should be thought about completely separately.
+
+## The Toolbox Side
+
+Use GenAI tools aggressively for development. The productivity gains are real and measurable. A senior developer with good AI tooling outpaces what that same developer with a small army could do before it. This is the power tools building the house — it changes how fast you work, not what you're delivering.
+
+The important thing to understand: this has zero runtime impact. The generated code is just code. It runs at the same speed, costs the same to operate, and behaves the same in production as code written by hand. AI involvement in the development process is completely invisible to your users.
+
+## The Product Side
+
+When you're ready to wire the house — to give your users AI-powered features — treat it as a first-class engineering problem. Plan for latency. LLM API calls take one to five seconds; that's not acceptable everywhere. Plan for cost at scale; token pricing compounds quickly with heavy usage. Plan for the cases where the model is confidently wrong, because it will be. Build fallbacks.
+
+The failure mode I see most often is treating AI product features as easy wins, underestimating the operational complexity, and then shipping something that's expensive, slow, and unpredictable. The second most common failure is building elaborate LLM integrations that don't actually benefit the user — someone just wanted to say the product uses AI.
+
+## What to Actually Do
+
+Be explicit about which category you're in. When someone says "let's add AI to our product," ask: do you mean the toolbox or the product? They're different conversations, different investments, different teams, different timelines.
+
+If it's the toolbox: get the tools, protect experimentation time, and get out of the way. If it's the product: treat it like any other critical infrastructure decision — design it, scope it, build in resilience.
+
+Electricity runs through both. The purpose is entirely different. Treat them accordingly.
