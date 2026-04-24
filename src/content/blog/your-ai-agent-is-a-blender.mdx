@@ -1,0 +1,65 @@
+---
+title: "Your AI Agent Is a Blender"
+description: "Every part of Claude Code maps to a part of a blender. Once you see it, you'll immediately know why your output came out wrong — and who to blame."
+publishDate: 2026-04-24
+author: "Sunny Kolattukudy"
+tags: ["ai", "claude-code", "developer-tools", "context-management"]
+---
+
+Here's a framing that will make Claude Code click faster than any documentation walkthrough.
+
+Claude Code is a blender.
+
+Not metaphorically-kind-of-sort-of. Every part of the system maps directly to a part of the machine. Once you see it, you can't unsee it — and more importantly, you'll immediately know why your "smoothie" came out wrong.
+
+## The Motor Is the Model
+
+The motor is Claude — the underlying language model doing the actual reasoning. It's powerful, it's consistent, and it doesn't care what you put in the blender. Feed it garbage and it will blend garbage, efficiently and confidently.
+
+The motor doesn't know what you're making. It just spins.
+
+## The Blender Body Is the Harness
+
+The harness — Claude Code itself, the CLI, the orchestration layer — is the body of the blender. It holds everything together. It routes power from the motor to the blades, accepts ingredients through the lid, and enforces the order of operations. Without it, you just have a spinning motor and a pile of fruit on the counter.
+
+The harness is what makes the model usable in a software engineering context. It knows how to run tools, manage the conversation loop, read files, and hand results back to the model for the next step. It also manages the agentic loop — the cycle where the model reasons, calls a tool, gets a result, reasons again, and keeps going until the task is done. That loop is the harness doing its job.
+
+## The Ingredients Are Your Context
+
+Context is everything that goes into the blender before you hit start: the files you've opened, your conversation history, the system prompt, memory files, any documents you've dragged in. This is your fruit, your yogurt, your ice.
+
+Bad ingredients make a bad smoothie. Irrelevant context degrades model performance — not because the model gets confused exactly, but because it gets diluted. The model has a fixed-size jar. Pack it with the wrong things and there's no room for what actually matters. A cup of spinach in a strawberry smoothie isn't a problem. A cup of sawdust is. Treat context like a recipe, not a dump bucket.
+
+This is where most developers go wrong. They paste in three files when one would do. They keep a conversation running for two hours instead of starting fresh when the task changes. They forget the system prompt entirely and then wonder why the model seems unfocused. The jar fills up, the ratio goes sideways, and the output turns to mush — and nobody looks at the ingredients.
+
+## The Blades Are Your Tools (Including MCP)
+
+Tools are the blades. Read, Write, Bash, Edit — these are the standard attachments that come in the box. MCP servers are the specialty attachments you buy separately: the spiralizer, the citrus juicer, the food processor bowl. They extend what the blender can do without changing the motor or the body.
+
+This is kind of the point of MCP. The model stays the same. The harness stays the same. You just snap in a new blade that connects to Jira, or GitHub, or your internal API — and suddenly that capability is available in every blend. The model can now call your Jira MCP tool the same way it calls Bash: by asking the harness to run it, getting the result, and incorporating it into its next thought.
+
+## How a Blend Actually Works
+
+When you send a message in Claude Code, the harness assembles the current context window — your conversation so far, any injected files, the system prompt, memory — and hands it all to the model. The model reads every bit of it, reasons about what to do next, and either responds directly or calls a tool. If it calls a tool, the harness executes it, appends the result to the context, and asks the model to continue. This keeps going until the task resolves or the model decides it's done.
+
+Every turn through that loop adds more to the jar. Tool results, intermediate reasoning, file contents — it all accumulates. A long session on a complex task can fill the context window fast. When that happens, the harness compresses older parts of the conversation to make room, and the model starts working with a summarized version of what happened earlier instead of the full transcript.
+
+That's not a bug. That's what happens when you leave the blender running with the lid open and keep throwing things in.
+
+## A Bad Smoothie Is a Skill Issue, Not a Hardware Problem
+
+Here's what actually happens in most "Claude Code doesn't work" complaints: the developer threw too much in, started with a vague task, ran the session too long, and let the context turn into a landfill. The model did exactly what it was supposed to — it blended everything in the jar. The output just reflected the input.
+
+Too much context and the model loses the thread. A missing tool means the model hallucinates a workaround — it knows something should exist to help it here, so it invents one. A vague system prompt means no recipe; the model doesn't know if it's making a smoothie or a soup. A stale context window full of abandoned sub-tasks means the model is reasoning against decisions that were made and reversed three steps ago.
+
+Every frustrating Claude Code session is a blender problem, not a motor problem. Anthropic is not shipping you a defective motor. The developers who end up in Hacker News threads complaining that AI coding tools "just don't work" are usually the same ones who handed the blender a full grocery bag, hit start, and expected a smoothie. They didn't blame the recipe. They blamed the blender.
+
+Check your ingredients, check your blades, check your jar size.
+
+## What This Means Practically
+
+When you're setting up a Claude Code workflow, think like a chef: write a clear system prompt (what are we making and for whom?), curate your context aggressively (only what belongs in this blend), start fresh sessions when the task changes (don't blend a smoothie in a dirty jar), and add tools with intention (the spiralizer stays in the cabinet if you're not spiralizing).
+
+The developers who get the most out of Claude Code aren't the ones who found the magic prompt. They're the ones who learned to manage the jar.
+
+The motor will do the rest.
