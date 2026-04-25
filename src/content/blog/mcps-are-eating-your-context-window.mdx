@@ -1,0 +1,63 @@
+---
+title: "MCPs Are Eating Your Context Window"
+description: "MCP servers promised to make your AI agent infinitely capable. They also made it slower, fatter, and easier to compromise. CLIs are quietly winning."
+publishDate: 2026-04-25
+author: "Sunny Kolattukudy"
+tags: ["ai", "claude-code", "mcp", "security", "developer-tools", "github-actions"]
+---
+
+I'm writing this from Dayton, Ohio at the GEM City Mini Conf, and someone just asked a question that I've been hearing more often lately: "Should we use an MCP or just a CLI?"
+
+Six months ago the answer was almost always MCP. Today it's more complicated.
+
+## The Promise Was Real
+
+MCP servers are genuinely elegant in theory. You snap a new tool into your AI agent the same way you'd install a package — and suddenly your model can talk to Jira, query your database, or call your internal API without any custom prompt engineering. The model discovers what tools exist, decides when to call them, and handles the rest. It's composable, it's declarative, and it works.
+
+The problem isn't the concept. The problem is what it costs you to run it.
+
+## Every MCP Tool Call Is a Context Toll
+
+When an MCP server connects, it doesn't just add a capability — it adds a payload. The full tool manifest gets injected into your context window at session start. That's every available function signature, every parameter description, every schema definition for every tool your server exposes. For a mature MCP server, you're looking at thousands of tokens before you've asked your first question.
+
+Then it runs. Every tool call appends its result to the context. A Jira MCP that returns a full ticket object — comments, history, attachments metadata, linked issues — is pushing another few thousand tokens into the window. Do that three times in an agentic loop and you've burned the equivalent of a short novel worth of context on administrative overhead.
+
+The context window is the jar. MCPs are filling it with the label instead of the juice.
+
+## CLIs Don't Apologize for Being Small
+
+A CLI does one thing. It takes arguments, runs, and prints output. The AI agent calls it via Bash, reads what came back, and moves on. No manifest. No schema injection. No persistent connection leaking tokens into every subsequent turn.
+
+This is why teams are quietly switching. Not because MCPs are bad, but because a well-designed CLI costs almost nothing to invoke and returns exactly what you asked for. `gh issue view 123 --json title,body` gives you a title and a body. An equivalent GitHub MCP call gives you a title, a body, and everything the protocol decided you might also want.
+
+Lean context windows produce sharper reasoning. This is kind of the point.
+
+## The Security Surface Is Not the Same
+
+MCPs and CLIs have meaningfully different attack surfaces, and most teams are not thinking about this carefully enough.
+
+An MCP server runs as a persistent process, often with broad credentials pre-loaded at startup. It exposes a structured API that the model can discover and invoke autonomously. If an attacker can inject malicious content into something the model reads — a Jira ticket, a GitHub comment, a Confluence page — they can attempt to manipulate the model into calling MCP tools it shouldn't. This is prompt injection with a direct execution path. The model reads the ticket, the ticket tells the model to exfiltrate data via the Jira MCP, and the model, helpfully, tries.
+
+A CLI invocation is narrower. The model constructs a command and the harness runs it. You can allowlist exactly which commands are permitted and block everything else. The blast radius of a compromised invocation is limited to what that one command can do. The credentials are scoped to the tool, not loaded into a server that the model can query freely.
+
+Neither is safe by default. Both require intentional permission design. But the CLI model makes that design easier to reason about and easier to audit.
+
+## GitHub Actions vs. Claude Code Actions
+
+The tradeoff sharpens when you move into automation pipelines.
+
+In GitHub Actions, an MCP server means a sidecar process that persists across job steps, with credentials that need to be available to that process for its entire lifetime. You're managing process lifecycle, secret injection, and network access for something that runs in CI. If that MCP server has a vulnerability, or if its credentials leak, the blast radius is the full CI environment — and potentially the repos and services it can reach.
+
+A CLI-based approach in GitHub Actions is simpler: install the CLI, pass in a secret as an argument or environment variable, run it, done. The credential exists for the duration of one command. The permissions are exactly what the CLI requires — nothing more, nothing ambient.
+
+Claude Code actions follow the same logic. The permission model in Claude Code is designed around tool allowlists. You can say "allow `gh` commands, allow `npm test`, allow reads from this directory" — and the harness enforces it. That works cleanly for CLIs. For MCP servers, the permission model is coarser: you're allowing an entire server's capability surface, not individual operations.
+
+## What This Means Practically
+
+Use MCPs where they earn the context cost: complex, stateful integrations where the schema injection pays for itself across many tool calls in a session, and where the alternative is significantly more brittle. A GitHub MCP in an interactive coding session might be worth it. A Jira MCP that gets called once to look up a ticket is not.
+
+Default to CLIs for everything else. They're auditable, composable, and cheap. They play well with CI. They don't require a persistent process or pre-loaded credentials. And they fit naturally into the permission models that tools like Claude Code are built around.
+
+The developers who are getting the most out of AI agents right now aren't the ones with the most MCP servers configured. They're the ones who figured out that smaller context means sharper output — and that the best tool call is usually the one that takes the least space to describe.
+
+The MCP ecosystem is still maturing. The CLI has been working since the 70s.
