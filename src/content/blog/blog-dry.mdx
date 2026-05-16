@@ -34,7 +34,11 @@ If you're maintaining ten different prompts that each describe your data model i
 
 Find the authoritative source and make everything else derive from it.
 
-In code, that's a module or a type. In AI systems, it's harder to enforce but not different in kind. It might be a shared system prompt loaded by all your agents. It might be a canonical context document that gets injected rather than duplicated. It might be a generation step that produces prompt content directly from your schema, so the prompt and the data model can't drift apart independently.
+In code, that's a module or a type. In AI systems, it's harder to enforce but not different in kind.
+
+For heavyweight systems, that might be a RAG-based approach with vector databases — your knowledge lives in the database, and every agent query retrieves it from the same source. For lighter-weight systems, it might be something like the [Claude Code Marketplace](https://code.claude.com/docs/en/plugin-marketplaces), where shared plugins and instructions can be versioned and referenced rather than duplicated across contexts.
+
+It might be a shared system prompt loaded by all your agents. It might be a canonical context document that gets injected rather than duplicated. It might be a generation step that produces prompt content directly from your schema, so the prompt and the data model can't drift apart independently.
 
 The discipline is the same. The surface area is vastly larger.
 
