@@ -1,0 +1,47 @@
+---
+title: "DRY Doesn't Mean What You Think It Means"
+description: "Hunt and Thomas defined DRY as knowledge — not code. AI generates duplicated knowledge at industrial scale. The discipline hasn't changed; the surface area has."
+publishDate: 2026-05-16
+author: "Sunny Kolattukudy"
+tags: ["ai", "engineering-principles", "dry", "llm"]
+---
+
+Most engineers have internalized DRY as "don't copy-paste code." Which is a fine rule. It's just not the rule.
+
+Hunt and Thomas wrote it in 1999: "Every piece of knowledge must have a single, unambiguous, authoritative representation within a system."
+
+Knowledge. Not code. The distinction is everything.
+
+## The Gap Is Bigger Than It Looks
+
+Duplicated code is annoying. You update a function in one place and forget to update it in three others. Tests break. Someone gets paged. You fix it. Life goes on.
+
+Duplicated knowledge is different. A business rule that lives in your API validation, your database trigger, your UI form, your wiki page, and your onboarding doc isn't just messy — it's a slow-moving lie. The moment those representations diverge, you don't have one rule. You have five opinions with no authoritative source to break the tie.
+
+The compiler catches duplicated code. Nobody catches duplicated knowledge until something blows up in production — or worse, until a new engineer makes a decision based on the wrong version and nobody notices for six months.
+
+## AI Generates Knowledge at Industrial Scale
+
+Here's the uncomfortable part.
+
+AI generates knowledge at a scale no human team can match. Ask an LLM to write your deployment runbook, your PR template, your architecture decision records, and your onboarding guide — and you'll have four coherent, detailed documents describing your system's behavior. They will start to diverge the moment your system changes. Nobody will know which one is current because all four will sound equally authoritative.
+
+Every prompt you write that describes your domain is a knowledge artifact. Every system prompt in every agent you build is a representation of how your system works. Every context file, every injected document, every memory file — these are not just configuration. They are claims about what is true.
+
+If you're maintaining ten different prompts that each describe your data model in slightly different ways, you don't have comprehensive documentation. You have a DRY violation at industrial scale, and no compiler to catch it.
+
+## The Answer Hasn't Changed
+
+Find the authoritative source and make everything else derive from it.
+
+In code, that's a module or a type. In AI systems, it's harder to enforce but not different in kind.
+
+For heavyweight systems, that might be a RAG-based approach with vector databases — your knowledge lives in the database, and every agent query retrieves it from the same source. For lighter-weight systems, it might be something like the [Claude Code Marketplace](https://code.claude.com/docs/en/plugin-marketplaces), where shared plugins and instructions can be versioned and referenced rather than duplicated across contexts.
+
+It might be a shared system prompt loaded by all your agents. It might be a canonical context document that gets injected rather than duplicated. It might be a generation step that produces prompt content directly from your schema, so the prompt and the data model can't drift apart independently.
+
+The discipline is the same. The surface area is vastly larger.
+
+The teams that figure this out won't be the ones who wrote the best prompts. They'll be the ones who treated prompts like code, context like data, and applied the same rigor to knowledge management that they'd apply to any other part of their system.
+
+Hunt and Thomas saw this coming in 1999. They were just early.
