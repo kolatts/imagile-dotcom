@@ -1,0 +1,94 @@
+name: Blog Scheduler
+
+on:
+  schedule:
+    # 1pm UTC = 9am ET — apply the `write` label to the next queued blog issue
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run — find next issue but do not apply label'
+        required: false
+        default: 'false'
+        type: boolean
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Finds the oldest open issue with the `blog` label that does NOT yet have
+# the `write` label, then applies `write` to trigger the blog-writer workflow.
+# This creates an even daily publishing cadence without manual label management.
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  schedule-next:
+    name: Schedule next blog post
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Ensure labels exist
+        run: |
+          gh label create blog  --color "e4e669" --description "Blog post topic" --force --repo "$GITHUB_REPOSITORY" || true
+          gh label create write --color "0075ca" --description "Triggers blog writing" --force --repo "$GITHUB_REPOSITORY" || true
+          gh label create blog-ready --color "0e8a16" --description "Blog post drafted, ready for review" --force --repo "$GITHUB_REPOSITORY" || true
+
+      - name: Find next queued blog issue
+        id: find-issue
+        run: |
+          # Find all open issues with 'blog' label, sorted oldest first,
+          # excluding any that already have the 'write' label.
+          ISSUE=$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label blog \
+            --state open \
+            --limit 100 \
+            --json number,title,labels,createdAt \
+            --jq '[.[] | select(.labels | map(.name) | contains(["write"]) | not)] | sort_by(.createdAt) | first')
+
+          NUMBER=$(echo "$ISSUE" | jq -r '.number // empty')
+          TITLE=$(echo "$ISSUE" | jq -r '.title // empty')
+
+          if [ -z "$NUMBER" ]; then
+            echo "No queued blog issues found — nothing to schedule."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Found issue #$NUMBER: $TITLE"
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+            echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Apply write label (or dry-run)
+        if: steps.find-issue.outputs.found == 'true'
+        run: |
+          NUMBER="${{ steps.find-issue.outputs.number }}"
+          TITLE="${{ steps.find-issue.outputs.title }}"
+
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "DRY RUN — would apply \`write\` label to issue #$NUMBER: $TITLE"
+          else
+            echo "Applying \`write\` label to issue #$NUMBER: $TITLE"
+            gh issue edit "$NUMBER" --add-label write --repo "$GITHUB_REPOSITORY"
+            echo "Label applied — blog-writer workflow will trigger shortly."
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## Blog Scheduler" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.find-issue.outputs.found }}" = "true" ]; then
+            NUMBER="${{ steps.find-issue.outputs.number }}"
+            TITLE="${{ steps.find-issue.outputs.title }}"
+            DRY="${{ inputs.dry_run }}"
+            if [ "$DRY" = "true" ]; then
+              echo "**Dry run** — next issue would be: [#$NUMBER — $TITLE](https://github.com/$GITHUB_REPOSITORY/issues/$NUMBER)" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "**Scheduled:** [#$NUMBER — $TITLE](https://github.com/$GITHUB_REPOSITORY/issues/$NUMBER)" >> "$GITHUB_STEP_SUMMARY"
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+              echo "Applied \`write\` label — blog-writer workflow triggered." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "No queued blog issues found. Add issues with the \`blog\` label to queue posts." >> "$GITHUB_STEP_SUMMARY"
+          fi

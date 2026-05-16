@@ -1,0 +1,205 @@
+name: Blog Writer
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+
+env:
+  ACTIONS_STEP_DEBUG: true
+  CLAUDE_CODE_VERBOSE: "1"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WRITE JOB — fires when the `write` label is applied to an issue that also
+# has the `blog` label. Uses the sunny:write-blog plugin skill to draft the
+# post, commits it to src/content/blog/, and opens a draft PR.
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  write:
+    name: Write blog — Issue #${{ github.event.issue.number }}
+    if: |
+      github.event_name == 'issues' &&
+      github.event.label.name == 'write' &&
+      contains(github.event.issue.labels.*.name, 'blog')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Prepare write prompt
+        env:
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          envsubst '${REPO}${ISSUE_NUMBER}${ISSUE_TITLE}${ISSUE_BODY}${ISSUE_AUTHOR}${RUN_URL}' \
+            < .github/prompts/blog-writer-write.md > /tmp/blog-write-prompt.md
+
+      - name: Read write prompt
+        id: read-write-prompt
+        run: |
+          {
+            echo 'content<<EOF_CLAUDE_PROMPT'
+            cat /tmp/blog-write-prompt.md
+            echo 'EOF_CLAUDE_PROMPT'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Claude Agent — write blog post (attempt 1)
+        id: write-attempt-1
+        continue-on-error: true
+        uses: anthropics/claude-code-action@v1.0.93
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: ${{ steps.read-write-prompt.outputs.content }}
+          plugin_marketplaces: |
+            https://github.com/kolatts/claude-marketplace.git
+          plugins: |
+            sunny@kolatts-marketplace
+          claude_args: --model sonnet --max-turns 30 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git checkout -b:*),Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr create:*),Bash(gh issue comment:*),Bash(gh issue edit:*),Bash(gh label create:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
+
+      - name: Retry wait — write phase
+        if: steps.write-attempt-1.outcome == 'failure'
+        run: |
+          echo "Attempt 1 failed (possibly API overload), waiting 60s before retry..."
+          sleep 60
+
+      - name: Claude Agent — write blog post (attempt 2)
+        if: steps.write-attempt-1.outcome == 'failure'
+        uses: anthropics/claude-code-action@v1.0.93
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: ${{ steps.read-write-prompt.outputs.content }}
+          plugin_marketplaces: |
+            https://github.com/kolatts/claude-marketplace.git
+          plugins: |
+            sunny@kolatts-marketplace
+          claude_args: --model sonnet --max-turns 30 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git checkout -b:*),Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr create:*),Bash(gh issue comment:*),Bash(gh issue edit:*),Bash(gh label create:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
+
+      - name: Cleanup — remove write label
+        if: always()
+        run: gh issue edit ${{ github.event.issue.number }} --remove-label "write" --repo "${{ github.repository }}" || true
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## Blog Writer — Write phase" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Issue:** [#${{ github.event.issue.number }} — ${{ github.event.issue.title }}](${{ github.event.issue.html_url }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Triggered by label:** \`write\` on a \`blog\` issue" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/claude-blog-progress.log ]; then
+            echo "### Progress" >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/claude-blog-progress.log >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESPOND JOB — fires when someone comments `@claude` on a blog PR.
+# Checks out the blog branch, applies the feedback, commits, and replies.
+# ─────────────────────────────────────────────────────────────────────────────
+  respond:
+    name: Respond — @claude feedback on PR #${{ github.event.issue.number }}
+    if: |
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, '@claude') &&
+      github.event.issue.pull_request != null
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Get PR branch and verify it is a blog branch
+        id: check-branch
+        run: |
+          BRANCH=$(gh pr view ${{ github.event.issue.number }} \
+            --repo "${{ github.repository }}" \
+            --json headRefName -q .headRefName)
+          echo "Branch: $BRANCH"
+          if [[ "$BRANCH" == blog/* ]]; then
+            echo "is_blog=true" >> "$GITHUB_OUTPUT"
+            echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_blog=false" >> "$GITHUB_OUTPUT"
+            echo "Not a blog branch — skipping."
+          fi
+
+      - name: Checkout blog branch
+        if: steps.check-branch.outputs.is_blog == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.check-branch.outputs.branch }}
+
+      - name: Configure git identity
+        if: steps.check-branch.outputs.is_blog == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Prepare feedback prompt
+        if: steps.check-branch.outputs.is_blog == 'true'
+        env:
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENTER: ${{ github.event.comment.user.login }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          envsubst '${REPO}${PR_NUMBER}${COMMENT_BODY}${COMMENTER}${RUN_URL}' \
+            < .github/prompts/blog-writer-feedback.md > /tmp/blog-feedback-prompt.md
+
+      - name: Read feedback prompt
+        if: steps.check-branch.outputs.is_blog == 'true'
+        id: read-feedback-prompt
+        run: |
+          {
+            echo 'content<<EOF_CLAUDE_PROMPT'
+            cat /tmp/blog-feedback-prompt.md
+            echo 'EOF_CLAUDE_PROMPT'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Claude Agent — apply feedback
+        if: steps.check-branch.outputs.is_blog == 'true'
+        uses: anthropics/claude-code-action@v1.0.93
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: ${{ steps.read-feedback-prompt.outputs.content }}
+          plugin_marketplaces: |
+            https://github.com/kolatts/claude-marketplace.git
+          plugins: |
+            sunny@kolatts-marketplace
+          claude_args: --model sonnet --max-turns 20 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr comment:*),Bash(gh pr view:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## Blog Writer — Feedback response" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**PR:** [#${{ github.event.issue.number }}](${{ github.event.issue.html_url }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Commenter:** @${{ github.event.comment.user.login }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Branch:** \`${{ steps.check-branch.outputs.branch }}\`" >> "$GITHUB_STEP_SUMMARY"
