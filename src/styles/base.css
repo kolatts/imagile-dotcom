@@ -1,0 +1,117 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: var(--step-h1);
+  margin-bottom: var(--space-md);
+}
+
+h2 {
+  font-size: var(--step-h2);
+  margin-bottom: var(--space-md);
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+h3 {
+  font-size: var(--step-h3);
+}
+
+p {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  max-width: 65ch;
+  line-height: 1.75;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--dur-med) var(--ease);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-sm);
+  z-index: 999;
+  background: var(--color-primary);
+  color: var(--color-bg-dark);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+  transition: top var(--dur-fast) var(--ease);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
+/* Reduced motion: the blanket rule first, then targeted overrides for the
+   Mesh-specific effects (drifting orbs, the 3D glyph, the morphing word) that
+   need a deliberate still state rather than just an instant-finish animation. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :root {
+    --space-lg: 3rem;
+    --space-xl: 5rem;
+  }
+}

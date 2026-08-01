@@ -1,0 +1,73 @@
+---
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  tone?: 'plain' | 'panel';
+  align?: 'left' | 'center';
+}
+
+const { id, eyebrow, title, lead, tone = 'plain', align = 'left' } = Astro.props;
+---
+
+<section id={id} class={`section section--${tone} section--${align}`}>
+  <div class="container">
+    {(eyebrow || title || lead) && (
+      <header class="section-header">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        {title && <h2>{title}</h2>}
+        {lead && <p class="lead">{lead}</p>}
+      </header>
+    )}
+    <div class="section-body">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+    z-index: var(--z-content);
+    padding: var(--space-xl) 0;
+  }
+
+  .section--panel {
+    background: rgba(255, 255, 255, 0.015);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-lg);
+    max-width: 720px;
+  }
+
+  .section--center {
+    text-align: center;
+  }
+
+  .section--center .section-header {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-header .eyebrow {
+    margin-bottom: var(--space-sm);
+  }
+
+  .section-header h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .section-header .lead {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .section {
+      padding: var(--space-lg) 0;
+    }
+  }
+</style>

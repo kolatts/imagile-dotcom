@@ -2,6 +2,9 @@
 dist/
 .astro/
 
+# local verification scratch output
+.playwright-cli/
+
 # dependencies
 node_modules/
 

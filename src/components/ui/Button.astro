@@ -1,0 +1,53 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'ghost' | 'text';
+  track?: string;
+  external?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  track,
+  external = false,
+  type = 'button',
+  class: className,
+} = Astro.props;
+
+const variantClass = variant === 'primary' ? 'btn' : variant === 'ghost' ? 'btn btn-secondary' : 'btn-text';
+const classes = [variantClass, className].filter(Boolean).join(' ');
+---
+
+{href ? (
+  <a
+    href={href}
+    class={classes}
+    data-track={track}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+  >
+    <slot />
+    {external && <span class="visually-hidden"> (opens in new tab)</span>}
+  </a>
+) : (
+  <button type={type} class={classes} data-track={track}>
+    <slot />
+  </button>
+)}
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

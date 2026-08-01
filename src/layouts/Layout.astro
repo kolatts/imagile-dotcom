@@ -1,11 +1,18 @@
 ---
 import { canonical } from '../lib/seo';
+import { site } from '../lib/site';
+import MeshBackground from '../components/ui/MeshBackground.astro';
+import '@fontsource/archivo-black';
+import '@fontsource-variable/work-sans';
+import '@fontsource-variable/fraunces/wonk-italic.css';
+import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
   noindex?: boolean;
+  meshIntensity?: 'full' | 'quiet';
   article?: {
     publishedTime: string;
     author: string;
@@ -19,6 +26,7 @@ const {
   // TODO(Phase 5): swap for a templated default OG card; logo-splash.png is a 731KB PNG slated for deletion.
   image = '/logo-splash.png',
   noindex = false,
+  meshIntensity = 'quiet',
   article
 } = Astro.props;
 
@@ -95,22 +103,42 @@ const canonicalURL = canonical(Astro.url.pathname);
         }
       })} />
     )}
+    {!article && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": site.name,
+        "url": site.url,
+        "logo": new URL('/logo-icon.png', Astro.site),
+        "sameAs": [site.linkedInUrl]
+      })} />
+    )}
   </head>
   <body>
+    <MeshBackground intensity={meshIntensity} />
+    <a href="#main" class="skip-link">Skip to content</a>
     <slot />
   </body>
 </html>
 
 <script>
-  import { initializeAppInsights } from '../lib/appInsights';
-  
+  import { initializeAppInsights, trackEvent } from '../lib/appInsights';
+
   // Initialize Application Insights on client side
   const connectionString = import.meta.env.PUBLIC_APPINSIGHTS_CONNECTION_STRING;
   if (connectionString) {
     initializeAppInsights(connectionString);
   }
-</script>
 
-<style is:global>
-  @import '../styles/global.css';
-</style>
+  // Delegated click tracking for any element carrying data-track, so each new
+  // CTA doesn't need its own inline listener (see CallToAction.astro history).
+  document.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement)?.closest<HTMLElement>('[data-track]');
+    if (el) {
+      trackEvent(el.dataset.track!, {
+        href: el.getAttribute('href') ?? '',
+        page: location.pathname
+      });
+    }
+  });
+</script>

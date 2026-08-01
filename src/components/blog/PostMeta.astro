@@ -1,0 +1,37 @@
+---
+interface Props {
+  publishDate: Date;
+  author: string;
+  readingTime?: number;
+}
+
+const { publishDate, author, readingTime } = Astro.props;
+
+const formattedDate = new Date(publishDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<div class="post-meta">
+  <time datetime={new Date(publishDate).toISOString()}>{formattedDate}</time>
+  <span>{author}</span>
+  {readingTime && <span>{readingTime} min read</span>}
+</div>
+
+<style>
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .post-meta > * + * {
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--hairline);
+  }
+</style>

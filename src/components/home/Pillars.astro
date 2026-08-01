@@ -1,0 +1,98 @@
+---
+import Card from '../ui/Card.astro';
+
+const pillars = [
+  {
+    number: '01',
+    title: 'AI Training & Transformation',
+    badge: 'Flagship',
+    description: 'Real AI fluency for your team -- not a course completion certificate. Productized as Beyond Boring.',
+    href: '/services#ai-training',
+  },
+  {
+    number: '02',
+    title: '.NET + Azure Engineering',
+    description: 'Senior-only delivery. We build and ship production systems on the stack we trust.',
+    href: '/services#dotnet-azure',
+  },
+  {
+    number: '03',
+    title: 'Startup Technology Coaching',
+    description: 'Fractional CTO-level advisory for teams betting the company on getting technology right.',
+    href: '/services#startup-coaching',
+  },
+];
+---
+
+<div class="pillars">
+  {pillars.map(pillar => (
+    <Card href={pillar.href} class="pillar-card">
+      <div class="pillar-number">{pillar.number}</div>
+      <h3 class="pillar-title">
+        {pillar.title}
+        {pillar.badge && <span class="pillar-badge">{pillar.badge}</span>}
+      </h3>
+      <p class="pillar-description">{pillar.description}</p>
+      <span class="pillar-link">Learn more &rarr;</span>
+    </Card>
+  ))}
+</div>
+
+<style>
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  :global(.pillar-card) {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .pillar-number {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-md);
+    letter-spacing: 0.05em;
+  }
+
+  .pillar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-sm);
+  }
+
+  .pillar-badge {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-primary);
+    border: 1px solid rgba(255, 107, 0, 0.35);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .pillar-description {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+  }
+
+  .pillar-link {
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+  }
+
+  :global(.pillar-card:hover) .pillar-link {
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 900px) {
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

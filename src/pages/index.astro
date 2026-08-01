@@ -3,18 +3,61 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
-import Features from '../components/Features.astro';
 import CallToAction from '../components/CallToAction.astro';
 import Footer from '../components/Footer.astro';
+import Section from '../components/ui/Section.astro';
+import Pillars from '../components/home/Pillars.astro';
+import BeyondBoringBand from '../components/home/BeyondBoringBand.astro';
+import LatestPosts from '../components/home/LatestPosts.astro';
 ---
 
-<Layout title="Imagile - AI-Powered Software Development & Cloud Solutions">
+<Layout
+  title="Imagile - AI Training, .NET & Azure Engineering, Startup Technology Coaching"
+  meshIntensity="full"
+>
   <Header />
-  <main>
+  <main id="main">
     <Hero />
-    <About />
-    <Features />
+
+    <div class="positioning-strip container">
+      <p>
+        We're an AI consulting firm. We teach it, we build with it, and we advise the people betting on it.
+      </p>
+    </div>
+
+    <Section eyebrow="What we do" title="Three ways we work with you">
+      <Pillars />
+    </Section>
+
+    <Section tone="panel">
+      <BeyondBoringBand />
+    </Section>
+
+    <Section eyebrow="How we work" title="A small firm, on purpose">
+      <About />
+    </Section>
+
+    <Section eyebrow="Writing" title="Latest from the blog">
+      <LatestPosts />
+    </Section>
+
     <CallToAction />
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .positioning-strip {
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    text-align: center;
+  }
+
+  .positioning-strip p {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+</style>

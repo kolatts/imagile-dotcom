@@ -1,0 +1,140 @@
+/* The single authority for long-form body typography (blog posts). Previously
+   this existed twice -- once as `article ...` in global.css, once as
+   `.blog-post-content ...` in blog.css -- fighting each other on specificity.
+   This is the only copy now. */
+
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-text-primary);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.prose h2 {
+  color: var(--color-primary);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.prose p {
+  margin-bottom: var(--space-md);
+  max-width: 100%;
+  color: var(--color-text-primary);
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: var(--space-md);
+  padding-left: 1.75rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--space-md) 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-medium);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.prose code {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  background: var(--color-bg-medium);
+  padding: 0.2em 0.45em;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+}
+
+.prose pre {
+  background: var(--color-bg-medium);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin: var(--space-md) 0;
+  border-radius: var(--radius-md);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+}
+
+.prose th,
+.prose td {
+  padding: 0.75rem;
+  border: 1px solid var(--hairline);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--color-bg-medium);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.prose td {
+  color: var(--color-text-secondary);
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: var(--space-lg) 0;
+}
+
+@media (max-width: 768px) {
+  .prose {
+    font-size: 1.05rem;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.5rem;
+  }
+
+  .prose pre {
+    padding: 1rem;
+    margin: 1.5rem -1.25rem;
+    border-radius: 0;
+  }
+
+  .prose code {
+    font-size: 0.85em;
+  }
+}

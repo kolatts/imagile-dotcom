@@ -1,146 +1,143 @@
 ---
+import MorphWord from './hero/MorphWord.astro';
+import HeroGlyph from './hero/HeroGlyph.astro';
 ---
 
 <section class="hero">
-  <div class="geometric-shape shape-circle" style="top: 10%; right: 5%;"></div>
-  <div class="geometric-shape shape-square" style="bottom: 15%; left: 10%;"></div>
-
-  <div class="container">
-    <div class="hero-content">
-      <h1 class="hero-title fade-in-up">
-        BUILD.<br />
-        DEPLOY.<br />
-        <span class="highlight">INNOVATE.</span>
-      </h1>
-      <p class="hero-description fade-in-up" style="animation-delay: 0.2s;">
-        We transform complex business challenges into intelligent software solutions.
-        AI-powered systems. Cloud-native architecture. Delivered with precision.
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow badge">
+        <span class="badge-dot"></span>
+        AI Consulting &amp; Training
       </p>
-      <div class="hero-cta fade-in-up" style="animation-delay: 0.4s;">
-        <a href="#contact" class="btn" id="hero-start-project">Start Your Project</a>
-        <a href="#services" class="btn btn-secondary" id="hero-explore-services">Explore Services</a>
+
+      <h1 class="hero-title">
+        Make your org <span class="line-accent">actually</span><br />
+        <MorphWord words={['fluent', 'dangerous', 'fast', 'useful']} /> in AI.
+      </h1>
+
+      <p class="hero-desc">
+        We're a small firm of senior engineers. We teach AI fluency, we build
+        .NET and Azure systems, and we advise the people betting their
+        company on getting technology right.
+      </p>
+
+      <div class="hero-cta">
+        <a href="/contact" class="btn" data-track="HeroCTA_Contact">Start a Conversation</a>
+        <a href="/services" class="btn-text">Explore services &rarr;</a>
       </div>
     </div>
-  </div>
 
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span>SCROLL</span>
+    <div class="hero-visual">
+      <HeroGlyph />
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    min-height: 100vh;
+    position: relative;
+    z-index: var(--z-content);
+    min-height: 92vh;
     display: flex;
     align-items: center;
-    position: relative;
     padding-top: 6rem;
-    overflow: hidden;
   }
 
-  .hero-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 10;
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: var(--space-lg);
   }
 
+  .badge {
+    display: inline-flex;
+    border: 1px solid rgba(255, 107, 0, 0.3);
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    align-self: center;
+    animation: blink 2.4s ease infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
 
   .hero-title {
-    font-size: clamp(3.5rem, 10vw, 9rem);
-    line-height: 0.9;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-md);
   }
 
-  .highlight {
-    color: var(--color-primary);
-    position: relative;
-    display: inline-block;
-  }
-
-  .highlight::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: var(--color-primary);
-    opacity: 0.2;
-    z-index: -1;
-  }
-
-  .hero-description {
-    font-size: clamp(1.125rem, 1.5vw, 1.75rem);
+  .line-accent {
+    font-family: var(--font-accent);
+    font-style: italic;
+    text-transform: none;
     color: var(--color-text-secondary);
-    margin-bottom: 3rem;
-    font-weight: 400;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    letter-spacing: 0;
+  }
+
+  .hero-desc {
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    max-width: 480px;
+    margin-bottom: var(--space-lg);
   }
 
   .hero-cta {
     display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .scroll-indicator {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    opacity: 0.6;
+    gap: 2rem;
+    flex-wrap: wrap;
   }
 
-  .scroll-line {
-    width: 2px;
-    height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--color-primary));
-    animation: scrollPulse 2s infinite;
+  .hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
   }
 
-  .scroll-indicator span {
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% {
-      opacity: 0.3;
-      transform: translateY(0);
-    }
-    50% {
-      opacity: 1;
-      transform: translateY(10px);
+  @media (prefers-reduced-motion: reduce) {
+    .badge-dot {
+      animation: none;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     .hero {
-      padding-top: 5rem;
+      min-height: auto;
+      padding-top: 7rem;
+      padding-bottom: var(--space-lg);
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-desc {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .hero-cta {
-      flex-direction: column;
+      justify-content: center;
     }
 
-    .hero-cta .btn {
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
+    /* Not display:none -- a small centered mark instead of losing the
+       visual entirely on mobile. */
+    .hero-visual {
+      transform: scale(0.4);
+      margin: -3rem 0 -3rem;
+      opacity: 0.6;
     }
   }
 </style>

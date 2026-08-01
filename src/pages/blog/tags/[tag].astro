@@ -41,7 +41,7 @@ const noindex = posts.length < MIN_INDEXABLE_TAG_COUNT;
   noindex={noindex}
 >
   <Header />
-  <main>
+  <main id="main">
     <section class="blog-header">
       <div class="container">
         <p class="blog-tag-eyebrow"><a href={tagsIndexHref}>All Tags</a></p>
@@ -70,8 +70,6 @@ const noindex = posts.length < MIN_INDEXABLE_TAG_COUNT;
 </Layout>
 
 <style>
-  @import '../../../styles/blog.css';
-
   .blog-tag-eyebrow {
     margin-bottom: var(--space-sm);
   }

@@ -47,7 +47,7 @@ const articleMeta = {
   article={articleMeta}
 >
   <Header />
-  <main>
+  <main id="main">
     <article class="blog-post">
       <a href="/blog/" class="back-to-blog">
         &larr; Back to Blog
@@ -73,7 +73,7 @@ const articleMeta = {
         )}
       </header>
 
-      <div class="blog-post-content">
+      <div class="prose">
         <slot />
       </div>
 
@@ -92,8 +92,6 @@ const articleMeta = {
 </Layout>
 
 <style>
-  @import '../styles/blog.css';
-
   .related-program {
     max-width: 800px;
     margin: var(--space-lg) auto 0;

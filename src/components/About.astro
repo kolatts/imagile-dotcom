@@ -1,99 +1,64 @@
 ---
+const principles = [
+  {
+    title: 'Senior-only',
+    description: 'No junior handoffs, no account managers relaying your requirements badly. You work with the people doing the work.',
+  },
+  {
+    title: 'Opinionated by design',
+    description: 'We have a stack we trust and a way we build. We\'ll tell you when we think you\'re wrong.',
+  },
+  {
+    title: 'Small on purpose',
+    description: 'We stay small enough that nothing gets lost between what you asked for and what ships.',
+  },
+];
 ---
 
-<section class="about" id="about">
-  <div class="container">
-    <div class="about-content">
-      <div class="about-text">
-        <h2 class="about-title">
-          Crafting the <span class="highlight">Future</span>
-        </h2>
-        <p class="about-description">
-          At Imagile, we blend cutting-edge AI technology with battle-tested engineering practices.
-          Our team transforms complex challenges into elegant, intelligent solutions that drive real business value.
-        </p>
-        <p class="about-description">
-          From cloud-native architectures to AI-powered automation, we build systems that don't just work—they think.
-        </p>
+<div class="about">
+  <p class="about-lead lead">
+    Imagile is a small firm of senior engineers. We teach AI fluency, build
+    production .NET and Azure systems, and advise startups betting on
+    getting technology right.
+  </p>
+
+  <div class="principles">
+    {principles.map(p => (
+      <div class="principle">
+        <h3>{p.title}</h3>
+        <p>{p.description}</p>
       </div>
-      <div class="about-image">
-        <div class="image-wrapper">
-          <img src="/logo-splash.png" alt="Imagile" class="splash-logo" />
-        </div>
-      </div>
-    </div>
+    ))}
   </div>
-</section>
+</div>
 
 <style>
-  .about {
-    padding: var(--space-xl) 0;
-    background: var(--color-bg-dark);
-    position: relative;
+  .about-lead {
+    max-width: 760px;
+    margin-bottom: var(--space-lg);
   }
 
-  .about-content {
+  .principles {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
   }
 
-  .about-title {
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    margin-bottom: var(--space-md);
-    line-height: 1.1;
+  .principle h3 {
+    font-size: 1.0625rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
   }
 
-  .about-description {
-    font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  .principle p {
+    font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
-    line-height: 1.8;
-  }
-
-  .about-image {
-    position: relative;
-  }
-
-  .image-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .image-wrapper img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 0 40px rgba(255, 102, 0, 0.3));
-    transition: all 0.6s ease;
-  }
-
-  .image-wrapper:hover img {
-    filter: drop-shadow(0 0 60px rgba(255, 102, 0, 0.5));
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 1024px) {
-    .about-content {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .image-wrapper {
-      max-width: 350px;
-    }
   }
 
   @media (max-width: 768px) {
-    .about {
-      padding: var(--space-lg) 0;
-    }
-
-    .image-wrapper {
-      max-width: 300px;
+    .principles {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
     }
   }
 </style>

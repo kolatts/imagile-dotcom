@@ -1,0 +1,27 @@
+---
+import { tagHref } from '../../lib/paths';
+import { getCanonicalTags, getTagMeta } from '../../lib/tags';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+const canonicalTags = getCanonicalTags(tags ?? []);
+---
+
+{canonicalTags.length > 0 && (
+  <div class="tag-list">
+    {canonicalTags.map(tag => (
+      <a href={tagHref(tag)} class="blog-tag">{getTagMeta(tag).label}</a>
+    ))}
+  </div>
+)}
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

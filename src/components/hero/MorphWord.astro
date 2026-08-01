@@ -1,0 +1,78 @@
+---
+interface Props {
+  words: string[];
+  intervalMs?: number;
+}
+
+const { words, intervalMs = 2800 } = Astro.props;
+const longest = Math.max(...words.map(w => w.length));
+---
+
+<span
+  class="morph-word"
+  data-words={JSON.stringify(words)}
+  data-interval={intervalMs}
+  style={`min-width: ${longest}ch;`}
+>{words[0]}</span>
+
+<script>
+  // SSR always renders words[0] so no-JS visitors and crawlers get a complete
+  // headline. This only starts cycling client-side, and never at all under
+  // prefers-reduced-motion.
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('.morph-word').forEach((el) => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
+    const words: string[] = JSON.parse(el.dataset.words ?? '[]');
+    const intervalMs = Number(el.dataset.interval ?? 2800);
+    if (words.length < 2) {
+      return;
+    }
+
+    let idx = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const start = () => {
+      if (timer) return;
+      timer = setInterval(() => {
+        el.classList.add('fading');
+        setTimeout(() => {
+          idx = (idx + 1) % words.length;
+          el.textContent = words[idx];
+          el.classList.remove('fading');
+        }, 150);
+      }, intervalMs);
+    };
+
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    });
+
+    start();
+  });
+</script>
+
+<style>
+  .morph-word {
+    display: inline-block;
+    transition: opacity 150ms ease;
+  }
+
+  .morph-word.fading {
+    opacity: 0;
+  }
+</style>

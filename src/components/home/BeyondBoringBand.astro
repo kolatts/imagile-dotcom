@@ -1,0 +1,65 @@
+---
+import { site } from '../../lib/site';
+---
+
+<div class="bb-band">
+  <div class="bb-content">
+    <p class="eyebrow bb-eyebrow">Program</p>
+    <h2 class="bb-title">Beyond Boring</h2>
+    <p class="lead bb-lead">Brilliant teaches. The bureaucracy assesses.</p>
+    <p class="bb-desc">
+      Beyond Boring is our AI training pillar, productized: a gamified
+      learning platform an entire organization can actually go through --
+      not an LMS wearing a costume.
+    </p>
+    <div class="bb-actions">
+      <a href="/beyond-boring" class="btn" data-track="BBBand_Internal">See the Program</a>
+      <a href={site.beyondBoringUrl} class="btn-text" target="_blank" rel="noopener noreferrer" data-track="BBBand_Outbound">
+        Visit beyond-boring.com &rarr;
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bb-band {
+    border: 1px solid rgba(0, 255, 209, 0.18);
+    border-radius: var(--radius-lg);
+    background: radial-gradient(circle at 15% 20%, rgba(0, 255, 209, 0.06), transparent 55%), var(--color-bg-medium);
+    padding: var(--space-lg) var(--space-lg);
+  }
+
+  .bb-content {
+    max-width: 640px;
+  }
+
+  .bb-eyebrow {
+    color: var(--color-secondary);
+  }
+
+  .bb-title {
+    margin-bottom: var(--space-sm);
+  }
+
+  .bb-lead {
+    margin-bottom: var(--space-md);
+  }
+
+  .bb-desc {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .bb-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .bb-band {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+</style>

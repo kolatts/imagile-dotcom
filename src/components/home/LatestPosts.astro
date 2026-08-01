@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPostCard from '../blog/BlogPostCard.astro';
+
+const posts = (await getCollection('blog', (entry) => !entry.data.draft))
+  .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime())
+  .slice(0, 3);
+---
+
+{posts.length > 0 && (
+  <div class="latest-posts">
+    <div class="latest-grid">
+      {posts.map(post => (
+        <BlogPostCard
+          title={post.data.title}
+          description={post.data.description}
+          publishDate={post.data.publishDate}
+          author={post.data.author}
+          tags={post.data.tags}
+          id={post.id}
+          image={post.data.image}
+        />
+      ))}
+    </div>
+    <div class="latest-cta">
+      <a href="/blog" class="btn-text">Read the blog &rarr;</a>
+    </div>
+  </div>
+)}
+
+<style>
+  .latest-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .latest-cta {
+    text-align: center;
+    margin-top: var(--space-lg);
+  }
+
+  @media (max-width: 900px) {
+    .latest-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
