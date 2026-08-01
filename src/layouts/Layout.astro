@@ -1,8 +1,11 @@
 ---
+import { canonical } from '../lib/seo';
+
 interface Props {
   title: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
   article?: {
     publishedTime: string;
     author: string;
@@ -10,14 +13,16 @@ interface Props {
   };
 }
 
-const { 
-  title, 
-  description = 'Imagile - Expert Software Development & Cloud Solutions',
+const {
+  title,
+  description = 'Imagile is an AI consulting firm: AI training and transformation, .NET and Azure software delivery, and technology coaching for startups.',
+  // TODO(Phase 5): swap for a templated default OG card; logo-splash.png is a 731KB PNG slated for deletion.
   image = '/logo-splash.png',
+  noindex = false,
   article
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = canonical(Astro.url.pathname);
 ---
 
 <!DOCTYPE html>
@@ -27,7 +32,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#080808" />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="Imagile Blog" href="/rss.xml" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -52,7 +60,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
     <!-- Icons -->
-    <link rel="icon" type="image/png" href="/logo-icon.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.png" type="image/png" />
+    <!-- TODO(Phase 5): swap to /apple-touch-icon.png once generated; logo-icon.png is slated for deletion -->
     <link rel="apple-touch-icon" href="/logo-icon.png" />
 
     <title>{title}</title>

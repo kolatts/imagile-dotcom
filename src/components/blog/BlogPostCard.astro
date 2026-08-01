@@ -1,49 +1,51 @@
 ---
+import { postHref, tagHref } from '../../lib/paths';
+import { getCanonicalTags, getTagMeta } from '../../lib/tags';
+
 interface Props {
   title: string;
   description: string;
   publishDate: Date;
   author: string;
   tags: string[];
-  slug: string;
+  id: string;
   image?: string;
 }
 
-const { title, description, publishDate, author, tags, slug, image } = Astro.props;
+const { title, description, publishDate, author, tags, id, image } = Astro.props;
 
-// Format date
 const formattedDate = new Date(publishDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 });
+
+const canonicalTags = getCanonicalTags(tags ?? []);
 ---
 
 <article class="blog-card">
   {image && (
-    <img src={image} alt={title} class="blog-card-image" />
+    <img src={image} alt={title} class="blog-card-image" width="400" height="225" loading="lazy" />
   )}
-  
+
   <div class="blog-card-content">
     <h3 class="blog-card-title">
-      <a href={`/blog/${slug}`}>{title}</a>
+      <a href={postHref(id)}>{title}</a>
     </h3>
-    
+
     <p class="blog-card-description">{description}</p>
-    
+
     <div class="blog-card-meta">
       <span class="blog-card-date">
-        📅 {formattedDate}
+        <time datetime={new Date(publishDate).toISOString()}>{formattedDate}</time>
       </span>
-      <span class="blog-card-author">
-        ✍️ {author}
-      </span>
+      <span class="blog-card-author">{author}</span>
     </div>
-    
-    {tags && tags.length > 0 && (
+
+    {canonicalTags.length > 0 && (
       <div class="blog-card-tags">
-        {tags.map(tag => (
-          <a href={`/blog?tag=${tag}`} class="blog-tag">{tag}</a>
+        {canonicalTags.map(tag => (
+          <a href={tagHref(tag)} class="blog-tag">{getTagMeta(tag).label}</a>
         ))}
       </div>
     )}

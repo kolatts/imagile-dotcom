@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import BlogPostCard from '../../../components/blog/BlogPostCard.astro';
+import { tagsIndexHref } from '../../../lib/paths';
+import { getCanonicalTags, getTagMeta, MIN_INDEXABLE_TAG_COUNT } from '../../../lib/tags';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', (entry) => !entry.data.draft);
+
+  const byTag = new Map<string, typeof allPosts>();
+  for (const post of allPosts) {
+    for (const tag of getCanonicalTags(post.data.tags)) {
+      const existing = byTag.get(tag) ?? [];
+      existing.push(post);
+      byTag.set(tag, existing);
+    }
+  }
+
+  return Array.from(byTag.entries()).map(([tag, posts]) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts.sort(
+        (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+      ),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const meta = getTagMeta(tag);
+const noindex = posts.length < MIN_INDEXABLE_TAG_COUNT;
+---
+
+<Layout
+  title={`${meta.label} - Imagile Blog`}
+  description={meta.description}
+  noindex={noindex}
+>
+  <Header />
+  <main>
+    <section class="blog-header">
+      <div class="container">
+        <p class="blog-tag-eyebrow"><a href={tagsIndexHref}>All Tags</a></p>
+        <h1 class="blog-title">{meta.label}</h1>
+        <p class="blog-subtitle">{meta.description}</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="blog-grid">
+        {posts.map(post => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            publishDate={post.data.publishDate}
+            author={post.data.author}
+            tags={post.data.tags}
+            id={post.id}
+            image={post.data.image}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  @import '../../../styles/blog.css';
+
+  .blog-tag-eyebrow {
+    margin-bottom: var(--space-sm);
+  }
+
+  .blog-tag-eyebrow a {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+  }
+</style>

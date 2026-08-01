@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import BlogPostCard from '../../../components/blog/BlogPostCard.astro';
+import Pagination from '../../../components/blog/Pagination.astro';
+import { BLOG_PAGE_SIZE } from '../../../lib/paths';
+
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection('blog', (entry) => !entry.data.draft)).sort(
+    (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+  );
+
+  // Page 1 lives at /blog itself -- drop it here so we don't emit a duplicate
+  // /blog/page/1/ route that only paths.ts knows to avoid linking to.
+  return paginate(posts, { pageSize: BLOG_PAGE_SIZE }).filter(
+    (result) => result.params.page !== '1'
+  );
+}
+
+const { page } = Astro.props;
+---
+
+<Layout
+  title={`Blog - Page ${page.currentPage} - Imagile`}
+  description="AI training, .NET and Azure delivery, and startup technology coaching -- written by the people doing the work."
+>
+  <Header />
+  <main>
+    <section class="blog-header">
+      <div class="container">
+        <h1 class="blog-title">Blog</h1>
+        <p class="blog-subtitle">Page {page.currentPage} of {page.lastPage}</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="blog-grid">
+        {page.data.map(post => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            publishDate={post.data.publishDate}
+            author={post.data.author}
+            tags={post.data.tags}
+            id={post.id}
+            image={post.data.image}
+          />
+        ))}
+      </div>
+
+      <Pagination currentPage={page.currentPage} totalPages={page.lastPage} />
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  @import '../../../styles/blog.css';
+</style>

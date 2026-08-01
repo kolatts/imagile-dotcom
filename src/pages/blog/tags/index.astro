@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { tagHref } from '../../../lib/paths';
+import { getCanonicalTags, getTagMeta } from '../../../lib/tags';
+
+const allPosts = await getCollection('blog', (entry) => !entry.data.draft);
+
+const counts = new Map<string, number>();
+for (const post of allPosts) {
+  for (const tag of getCanonicalTags(post.data.tags)) {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+}
+
+const tags = Array.from(counts.entries())
+  .map(([tag, count]) => ({ tag, count, meta: getTagMeta(tag) }))
+  .sort((a, b) => b.count - a.count || a.meta.label.localeCompare(b.meta.label));
+---
+
+<Layout
+  title="All Tags - Imagile Blog"
+  description="Every topic covered on the Imagile blog, from AI fluency to Azure architecture to startup technology decisions."
+>
+  <Header />
+  <main>
+    <section class="blog-header">
+      <div class="container">
+        <h1 class="blog-title">All Tags</h1>
+        <p class="blog-subtitle">Every topic covered on the blog.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <ul class="tag-index">
+        {tags.map(({ tag, count, meta }) => (
+          <li>
+            <a href={tagHref(tag)} class="tag-index-link">
+              <span class="tag-index-label">{meta.label}</span>
+              <span class="tag-index-count">{count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  @import '../../../styles/blog.css';
+
+  .tag-index {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    padding: var(--space-lg) 0;
+  }
+
+  .tag-index-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--color-bg-medium);
+    border: 2px solid var(--color-bg-light);
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+  }
+
+  .tag-index-link:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .tag-index-count {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+</style>

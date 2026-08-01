@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Page Not Found - Imagile"
+  description="That page doesn't exist. Head back to Imagile or check out the blog."
+>
+  <Header />
+  <main>
+    <section class="not-found container">
+      <p class="not-found-code">404</p>
+      <h1>That page doesn't exist.</h1>
+      <p>The link might be old, or you typed something wrong. Either way, it's not here.</p>
+      <div class="not-found-actions">
+        <a href="/" class="btn">Back to Home</a>
+        <a href="/blog" class="btn btn-secondary">Read the Blog</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .not-found {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 140px;
+    padding-bottom: var(--space-xl);
+  }
+
+  .not-found-code {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 10vw, 6rem);
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: var(--space-sm);
+  }
+
+  .not-found-actions {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-md);
+  }
+</style>

@@ -2,6 +2,8 @@
 import Layout from './Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { tagHref } from '../lib/paths';
+import { getCanonicalTags, getTagMeta } from '../lib/tags';
 
 interface Props {
   frontmatter: {
@@ -12,23 +14,25 @@ interface Props {
     tags: string[];
     image?: string;
   };
+  readingTime: number;
 }
 
-const { frontmatter } = Astro.props;
+const { frontmatter, readingTime } = Astro.props;
 
-// Format date
 const formattedDate = new Date(frontmatter.publishDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 });
 
-// Calculate reading time (rough estimate: 200 words per minute)
-const content = await Astro.slots.render('default');
-const words = content.split(/\s+/).length;
-const readingTime = Math.ceil(words / 200);
+const canonicalTags = getCanonicalTags(frontmatter.tags ?? []);
 
-// Prepare article metadata for SEO
+// Posts about AI training / fluency cross-link the Beyond Boring program page.
+// Zero MDX churn required — it applies automatically based on tags.
+const showBeyondBoringPanel = canonicalTags.some(tag =>
+  ['developer-training', 'ai-training'].includes(tag)
+);
+
 const articleMeta = {
   publishedTime: new Date(frontmatter.publishDate).toISOString(),
   author: frontmatter.author,
@@ -36,8 +40,8 @@ const articleMeta = {
 };
 ---
 
-<Layout 
-  title={frontmatter.title} 
+<Layout
+  title={frontmatter.title}
   description={frontmatter.description}
   image={frontmatter.image}
   article={articleMeta}
@@ -45,25 +49,25 @@ const articleMeta = {
   <Header />
   <main>
     <article class="blog-post">
-      <a href="/blog" class="back-to-blog">
-        ← Back to Blog
+      <a href="/blog/" class="back-to-blog">
+        &larr; Back to Blog
       </a>
-      
+
       <header class="blog-post-header">
         <h1 class="blog-post-title">{frontmatter.title}</h1>
-        
+
         <div class="blog-post-meta">
-          <span>📅 {formattedDate}</span>
-          <span>✍️ {frontmatter.author}</span>
-          <span>⏱️ {readingTime} min read</span>
+          <time datetime={new Date(frontmatter.publishDate).toISOString()}>{formattedDate}</time>
+          <span>{frontmatter.author}</span>
+          <span>{readingTime} min read</span>
         </div>
-        
+
         <p class="blog-post-description">{frontmatter.description}</p>
-        
-        {frontmatter.tags && frontmatter.tags.length > 0 && (
+
+        {canonicalTags.length > 0 && (
           <div class="blog-post-tags">
-            {frontmatter.tags.map(tag => (
-              <a href={`/blog?tag=${tag}`} class="blog-tag">{tag}</a>
+            {canonicalTags.map(tag => (
+              <a href={tagHref(tag)} class="blog-tag">{getTagMeta(tag).label}</a>
             ))}
           </div>
         )}
@@ -72,6 +76,16 @@ const articleMeta = {
       <div class="blog-post-content">
         <slot />
       </div>
+
+      {showBeyondBoringPanel && (
+        <aside class="related-program">
+          <p class="related-program-eyebrow">Related program</p>
+          <p>
+            If this is the kind of thing you want your whole team fluent in, that's what
+            <a href="/beyond-boring/">Beyond Boring</a> is for.
+          </p>
+        </aside>
+      )}
     </article>
   </main>
   <Footer />
@@ -79,4 +93,24 @@ const articleMeta = {
 
 <style>
   @import '../styles/blog.css';
+
+  .related-program {
+    max-width: 800px;
+    margin: var(--space-lg) auto 0;
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--color-bg-light);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .related-program-eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .related-program p:last-child {
+    margin-bottom: 0;
+  }
 </style>

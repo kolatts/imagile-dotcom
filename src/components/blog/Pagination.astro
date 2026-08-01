@@ -1,0 +1,34 @@
+---
+import { blogPageHref } from '../../lib/paths';
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Blog pagination">
+    {currentPage > 1 ? (
+      <a href={blogPageHref(currentPage - 1)} class="pagination-button">Previous</a>
+    ) : (
+      <span class="pagination-button disabled" aria-disabled="true">Previous</span>
+    )}
+
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      page === currentPage ? (
+        <span class="pagination-button active" aria-current="page">{page}</span>
+      ) : (
+        <a href={blogPageHref(page)} class="pagination-button">{page}</a>
+      )
+    ))}
+
+    {currentPage < totalPages ? (
+      <a href={blogPageHref(currentPage + 1)} class="pagination-button">Next</a>
+    ) : (
+      <span class="pagination-button disabled" aria-disabled="true">Next</span>
+    )}
+  </nav>
+)}
