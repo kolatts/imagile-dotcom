@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/ui/Section.astro';
+
+const pillars = [
+  {
+    id: 'ai-training',
+    eyebrow: 'Pillar 01 -- Flagship',
+    title: 'AI Training & Transformation',
+    what: 'Real AI fluency for your organization -- not tool demos, not a course-completion certificate. We teach the four behaviors that separate someone who uses AI from someone who is fluent in it: delegation, description, discernment, and diligence. Delivered as workshops, embedded coaching, or through Beyond Boring, our own gamified training platform.',
+    who: 'Engineering orgs rolling out AI tooling who want their people to actually get better at it, not just get access to it. Also a fit for non-technical teams who need a working mental model of what these tools can and can\'t do.',
+    get: [
+      'A fluency baseline for your team, assessed rather than assumed',
+      'Hands-on workshops built around your actual codebase and workflows',
+      'Optional ongoing access to Beyond Boring for self-paced, assessed learning',
+      'A report on where your org is strong and where it isn\'t -- no padding',
+    ],
+    how: 'Starts with a short assessment conversation. Most engagements run 2-6 weeks depending on scope, with a mix of live sessions and asynchronous material. We\'ll tell you upfront if a training program isn\'t what you actually need.',
+  },
+  {
+    id: 'dotnet-azure',
+    eyebrow: 'Pillar 02',
+    title: '.NET + Azure Engineering',
+    what: 'Senior-only delivery on the stack we trust: .NET, Azure, and the boring infrastructure choices that keep systems running. We build new systems and take over systems that need to actually ship.',
+    who: 'Teams that need production-grade delivery without the overhead of staffing a full team, and teams stuck on a system nobody wants to touch.',
+    get: [
+      'Architecture and delivery from engineers who write the code, not just review it',
+      'No handoffs between "the architects" and "the implementers" -- one team, start to finish',
+      'Honest scoping, including telling you when the ask is bigger than it looks',
+      'Systems built to be handed off cleanly when the engagement ends',
+    ],
+    how: 'We scope against a specific outcome and a delivery date, not a vague retainer. Engagements are typically weeks, not quarters. We\'ll say plainly if your timeline doesn\'t match your scope.',
+  },
+  {
+    id: 'startup-coaching',
+    eyebrow: 'Pillar 03',
+    title: 'Startup Technology Coaching',
+    what: 'Fractional CTO-level advisory for founders making technology decisions they can\'t afford to get wrong twice: stack choices, hiring, build-vs-buy, and how much process is actually load-bearing at your size.',
+    who: 'Early-stage founders without a technical co-founder, or technical founders who want a second, more experienced opinion before a decision gets expensive to reverse.',
+    get: [
+      'A standing advisory relationship, not a one-off consulting report',
+      'Direct opinions on scope, timeline, and technical approach',
+      'Help hiring your first engineers, and help evaluating the ones you have',
+      'Someone who has watched a lot of early-stage technical decisions go wrong, and can tell you which pattern you\'re about to repeat',
+    ],
+    how: 'Usually a monthly cadence with async access in between. No minimum commitment beyond the first month -- if it\'s not useful, we\'ll say so.',
+  },
+];
+---
+
+<Layout
+  title="Services - Imagile"
+  description="AI training and transformation, .NET and Azure engineering, and startup technology coaching. Three ways to work with a small firm of senior engineers."
+>
+  <Header />
+  <main id="main">
+    <Section eyebrow="Services" title="Three ways we work with you" lead="Pick the one that matches what you actually need. If none of them do, tell us -- we'd rather say we're not the right fit than force one." />
+
+    {pillars.map(pillar => (
+      <Section id={pillar.id} tone="panel">
+        <p class="eyebrow">{pillar.eyebrow}</p>
+        <h2>{pillar.title}</h2>
+
+        <div class="pillar-detail">
+          <div class="pillar-block">
+            <h3>What it is</h3>
+            <p>{pillar.what}</p>
+          </div>
+          <div class="pillar-block">
+            <h3>Who it's for</h3>
+            <p>{pillar.who}</p>
+          </div>
+          <div class="pillar-block">
+            <h3>What you get</h3>
+            <ul>
+              {pillar.get.map(item => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="pillar-block">
+            <h3>How the engagement runs</h3>
+            <p>{pillar.how}</p>
+          </div>
+        </div>
+
+        <a href="/contact" class="btn" data-track={`Services_${pillar.id}_CTA`}>Talk to us about {pillar.title}</a>
+      </Section>
+    ))}
+
+    <Section tone="panel" align="center">
+      <p class="lead">Not sure which one fits?</p>
+      <a href="/contact" class="btn" data-track="Services_NotSure_CTA">Just tell us what you're working on</a>
+    </Section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .pillar-detail {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg) var(--space-lg);
+    margin: var(--space-lg) 0;
+    max-width: 1000px;
+  }
+
+  .pillar-block h3 {
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .pillar-block p,
+  .pillar-block li {
+    color: var(--color-text-secondary);
+  }
+
+  .pillar-block ul {
+    padding-left: 1.25rem;
+  }
+
+  .pillar-block li {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .pillar-detail {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+  }
+</style>

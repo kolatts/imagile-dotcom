@@ -1,0 +1,235 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/ui/Section.astro';
+import { site } from '../lib/site';
+
+const faqs = [
+  {
+    q: 'Is this the same as buying seats in an LMS?',
+    a: 'No. An LMS tracks course completion. Beyond Boring assesses you -- adversarially, through characters designed to catch the difference between "watched the video" and "can actually do this." Assessment belongs to characters, not a question bank.',
+  },
+  {
+    q: 'What does an org actually get?',
+    a: 'A shared org code, individual logins for every employee, a fixed curriculum taught by an AI character named Brilliant, and assessment by a cast of bureaucrat characters -- each one training a specific real skill under a costume.',
+  },
+  {
+    q: 'How long does a module take?',
+    a: 'About 30 minutes per module, untimed, with unlimited retries. Your best score is the one that counts.',
+  },
+  {
+    q: "Do you customize it to our codebase or tools?",
+    a: 'The core curriculum is fixed -- that\'s what keeps it honest and comparable across an org. Workshops booked alongside it (see AI Training & Transformation) are where we get specific to your stack.',
+  },
+];
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(faq => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a },
+  })),
+};
+---
+
+<Layout
+  title="Beyond Boring - Imagile"
+  description="Brilliant teaches. The bureaucracy assesses. Beyond Boring is a gamified AI-fluency training platform for organizations, built by Imagile."
+  meshIntensity="full"
+>
+  <Header />
+  <main id="main">
+    <Section eyebrow="Program" title="Beyond Boring">
+      <p class="lead bb-hero-lead">Brilliant teaches. The bureaucracy assesses.</p>
+      <p class="bb-status">Currently in private rollout with pilot organizations.</p>
+      <div class="bb-hero-actions">
+        <a href="/contact" class="btn" data-track="BB_Hero_Contact">Talk to Us About a Rollout</a>
+        <a href={site.beyondBoringUrl} class="btn-text" target="_blank" rel="noopener noreferrer" data-track="BB_Hero_Outbound">
+          Visit beyond-boring.com &rarr;
+        </a>
+      </div>
+    </Section>
+
+    <Section tone="panel" eyebrow="Why it exists" title="Training programs go obsolete before they finish">
+      <p>
+        We already argued this in
+        <a href="/blog/ai-training-costs-not-worth-it">Your AI Training Program Is Already Obsolete</a>:
+        by the time a cohort finishes a conventional AI training program, the tools it covered have moved on.
+        Beyond Boring is what we built instead of writing that complaint again -- a platform that assesses
+        real capability rather than course completion, and that we can keep current because we own it.
+      </p>
+    </Section>
+
+    <Section eyebrow="How it works" title="Not an LMS wearing a costume">
+      <div class="bb-how-grid">
+        <div class="bb-how-card">
+          <h3>Brilliant teaches</h3>
+          <p>Every module is narrated by an AI character genuinely delighted to explain how these systems work -- next-token prediction, context windows, tool use, the whole mental model.</p>
+        </div>
+        <div class="bb-how-card">
+          <h3>The bureaucracy assesses</h3>
+          <p>You don't pass a quiz. You obtain approval from a cast of bureaucrat characters, each with a bespoke assessment mechanic that doubles as a real skill: catching drift, reviewing confident-sounding output, deciding what to delegate.</p>
+        </div>
+        <div class="bb-how-card">
+          <h3>The glossary is public</h3>
+          <p>Core terms are deep-linkable and free to read, no login required -- a real reference, not a locked-down sales asset.</p>
+        </div>
+      </div>
+    </Section>
+
+    <Section tone="panel" eyebrow="Rollout" title="What an org rollout looks like">
+      <ol class="bb-steps">
+        <li><strong>Talk to us.</strong> A short call to understand your org size and what you're hoping fluency looks like on the other side.</li>
+        <li><strong>We seed your org code.</strong> Every employee gets a shared code and sets up their own login -- no individual onboarding required from you.</li>
+        <li><strong>Your team goes through the curriculum.</strong> Self-paced, roughly 30 minutes per module, unlimited retries.</li>
+        <li><strong>You get a fluency picture, not a completion report.</strong> We can tell you where your org is actually capable, not just where it clicked "next."</li>
+      </ol>
+    </Section>
+
+    <Section eyebrow="Fit" title="Who it's for -- and who it isn't">
+      <div class="bb-fit-grid">
+        <div>
+          <h3>A good fit if</h3>
+          <ul>
+            <li>Your org is rolling out AI tooling and wants people to actually be good at it</li>
+            <li>You want a fluency signal you can trust, not a licenses-issued count</li>
+            <li>Your team includes non-technical people who need a real mental model, not just developers</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Probably not a fit if</h3>
+          <ul>
+            <li>You want a compliance checkbox, not a capability change</li>
+            <li>You need the curriculum customized to your internal tools before day one</li>
+            <li>You're looking for a one-time workshop, not a standing program</li>
+          </ul>
+        </div>
+      </div>
+    </Section>
+
+    <Section tone="panel" eyebrow="FAQ" title="Questions">
+      <div class="bb-faq">
+        {faqs.map(faq => (
+          <details>
+            <summary>{faq.q}</summary>
+            <p>{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </Section>
+
+    <Section align="center">
+      <a href="/contact" class="btn" data-track="BB_Bottom_Contact">Talk to Us About a Rollout</a>
+    </Section>
+  </main>
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+</Layout>
+
+<style>
+  .bb-hero-lead {
+    margin-bottom: var(--space-sm);
+  }
+
+  .bb-status {
+    color: var(--color-text-tertiary);
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .bb-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .bb-how-grid,
+  .bb-fit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .bb-fit-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .bb-how-card h3,
+  .bb-fit-grid h3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .bb-how-card p {
+    color: var(--color-text-secondary);
+  }
+
+  .bb-fit-grid ul {
+    padding-left: 1.25rem;
+  }
+
+  .bb-fit-grid li {
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .bb-steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    max-width: 700px;
+  }
+
+  .bb-steps li {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-secondary);
+  }
+
+  .bb-steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-display);
+    color: var(--color-primary);
+  }
+
+  .bb-steps strong {
+    color: var(--color-text-primary);
+  }
+
+  .bb-faq {
+    max-width: 780px;
+  }
+
+  .bb-faq details {
+    border-bottom: 1px solid var(--hairline);
+    padding: 1.25rem 0;
+  }
+
+  .bb-faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .bb-faq p {
+    margin-top: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 900px) {
+    .bb-how-grid,
+    .bb-fit-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

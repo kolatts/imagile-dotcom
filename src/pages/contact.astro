@@ -1,0 +1,212 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/ui/Section.astro';
+import { site } from '../lib/site';
+---
+
+<Layout
+  title="Contact - Imagile"
+  description="Tell us what you're working on. We'll tell you honestly whether we're the right fit."
+>
+  <Header />
+  <main id="main">
+    <Section eyebrow="Contact" title="Tell us what you're working on">
+      <p class="lead contact-lead">
+        A few sentences about what you're building, where you're stuck, or what you want your team
+        to be fluent in. We read every one of these ourselves.
+      </p>
+
+      <noscript>
+        <p class="contact-noscript">
+          This form needs JavaScript to submit safely. Email us directly instead at
+          <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+        </p>
+      </noscript>
+
+      <form id="contact-form" class="contact-form">
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required autocomplete="name" />
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+        </div>
+
+        <div class="form-row">
+          <label for="company">Company <span class="optional">(optional)</span></label>
+          <input type="text" id="company" name="company" autocomplete="organization" />
+        </div>
+
+        <div class="form-row">
+          <label for="interest">What are you interested in? <span class="optional">(optional)</span></label>
+          <select id="interest" name="interest">
+            <option value="">Not sure yet</option>
+            <option value="ai-training">AI Training & Transformation</option>
+            <option value="dotnet-azure">.NET + Azure Engineering</option>
+            <option value="startup-coaching">Startup Technology Coaching</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+
+        <!-- Honeypot: hidden from real visitors, invisible to screen readers,
+             but present in the DOM for bots that fill every field blindly. -->
+        <div class="honeypot" aria-hidden="true">
+          <label for="website-url">Leave this field blank</label>
+          <input type="text" id="website-url" name="websiteUrl" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey}></div>
+
+        <button type="submit" class="btn" id="contact-submit">Send</button>
+
+        <p id="contact-status" class="contact-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="contact-fallback">
+        Prefer email? Reach us directly at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    </Section>
+  </main>
+  <Footer />
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</Layout>
+
+<script define:vars={{ intakeUrl: site.intakeUrl }}>
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('contact-status');
+  const submitButton = document.getElementById('contact-submit');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitButton.disabled = true;
+    status.textContent = 'Sending...';
+
+    const data = new FormData(form);
+    const turnstileToken = data.get('cf-turnstile-response') ?? '';
+
+    const payload = {
+      name: data.get('name'),
+      email: data.get('email'),
+      company: data.get('company'),
+      interest: data.get('interest'),
+      message: data.get('message'),
+      turnstileToken,
+      sourceUrl: window.location.href,
+      websiteUrl: data.get('websiteUrl'),
+    };
+
+    try {
+      const response = await fetch(intakeUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        status.textContent = "Sent. We'll get back to you soon.";
+        form.reset();
+        if (window.turnstile) {
+          window.turnstile.reset();
+        }
+      } else {
+        const problem = await response.json().catch(() => null);
+        status.textContent = problem?.detail
+          ? `Couldn't send: ${problem.detail}`
+          : "Something went wrong. Please email us directly instead.";
+      }
+    } catch {
+      status.textContent = "Couldn't reach the server. Please email us directly instead.";
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .contact-lead {
+    margin-bottom: var(--space-lg);
+    max-width: 600px;
+  }
+
+  .contact-noscript {
+    background: var(--color-bg-medium);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .contact-form {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-row label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .optional {
+    color: var(--color-text-quaternary);
+  }
+
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    background: var(--color-bg-medium);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+
+  .form-row input:focus,
+  .form-row select:focus,
+  .form-row textarea:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 1px;
+    border-color: var(--color-secondary);
+  }
+
+  /* Honeypot: visually hidden, but not display:none (some bots skip that). */
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-status {
+    min-height: 1.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .contact-fallback {
+    margin-top: var(--space-lg);
+    color: var(--color-text-tertiary);
+    font-size: 0.9375rem;
+  }
+</style>

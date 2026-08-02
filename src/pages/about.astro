@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/ui/Section.astro';
+---
+
+<Layout
+  title="About - Imagile"
+  description="Why Imagile exists, how we work, and why we default to Azure and .NET."
+>
+  <Header />
+  <main id="main">
+    <Section eyebrow="About" title="Why Imagile exists">
+      <p class="lead about-lead">
+        I spent over a decade in enterprise software. Good companies, smart people, complicated systems.
+        What I kept bumping into was the distance -- between the people writing the software and the people
+        whose problems it was supposed to solve.
+      </p>
+      <p>
+        Big organizations are good at many things. Working directly with clients on hard problems isn't
+        usually one of them. So I started Imagile. The pitch isn't complicated: a small, expert team that
+        works directly with clients to build software that actually works. No layers. No handoffs to three
+        other departments. Just us and the problem.
+      </p>
+    </Section>
+
+    <Section tone="panel" eyebrow="How we work" title="Operating principles">
+      <div class="principles-grid">
+        <div>
+          <h3>Senior-only, always</h3>
+          <p>Every engagement is staffed by the people who actually do the work. No account managers relaying requirements badly, no junior handoffs.</p>
+        </div>
+        <div>
+          <h3>Opinionated, on purpose</h3>
+          <p>We have a stack we trust and a way we build. We'll tell you when we think an approach is wrong -- that's part of what you're paying for.</p>
+        </div>
+        <div>
+          <h3>Small, deliberately</h3>
+          <p>We stay small enough that nothing gets lost between what a client asked for and what actually ships.</p>
+        </div>
+      </div>
+    </Section>
+
+    <Section eyebrow="Stack" title="Why we default to Azure and .NET">
+      <p>
+        Performance, a real talent pool, and secretless authentication. We wrote the full argument in
+        <a href="/blog/why-we-use-azure-and-dotnet">Azure and .NET: The Boring Stack That Wins</a> --
+        it's a default, not a dogma, but it's the default for almost every client project.
+      </p>
+    </Section>
+
+    <Section align="center" tone="panel">
+      <a href="/contact" class="btn" data-track="About_CTA">Start a Conversation</a>
+    </Section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .about-lead {
+    margin-bottom: var(--space-md);
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .principles-grid h3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .principles-grid p {
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 900px) {
+    .principles-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+  }
+</style>
