@@ -8,11 +8,23 @@ export default defineConfig({
   build: {
     assets: 'assets'
   },
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  },
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark'
+    }
+  },
   integrations: [
     mdx(),
     sitemap({
       // Mockups are dev-only design review pages and must never be indexed.
-      // Thin tag pages get excluded here too once src/lib/tags.ts lands (Phase 1/6).
+      // Thin tag pages (<2 posts) are handled by a per-page noindex meta tag
+      // instead of a sitemap exclusion -- search engines are explicit that a
+      // noindexed URL in a sitemap is fine, and duplicating the tag-count
+      // logic here would mean maintaining it in two places.
       filter: (page) => !page.includes('/mockups/')
     })
   ]
