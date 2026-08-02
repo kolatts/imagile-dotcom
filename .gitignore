@@ -5,6 +5,13 @@ dist/
 # local verification scratch output
 .playwright-cli/
 
+# raw, full-res image-generation output -- prompt.md stays tracked for
+# reproducibility, but the source renders are large (~2MB each) and only
+# the processed derivative under src/assets/ actually ships
+.claude/image-generation/**/*.png
+.claude/image-generation/**/*.jpg
+.claude/image-generation/**/*.webp
+
 # dependencies
 node_modules/
 

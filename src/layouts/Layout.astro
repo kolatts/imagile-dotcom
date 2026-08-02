@@ -2,6 +2,7 @@
 import { canonical } from '../lib/seo';
 import { site } from '../lib/site';
 import MeshBackground from '../components/ui/MeshBackground.astro';
+import defaultOgImage from '../assets/og/_default.jpg';
 import '@fontsource/archivo-black';
 import '@fontsource-variable/work-sans';
 import '@fontsource-variable/fraunces/wonk-italic.css';
@@ -23,8 +24,7 @@ interface Props {
 const {
   title,
   description = 'Imagile is an AI consulting firm: AI training and transformation, .NET and Azure software delivery, and technology coaching for startups.',
-  // TODO(Phase 5): swap for a templated default OG card; logo-splash.png is a 731KB PNG slated for deletion.
-  image = '/logo-splash.png',
+  image = defaultOgImage.src,
   noindex = false,
   meshIntensity = 'quiet',
   article
@@ -70,8 +70,7 @@ const canonicalURL = canonical(Astro.url.pathname);
     <!-- Icons -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate icon" href="/favicon.png" type="image/png" />
-    <!-- TODO(Phase 5): swap to /apple-touch-icon.png once generated; logo-icon.png is slated for deletion -->
-    <link rel="apple-touch-icon" href="/logo-icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <title>{title}</title>
 
@@ -93,7 +92,7 @@ const canonicalURL = canonical(Astro.url.pathname);
           "name": "Imagile",
           "logo": {
             "@type": "ImageObject",
-            "url": new URL('/logo-icon.png', Astro.site)
+            "url": new URL('/apple-touch-icon.png', Astro.site)
           }
         },
         "keywords": article.tags.join(', '),
@@ -109,7 +108,7 @@ const canonicalURL = canonical(Astro.url.pathname);
         "@type": "Organization",
         "name": site.name,
         "url": site.url,
-        "logo": new URL('/logo-icon.png', Astro.site),
+        "logo": new URL('/apple-touch-icon.png', Astro.site),
         "sameAs": [site.linkedInUrl]
       })} />
     )}
