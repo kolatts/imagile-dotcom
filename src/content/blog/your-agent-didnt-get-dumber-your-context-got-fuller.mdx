@@ -1,0 +1,47 @@
+---
+title: "Your Agent Didn't Get Dumber. Your Context Got Fuller."
+description: "Recall doesn't fall off a cliff when the context window fills up. It degrades smoothly, well before that, and compaction resets the token counter without resetting the degradation."
+publishDate: 2026-06-11
+author: "Sunny Kolattukudy"
+tags: ["ai", "context-management", "claude-code", "agentic-ai", "llm"]
+---
+
+The complaint arrives in the same words almost every time. "It was following our conventions perfectly an hour ago." Something changed, and the obvious suspect is the model — it got tired, it got confused, it got worse.
+
+It didn't. What changed is how much the model is carrying, and recall against that load doesn't hold steady until some capacity limit and then collapse. It erodes the entire time, quietly, well before anything looks full.
+
+## Nothing Announces the Decline
+
+This is the part that makes it hard to debug in the moment. There's no error, no warning, no visible threshold you cross. A session that started sharp — clean adherence to your conventions, accurate recall of a decision made ten minutes earlier — slowly stops being sharp, and the slope is gradual enough that nobody notices the exact turn.
+
+Ask the two questions that actually explain it, every time: how many files has this session read since it started, and how many correction attempts have already failed. Both numbers climb together, and recall falls as they do — not because a limit got hit, but because attention is a finite resource being spent on everything currently held, not just the part that matters right now.
+
+## Compaction Resets the Counter, Not the Fall
+
+Here's the counterintuitive part, and it's the reason "just let it compact and keep going" is worse advice than it sounds. When a session's context window fills, the harness compresses the older parts into a summary, freeing up token space. The token count drops. It looks like a fresh start.
+
+It isn't one. The token counter resets. Recall accuracy does not — a session running at reduced fidelity after two failed correction attempts is still running at reduced fidelity after compaction, because compaction summarizes what was said, not what was understood. You get more room in the jar. You don't get the sharpness back. Only a genuinely new session does that, and that distinction — reset tokens versus reset recall — is the one most teams never learn, because the token count is the only number the interface actually shows them.
+
+## Curation Is the Entire Job
+
+If recall degrades in proportion to what's being carried, then the discipline isn't "avoid filling the window." It's "keep the working set small on purpose, continuously, for the whole session" — which is a different and much less intuitive habit than watching a progress bar.
+
+The instinct most engineers bring from every other tool they've used is to front-load context, because more information has always been safer than less. It's backwards here. The goal is the smallest set of high-signal tokens that make the correct outcome likely — not the largest set that might conceivably be relevant. Every file read that didn't need reading, every stale sub-task left sitting in the transcript, every tangent the agent chased and didn't need, is spending attention that a sharper, narrower session would have kept in reserve for the thing that actually mattered.
+
+## Fetch Just in Time, Not Just in Case
+
+The practical version of that discipline is preferring retrieval at the moment of need over loading everything up front. A file path fetched when the task actually touches it costs less than the same file loaded speculatively at session start on the chance it becomes relevant. Folder structure itself is signal worth preserving rather than flattening — `tests/test_utils.py` tells a reader, human or model, something that the same file sitting directly under `src/core_logic/` does not.
+
+None of this is exotic. It's the same instinct that makes a well-organized codebase easier for a new hire to navigate than a flat directory of two hundred files with descriptive names. The difference is that an agent pays for the disorganization in real time, every turn, in degraded recall instead of a slower afternoon.
+
+## Mise en Place, Not Improvisation
+
+The single analogy that's earned its place here is a kitchen one, because it's the only domain I know where "prepare everything before you need it, and no more than you need" is already a professional discipline with a name.
+
+Restaurants don't chop onions during service. Everything is staged before the ticket arrives — that's the entire reason a well-run kitchen looks effortless from the dining room, and it's not because the cooking got easier. It's because the chopping happened somewhere else, in advance, out of the way of the moment that actually needed speed. A CLAUDE.md, a well-scoped skill, a spec written before the session starts — those are the prep station. Skip that step and you're chopping onions mid-service, improvising structure while the clock is running, and that's also roughly how the onions end up in the dessert.
+
+## An Unattended Run Needs a Curator, Not Just a Task
+
+This matters most exactly where it's least visible: a long, unattended agent run with no one watching the middle of it. No context engineering and no verification checkpoint along the way isn't autonomy. It's an unwatched process with a full working set and nobody managing what's actually in it — which is precisely how the wrong module gets confidently refactored at three in the morning, with a polite, well-formatted pull request opened about it by the time anyone checks.
+
+The fix was never a bigger context window. Every model generation that's shipped a larger one has shipped the same degradation curve at a larger scale, just with more room before anyone notices it start. The fix is fewer things held at once, curated deliberately, for the entire length of the session — the same discipline a good kitchen already had figured out, long before anyone needed to explain it to a model.

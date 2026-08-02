@@ -1,0 +1,43 @@
+---
+title: "You're Not Re-Litigating the Plan. You Changed the Spec."
+description: "Teams argue about the same decision three files into implementation because nobody labeled which document was supposed to hold still and which one was always going to change."
+publishDate: 2026-07-09
+author: "Sunny Kolattukudy"
+tags: ["product-engineering", "engineering-principles", "startups", "agentic-ai"]
+---
+
+The argument always sounds like the same argument. Someone says "wait, I thought we agreed on this," and someone else says "we did, this is that, just implemented differently," and the meeting spends twenty minutes figuring out whether anyone actually changed their mind.
+
+Usually nobody did. Two different documents got treated as one, and only one of them was ever supposed to hold still.
+
+## One Feature, Two Documents
+
+Take rate limiting on a public API. The spec says: clients making more than a hundred requests a minute get a 429 with a `Retry-After` header; clients under that threshold notice nothing. That's it. That's the whole spec — what the system does and why, stated once, and it exists because one integration partner was hammering `/search` hard enough to degrade it for everyone else.
+
+The plan says: middleware, Redis counters keyed by client ID, a test asserting the 429 fires at request 101, staged behind a flag before it goes live for everyone. That's how, not what — and on Tuesday the plan changed to in-memory counters instead of Redis, because Redis was overkill for the actual traffic volume.
+
+The spec didn't move. Nobody re-litigated anything. The plan did exactly what plans are for.
+
+## The Plan Is Supposed to Get Rewritten
+
+A plan is disposable by design — it's a document you're allowed to argue with, discard, and rebuild the moment reality disagrees with it, and none of that is a failure of the original planning. The spec is the opposite: durable, revisited rarely, and revised only when the actual requirement changes, not when the approach to meeting it does.
+
+Most of the friction I've watched teams generate comes from treating both documents as equally sacred, or worse, as the same document. When "the plan" is the only thing written down, changing the implementation approach looks indistinguishable from changing the requirement, and every legitimate technical pivot turns into a conversation that sounds like backpedaling.
+
+## A Vague Ticket Just Moves the Discovery
+
+A ticket that skips the spec — jumps straight to "add rate limiting" with no stated threshold, no stated behavior, no stated reason — doesn't make the work smaller. It just relocates the missing decision to a more expensive place to make it: interactively, mid-implementation, either by a human improvising an answer under time pressure or by an agent guessing one without knowing it's guessing.
+
+Every one of those guesses is a decision that should have been made once, in the spec, by someone who could see the whole picture. Deferring it doesn't remove the decision. It just makes sure it gets made by whoever's holding the ticket when the ambiguity finally becomes unavoidable.
+
+## Plan in the Repo, Spec Where the Non-Builders Look
+
+The practical fix is almost entirely about where each document lives, not how either one is written. A plan belongs next to the code — a markdown file in the repo, disposable, versioned alongside the implementation it describes, gone or rewritten the moment the approach changes. A spec belongs somewhere the people who aren't writing code can actually find it: a ticket, a one-pager, a doc that survives the implementation being rewritten twice.
+
+Once they're in different places, the confusion mostly resolves itself. Nobody re-litigates a plan that's clearly marked as scratch work. Nobody treats a spec as up for debate every sprint, because it's sitting somewhere that signals it's the stable one.
+
+## What an Agent Can and Can't Write for You
+
+An agent will genuinely help you write a good plan — decomposing the how, catching an edge case, drafting the middleware structure before you've thought through all of it yourself. It cannot write the spec, and this isn't a capability gap that improves with a better model.
+
+A spec is a record of what humans actually expect, and there is no way to infer that from the codebase alone. Someone has to say it out loud — the threshold, the reason, the tradeoff that made a hundred requests a minute the right number instead of fifty. Skip that step and the agent will happily plan its way toward the wrong target, extremely efficiently, with a beautifully structured implementation of a requirement nobody actually stated.

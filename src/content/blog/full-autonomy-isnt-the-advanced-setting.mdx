@@ -1,0 +1,35 @@
+---
+title: "Full Autonomy Isn't the Advanced Setting"
+description: "Chatbot, human-in-the-loop, agentic workflow, autonomous agent are four positions you pick per task -- not four rungs on a ladder. Even the vendors selling autonomy say don't default to it."
+publishDate: 2026-06-22
+author: "Sunny Kolattukudy"
+tags: ["ai", "agentic-ai", "engineering-principles", "developer-tools"]
+---
+
+There are, at any given moment, a handful of teams with "Agent Platform" somewhere on their org chart. I have yet to find one where what's actually running meets a real definition of autonomous — unattended, making its own decisions about what to do next, no human in the loop while it happens. What's usually running is a chatbot with one tool call, described in the press release as agentic because the industry quietly redefined the word to mean "a model did something."
+
+That's a naming problem, and it's also a symptom of a bigger one: a lot of engineering orgs have decided that full autonomy is the advanced tier, the place you graduate to once you've proven yourself with the simpler modes. It isn't. It's one position on a spectrum, chosen per task, and treating it as the destination is how you end up with an unattended process and nobody assigned to notice when it's wrong.
+
+## Four Positions, Picked Per Task
+
+A chatbot is a conversation with no hands — it answers, and a human acts on the answer in whatever system the model can't touch. Human-in-the-loop means a person is present for the session, watching, able to interrupt, even when most of the routine steps clear without asking. Presence is the definition, not how many prompts got a manual click.
+
+An agentic workflow runs on a fixed, pre-designed path — triggered by a cron schedule, a pull request, a filed issue — with a model reasoning at every stop along that path, which is why it's nothing like a shell script running on a timer even though the trigger looks similar. An autonomous agent is the model deciding its own steps as it goes, unattended, with nobody in the room while it happens. None of the four is more advanced than the others. Each is suited to a different shape of task, and the same engineer reasonably uses all four in the same week.
+
+## The Vendors Are Telling You Not To
+
+This is the detail that should carry more weight than it does. The companies with the clearest financial incentive to sell you on running everything at full autonomy are, in their own documentation, telling you to start with the simplest approach that works and add complexity only when it demonstrably earns its place — up to and including not building an agentic system at all for a task that doesn't need one.
+
+That's not a company being modest about its own product. It's an acknowledgment that autonomy has a real failure mode, and the people who understand that failure mode best are the ones who built the thing.
+
+## Human-in-the-Loop Is Where You Learn What It's Bad At
+
+The mode most teams skip past too quickly is the one that actually teaches you where an agent fails on your specific codebase, your specific conventions, your specific edge cases. Presence during a session — watching it work, available to interrupt, not necessarily clicking through every step — is how you build a real model of its blind spots instead of a guessed one.
+
+Skip straight to unattended runs and you learn about those blind spots from an incident instead of an observation. The lesson arrives the same either way. One version is a lot cheaper.
+
+## Unattended Is Not the Same as Autonomous
+
+Here's the sentence worth sitting with: autonomy without a verification step attached isn't autonomy, it's an unattended process — a system running with nobody assigned to notice when it's confidently wrong. Verify is the one phase that never fully hands itself over as you move toward the autonomous end of the spectrum, and skipping it doesn't grant you speed. It grants you a process that fails silently until someone eventually checks, which is a worse failure mode than the one it replaced.
+
+Think of the four positions the way you'd think about arithmetic and calculus. Calculus isn't better math that replaces the rest — it's a specialized tool for a specific class of problem, sitting on top of arithmetic you still use every single day. Nobody derivates the grocery bill. Human-in-the-loop is the arithmetic here: foundational, used constantly, not a phase you graduate out of. Skip ahead to the advanced tool for a task that didn't need it, and the advanced tool doesn't make you advanced. It makes your mistakes advanced, running unattended, at whatever speed the automation was sold on.

@@ -1,0 +1,45 @@
+---
+title: "One Queue and One Function App Replaced Three Years of Architecture"
+description: "Event Hubs, several Function Apps, an API, webjobs, and a queue -- to move some data. I replaced it with one queue and one function app. The complexity wasn't for the problem. It was for the builder."
+publishDate: 2026-06-28
+author: "Sunny Kolattukudy"
+tags: ["architecture", "azure", "dotnet", "engineering-principles"]
+---
+
+The system moved data from one place to another. That's the whole job. Here's what it took to do it: Azure Event Hubs, several Function Apps, a dedicated API, a set of webjobs, and a queue for good measure. Three years old. Built in isolation by a small group who called themselves the architects, with no observability, no logging, and no documentation current enough to trust.
+
+When it finally needed to change, nobody who still worked there could explain what half of it was for.
+
+## Five Moving Parts, One Job
+
+I rewrote it as one queue and one function app. Same job. Fewer places for it to fail, and — the part that actually mattered — a system where you could look at it running and know what it was doing.
+
+I want to be precise about what I'm not saying. I'm not saying Event Hubs is bad, or that Function Apps are overkill, or that any one piece of that stack was individually wrong. Every one of those services has a real use case it's good at. The problem was never the parts. It was that five of them got assembled to do a job that fit in one.
+
+## Complexity Built for the Builder
+
+Here's the tell I've learned to watch for, and it's not architectural — it's postural. Over-engineering that happens by accident looks different from over-engineering that happens on purpose, and you can usually tell which one you're looking at by asking who benefits from the complexity.
+
+A system with five moving parts for a one-part job isn't usually a mistake. It's usually a portfolio. Event Hubs on a resume reads better than "a queue." A distributed system of Function Apps reads better than "a function." The complexity wasn't serving the data. It was serving whoever got to say they built a distributed system.
+
+## Nobody Could Tell What It Was Doing
+
+The concrete cost showed up as silence. No logging meant a failure produced no signal — the pipeline just stopped moving data, and someone downstream noticed a report was missing days later. No observability meant nobody could say, at any given moment, which of the five parts was the bottleneck, or whether the system was healthy at all.
+
+I've never seen a five-part system fail loudly. I've only ever seen them fail quietly, for a while, until someone finally goes looking and finds out how long "a while" actually was.
+
+## The Architects Were Never There When the Bill Came Due
+
+What made this genuinely maddening wasn't the complexity. Complexity happens. What made it maddening was the posture that came with it — dismissive when questioned, certain the design was self-evidently correct, entirely unaccountable for the outcome three years later.
+
+The people who built it had moved on to other things long before anyone had to live with the consequences. That's not a coincidence, and it's not unique to this one system. The engineers who question an overbuilt design early — the ones who ask "why five services for this" in the design review — get told they don't understand the scale requirements. The engineers who inherit it later don't get a design review. They get an incident.
+
+That asymmetry is the actual cost of premature complexity. It's not that the code is hard to read. It's that the people who wrote it were never around long enough to be humbled by it.
+
+## Earn Every Addition
+
+The rewrite wasn't a rejection of Azure's more sophisticated services. It was an application of a rule I hold to on every system I build: a queue and a function is where you start, and everything past that has to earn its place by solving a problem the simple version actually has.
+
+Does the data volume genuinely exceed what a single queue can handle? Add the second service. Does the processing genuinely need to fan out to independent consumers who can't share a trigger? Add Event Hubs. But "might need to scale someday" isn't a reason. It's a guess wearing an architecture diagram, and guesses don't debug well at 2am.
+
+The question that would have killed this system in its design review, before a single Function App got provisioned, isn't "does this scale." It's "who is going to debug this when it breaks, and can they." Nobody asked it. Three years later, I was the answer, and the answer was: barely, and only after rebuilding the thing that should never have needed five parts in the first place.

@@ -1,0 +1,35 @@
+---
+title: "Your Story Points Don't Correlate With Anything. I Checked."
+description: "I exported the Jira data and plotted point proportionality against cycle time to see whether two-point stories took twice as long as one-pointers. They didn't. There was no correlation."
+publishDate: 2026-02-05
+author: "Sunny Kolattukudy"
+tags: ["team-structure", "engineering-principles", "product-engineering", "startups"]
+---
+
+Story points, t-shirt sizes, planning poker — all of it produces a number, and the number gets treated as if it predicts something. When I was asked to produce velocity metrics for a team I was leading, I decided to actually check whether it did, instead of assuming it the way everyone upstream of me was assuming it.
+
+## The Data Either Opens It or Ends It
+
+I exported the Jira history and plotted point proportionality against actual cycle time. The specific question: do two-point stories take roughly twice as long to complete as one-point stories, on average, across enough tickets that noise shouldn't dominate the answer.
+
+They didn't. There was no meaningful correlation. A two-point story was about as likely to blow past a five-point story's actual cycle time as it was to land where the point value implied it should. The number the team had been estimating, reporting, and building velocity charts around wasn't measuring what everyone assumed it was measuring.
+
+That's the useful shape for this argument to take, generally. Either the data confirms the practice and you keep it with actual evidence behind it, or the data doesn't and you have something concrete to bring to the conversation instead of an opinion about ceremonies.
+
+## Estimate Milestones, Stop There
+
+The replacement isn't "stop estimating." It's estimating at a level where the number means something: bottom-up, at the feature or epic level, with a milestone and a rough delivery window attached. That estimate is honest about its own uncertainty in a way a five-point story never is, because nobody's pretending a milestone estimate is precise to the day.
+
+Below that level, granular estimates mostly produce the illusion of precision without the substance of it — a number confident enough to build a burndown chart on, wrong often enough that the chart was never trustworthy in the first place.
+
+## The First Stories Always Go Slower
+
+Part of why the correlation breaks down structurally, not just in this one dataset: the first few stories on any new piece of work always take longer than the estimate implies, because the engineer is still building context — reading the existing code, understanding the constraints, finding the seams. No point scale accounts for that ramp, because the ramp isn't a property of the story. It's a property of how much context existed before the story started, which varies by person, by week, by how recently anyone touched that part of the codebase.
+
+A five-point story picked up by someone who already has full context can go faster than a two-point story picked up cold. The point value was never actually estimating the work. It was estimating a guess about complexity, stripped of the one variable — context — that actually drives cycle time.
+
+## Right-Sizing Is Not Estimating
+
+The only question worth asking at the story level isn't "how long will this take." It's "is this ticket too big" — a much narrower, much more answerable question, and one that doesn't require pretending a point value predicts a duration. Right-sizing keeps work moving. Estimating dresses up a guess as a measurement and then builds a chart on top of the dress-up.
+
+If the org still needs a velocity number for a report somewhere upstream, and the org sometimes does regardless of what the data says, there's a deadpan answer that's more honest than it looks: point every story a two. Every one. In my experience, once you're already producing a metric that doesn't correlate with the thing it claims to measure, nobody downstream notices the difference — which is itself the whole argument, restated one more way.

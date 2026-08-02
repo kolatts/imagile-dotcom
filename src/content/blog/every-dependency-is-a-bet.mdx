@@ -1,0 +1,37 @@
+---
+title: "Every Dependency Is a Bet That Someone Else Keeps Caring"
+description: "The friction that used to make you think twice before adding a package is gone -- an agent adds one without hesitating. That makes an explicit policy matter more now, not less."
+publishDate: 2026-07-19
+author: "Sunny Kolattukudy"
+tags: ["dotnet", "architecture", "engineering-principles", "agentic-ai"]
+---
+
+Adding a dependency used to cost a little bit of friction — find the package, check it's maintained, run the install, wire it up. Small, but enough that most engineers paused for a second before doing it, and that pause was doing more work than anyone gave it credit for.
+
+An agent doesn't pause. It sees a gap, finds a package that fills it, and installs it, in the same breath as writing the code that uses it. The friction that used to make people think twice is gone, which means the decision it used to gate now needs an explicit policy standing in its place.
+
+## The Friction That Made You Think Twice Is Gone
+
+This isn't a complaint about agents being reckless. They're doing exactly what a fast, capable engineer would do if that engineer had never once been burned by a dependency going unmaintained mid-project. The caution was earned the hard way, over years, by people who inherited a project with forty transitive dependencies and no idea which three of them were actually load-bearing. An agent hasn't had that experience, and won't develop the instinct from it the way a person eventually does.
+
+So the instinct has to be written down instead of assumed.
+
+## A Hundred Lines Is Cheaper Than a Transitive Graph
+
+The policy, stated as three questions, asked in order, every time a new package is on the table. Can this be written in under a hundred lines, in-house, without meaningfully worse quality than the package would provide? If yes, write it — a hundred lines you own outright beats a dependency you don't, and it beats it specifically on the axis that matters most: nobody else's roadmap decisions can break it out from under you.
+
+Is there a Microsoft-supplied package that does this? If yes, prefer it — `System.Text.Json` over a third-party JSON library, `Microsoft.Extensions.Caching.Memory` over a bespoke cache, `HttpClient` over a wrapper around it. This isn't brand loyalty. It's that the support horizon on a first-party package and the support horizon on the framework itself are the same horizon, which is the only thing that actually matters four years in, long after the initial feature that motivated the choice has shipped and been forgotten.
+
+Does a third-party package solve the actual problem with a real feature advantage over both of the above? Then it's a legitimate option — offer it, and check the license. MIT and Apache 2.0 are fine defaults. LGPL and GPL are a flag worth raising before anyone merges. A commercial license needs an explicit decision by someone who can actually make that call, not an implicit one made by whoever happened to be pairing with the agent that day.
+
+## Microsoft-First Is a Support-Horizon Decision
+
+The reasoning behind the second question is worth stating plainly, because it sounds like a preference and it's actually closer to a bet placed deliberately. A first-party package ships on the same cadence as the framework it belongs to, gets security patches on the same timeline, and doesn't disappear because a maintainer moved on to something else. A random npm or NuGet package with two thousand stars and one maintainer is a bet on that person's continued interest, and continued interest is not a thing you can diligence your way into certainty about.
+
+Every dependency is that same bet, just with different odds depending on who's behind it. The policy exists to make sure the bet gets placed on purpose, at odds someone actually looked at, instead of by default because it was the first result and the friction that used to prompt a second look isn't there to prompt it anymore.
+
+## Somebody Has to Read the License
+
+The one step in this that genuinely can't be delegated to an agent without a human checking behind it is the license read. An agent will report what a license says if asked. Whether that license is acceptable for this specific product, in this specific jurisdiction, sold under this specific commercial arrangement — that's a judgment call with real legal weight behind it, and it belongs to a person who can be held accountable for making it, every time, no exceptions for the dependency that seemed too small to matter.
+
+The package added today is a maintenance obligation the team inherits and a decision the next team can't easily unwind once enough code depends on it. Making that decision out loud, against three concrete questions, is a smaller cost than discovering eighteen months from now that nobody remembers agreeing to take it on.

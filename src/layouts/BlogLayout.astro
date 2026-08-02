@@ -19,10 +19,14 @@ interface Props {
 
 const { frontmatter, readingTime } = Astro.props;
 
+// timeZone: 'UTC' avoids an off-by-one: publishDate is a date-only string,
+// which Date parses as UTC midnight -- formatting in local time can roll it
+// back a full calendar day for any timezone behind UTC.
 const formattedDate = new Date(frontmatter.publishDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
-  day: 'numeric'
+  day: 'numeric',
+  timeZone: 'UTC'
 });
 
 const canonicalTags = getCanonicalTags(frontmatter.tags ?? []);

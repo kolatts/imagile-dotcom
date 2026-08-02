@@ -1,0 +1,45 @@
+---
+title: "Your Best Engineer's Judgment Doesn't Have to Stay in Their Head"
+description: "A staff engineer's architectural instincts used to spread through 1:1s and osmosis. Skills files distribute them at the speed of a git merge -- if you stop dumping everything into one file first."
+publishDate: 2026-05-27
+author: "Sunny Kolattukudy"
+tags: ["ai", "engineering", "knowledge-transfer", "claude-code", "mentorship", "team-structure"]
+---
+
+A senior engineer's real value was never the code they personally wrote. It was the two hundred small judgment calls a week that everyone else on the team either asked them about or, more often, didn't — and shipped the wrong version anyway.
+
+That judgment used to spread one of two ways. Slowly, through 1:1s and code review comments and the engineer happening to be in the room. Or not at all, because they were in three meetings and the PR got approved without them.
+
+Skills files are the first mechanism I've seen that actually changes the distribution problem instead of just making the meetings more efficient.
+
+## The Bottleneck Was Never Mentorship
+
+Mentorship doesn't scale, and it was never supposed to. One senior engineer, one junior, one conversation at a time — that's the format, and it's a good format for what it is. The problem is treating it as your only distribution channel for institutional judgment that forty people need.
+
+A wiki page was the next attempt. Wiki pages document decisions. They don't carry judgment, because judgment is contextual — "use a repository pattern here" is a rule, but "here" is doing all the work, and a wiki page can't tell you when you're not in "here" anymore.
+
+A skill can. `Imagile.App.EntityFrameworkCore` calls out `IQueryable<TModel>` extension methods over a repository layer, and it explains *why*, tied to the specific failure mode: a `Get(int id)` repository signature is how you end up with N+1 queries, because that signature can only be called in a loop. That's not a rule copied from a wiki page. That's the instinct, written down once, applied every time someone touches that codebase — including an agent.
+
+## Context Is Not a Landfill
+
+Here's the part that makes this different from "write better documentation," which people have been telling each other to do for twenty years without it working.
+
+A context window is finite and every token in it costs money and attention. Loading your entire engineering handbook into every conversation because *some* of it might be relevant is the AI equivalent of cc'ing the whole company on every email — technically nobody's uninformed, and nobody's actually informed either.
+
+A monolithic CLAUDE.md is the landfill version. Everything goes in, nothing comes back out, and the file grows until loading it costs more attention than the task itself needs. A structured skill is the alternative: a short frontmatter description an agent reads first, and the full body only loads when the description says this skill is actually relevant to what's happening right now.
+
+That's the mechanism that makes distribution cheap. Not "write it down" — "write it down so it only loads when it's needed."
+
+## Skills Compose. Meetings Don't.
+
+The organizational case is the bigger one. A staff engineer who encodes their code review standards, their architecture instincts, and their "here's why we don't do that" reasoning into a handful of skills isn't writing documentation once. They're installing themselves into every PR review, every new-feature kickoff, every agent session on that codebase — without attending any of them.
+
+And skills stack. A task that touches data access, API design, and testing conventions can load three narrow skills at once, each one contributing exactly its slice, instead of one person trying to hold the entire mental model in a single conversation. That's not something a mentor can do in parallel. It's not something a wiki page does at all — a wiki page is read once, if you're lucky, by someone who remembered it existed.
+
+## The Mechanics Are Boring, Which Is the Point
+
+A skill is a markdown file with frontmatter, versioned in git, distributed through a marketplace repo the same way a package gets distributed. It updates when the source repo updates. Nobody schedules a training session. Nobody waits for the next all-hands to hear about the new convention — it's there the next time an agent loads it.
+
+This is not a pitch for skills as a replacement for mentorship. The parts of mentoring that are about a person's growth, their career, their specific blind spots — that's still a conversation, and it should stay one. What skills replace is the part of senior engineering that was never actually personal: the accumulated judgment about *this* codebase, *this* stack, *this* set of hard-won mistakes. That part was always meant to be shared. It just didn't have a distribution mechanism cheap enough to use constantly.
+
+Now it does. The question worth asking isn't whether your best engineer's knowledge is written down somewhere. It's whether it's written down in a shape that loads only when it's needed — or in a shape that just sits there, technically available, functionally landfill.

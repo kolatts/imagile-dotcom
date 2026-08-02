@@ -1,0 +1,35 @@
+---
+title: "Extract a Service for One of Three Reasons. 'Might Need To' Isn't One."
+description: "A module boundary is right when it could deploy independently, not when it does. Extraction is a cost paid immediately for a property you may never exercise -- so it needs a real reason, not a guess."
+publishDate: 2026-06-05
+author: "Sunny Kolattukudy"
+tags: ["architecture", "dotnet", "azure", "engineering-principles"]
+---
+
+Most service extractions I've reviewed happen for a reason nobody can actually state out loud once you ask directly. "It might need to scale independently someday" is the most common answer, and it's not really an answer — it's a guess dressed up as an architectural decision, paid for immediately in exchange for a property that may never get exercised.
+
+There are exactly three reasons that hold up when you push on them.
+
+## The Boundary Comes First, the Deployment Later
+
+A module boundary is right the moment it *could* deploy independently — clean interfaces, no shared mutable state reaching across it, ownership clear enough that one team can change it without coordinating with another. Whether it actually gets extracted into its own service is a separate, later decision, and conflating the two is where most premature extractions come from.
+
+Independent deployability is a property you design for. It costs almost nothing to design for and a great deal to walk back once you've extracted a service around a boundary that wasn't actually ready — network calls where a function call used to be, a deployment pipeline where a build step used to be, an entire category of distributed-systems failure modes that didn't exist an hour earlier.
+
+## Three Reasons That Justify a Service
+
+A genuinely distinct load profile — one part of the system needs to scale independently of the rest, not hypothetically but measurably, right now. Separate team ownership — a different team owns this code and needs to ship it without coordinating releases with everyone else touching the monolith. An independent deploy cadence that has to move on its own schedule — compliance-driven, contractually obligated, not merely convenient.
+
+Any one of those, on its own, is enough. "It's getting big" isn't on the list, and neither is "the codebase feels messy" — both of those are usually solved by better module boundaries inside the thing you already have, not by drawing a network call between two halves of it.
+
+## "Services" Is Not a Domain
+
+The clearest tell that a boundary was drawn for the wrong reason is what it's named. A module called `Services`, or `Repositories`, or `Handlers` is named after a technical layer, not a concept a person outside engineering would recognize — and a boundary drawn along a technical layer instead of a domain concept tends to need constant cross-cutting changes, because most real features touch more than one layer at once.
+
+The second tell is behavioral rather than structural: two teams that keep needing to touch the same files despite a boundary that's supposed to separate their ownership. That's not a coordination problem to manage with more process. It's a boundary drawn in the wrong place, and the fix is redrawing it, not scheduling more syncs between the teams stuck straddling it.
+
+## Small Team, Low Communication Cost, No Extraction
+
+For a small team — the size where everyone already talks to everyone daily, where a Slack message reaches the right person in minutes — the communication cost that extraction is meant to reduce basically doesn't exist yet. Extracting a service at that size buys you the failure modes of a distributed system in exchange for solving a coordination problem you don't currently have.
+
+The default I hold to, and the one worth defaulting to on almost any new system: a modular monolith first, with well-drawn internal boundaries from day one, and services extracted one at a time, each with a specific, statable reason. Late is right. The cost of staying a well-organized monolith too long is refactoring. The cost of extracting too early is a distributed system you now have to operate, for a scaling problem that, on measurement, turned out not to be real.

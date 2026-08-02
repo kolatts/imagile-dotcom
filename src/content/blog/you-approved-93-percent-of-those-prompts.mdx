@@ -1,0 +1,41 @@
+---
+title: "You Approved 93% of Those Prompts and Read Maybe Four"
+description: "Anthropic's own telemetry says users approve roughly 93% of permission prompts, and attention drops as the count rises. The fix isn't reading harder. It's a reflex for three shapes."
+publishDate: 2026-07-04
+author: "Sunny Kolattukudy"
+tags: ["ai", "security", "claude-code", "developer-tools", "agentic-ai"]
+---
+
+Anthropic's own telemetry on this is blunt: users approve roughly 93% of permission prompts. The more prompts a session generates, the less attention each one gets. By the twentieth prompt of the day, most people are clicking the same button they clicked on the first nineteen, without reading what changed.
+
+The instinct is to blame the user for not reading carefully enough. That's the wrong diagnosis, and it leads to the wrong fix.
+
+## The Prompt Is for the Seventh Percent
+
+Permission prompts were never designed to be read individually, in full, every time — that model breaks the moment volume gets high enough, and it gets high fast in any real agentic workflow. The actual job of the prompt is narrower: make sure the rare, genuinely dangerous request has to walk past a human on its way out the door.
+
+That reframes the goal. You don't need to read all six hundred prompts a busy week generates. You need a reflex sharp enough to notice the one in six hundred that doesn't belong — which is a different skill than vigilance, and a much more learnable one.
+
+## Three Shapes, Not Six Hundred Commands
+
+The reflex worth building isn't "carefully evaluate every command." It's pattern recognition for three specific shapes that deserve a second look every time, regardless of how routine the session has felt so far: anything deleting outside the project's own directory, anything touching credentials or secrets, and any script pulled from the internet that hasn't been read.
+
+Almost everything else — reading a file, running a test, making a commit — is routine in a way that's genuinely fine to approve quickly. The failure mode isn't approving too much. It's approving those three shapes with the same unexamined reflex as everything else, because they arrived wearing the same UI as the boring stuff.
+
+## "Allow Every Time" Grants Requests You Haven't Seen
+
+The detail that catches people is what "allow every time" actually promises. It's not a one-time approval. It's a standing grant against every future request matching that pattern — including ones that don't exist yet at the moment you click it.
+
+`rm -rf node_modules` allowed broadly on a Tuesday is the same standing permission that covers `rm -rf src` on Thursday, if the pattern was scoped to the command rather than the specific argument. The rule that actually holds up: never allowlist a pattern broader than the exact request in front of you. If the next one needs a wider grant, it gets its own prompt, and its own decision.
+
+## Ask the Window That Doesn't Want the Task Finished
+
+When a prompt doesn't parse — genuinely unclear what it's asking, or why — the move isn't to guess and it isn't to reflexively deny either. It's to open a second window, paste the [permission request](https://beyond-boring.com/glossary/permission-request), and ask a second model with no stake in the outcome whether it's safe.
+
+That second opinion costs nothing and takes seconds, and it's structurally more trustworthy than the agent's own justification for its own request. The agent proposing a command has a completion goal. It is, by construction, the worst available judge of whether that command is the safe way to reach it.
+
+## The Goal Was Never a Perfect Read Rate
+
+Ninety-three percent approved isn't a discipline failure to fix with more willpower. It's what happens at volume, for anyone, and the fix that actually holds is structural rather than personal: fewer standing grants, tighter pattern scoping, and a reflex for three specific shapes instead of an impossible commitment to read everything carefully forever.
+
+The rare prompt that matters was always going to arrive looking exactly like the six hundred that didn't. The only real defense is making sure something — a habit, a second window, a narrower allowlist — is still paying attention by the time it shows up.

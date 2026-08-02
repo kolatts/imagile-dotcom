@@ -1,0 +1,57 @@
+---
+title: "Before You Touch AI Tooling, Fix Your Floor"
+description: "AI agents can't navigate README lies, broken setups, or undocumented environments. The engineering baseline you skipped is now the reason your agent can't function."
+publishDate: 2026-05-20
+author: "Sunny Kolattukudy"
+tags: ["ai", "devops", "engineering-culture", "dora"]
+---
+
+The teams that are actually shipping with AI agents share something in common. It's not the prompt engineering. It's not which model they're using.
+
+Their infrastructure was already boring before the agents arrived.
+
+## The Floor You Keep Skipping
+
+There's a set of engineering capabilities that the industry treats as aspirational and DORA researchers have been calling table stakes since 2014. Automated deployment. Seedable, reproducible test environments. A local setup that starts with one command and succeeds every time.
+
+These weren't optional when onboarding a human. They were just optional enough that you got away without them. A new engineer could read the README, Slack someone for the missing environment variable, wait a day, and eventually get unstuck.
+
+An AI agent cannot wait a day. It cannot Slack anyone. When the setup fails, the agent fails — cleanly, immediately, and without the workaround.
+
+## DORA Was Always Telling You Something
+
+The four DORA metrics — deployment frequency, lead time for changes, change failure rate, time to restore service — get cited in conference talks about engineering velocity and then quietly ignored when it's time to actually invest in the underlying capability.
+
+DORA wasn't measuring what high-performing teams achieve. It was measuring what they build first. The teams at the top of those charts didn't get there by measuring themselves. They got there by fixing deployment before it was urgent, by seeding test databases before someone's laptop was the only copy of real data, by making local setup reproducible before it became a quarterly emergency.
+
+That baseline made them fast. Now it makes them AI-ready. The teams that skipped it are discovering the gap differently than they expected.
+
+## The README Lies
+
+Every engineering organization has a README with aspirations. "Run `make dev` to start the application." "Database seeds are included." "Deployment is handled by CI."
+
+The README is not wrong. It describes what someone intended when they wrote it, or what works on one specific machine, or what would be true if the last three steps had actually been documented.
+
+The AI doesn't care about intent. It runs `make dev`, reads the error, tries to fix it, reads the next error, and either spirals into hours of unproductive environment debugging or stops and tells you the setup is broken. Either outcome is a waste.
+
+Human engineers navigate README lies through institutional knowledge, Slack, and stubbornness. Agents navigate them by failing in ways that are harder to explain to a stakeholder.
+
+## What the Floor Actually Requires
+
+One-command local setup means running one command on a clean machine and getting a working environment in under ten minutes. Not "mostly working." Not "working if you also installed these five things." Working.
+
+Seedable databases means a script that loads your database with representative, deterministic test data. Every time, same result. No dependency on production data exports. No manual SQL living in a Confluence page someone last edited in 2022.
+
+Automated deployment means pushing to a branch triggers a pipeline that runs tests and either ships or fails — without anyone touching a server. The agent needs to validate its own work. Without CI/CD, that validation requires a human in the loop, and the loop breaks.
+
+These aren't novel ideas. They're the first three things DORA researchers have been pointing at for over a decade.
+
+## The Debt You Thought You Could Defer
+
+Before agents, a broken floor cost you onboarding time. A few days for each new hire, recurring hours every time a dependency changed. Painful, survivable. Teams adapted.
+
+An agent doesn't adapt. It either runs in a working environment or it doesn't run at all. The same debt that cost you three days of onboarding now costs you the entire capability of the agent. The ROI on that AI tooling investment goes to zero when the environment it operates in wasn't built to be reproducible.
+
+The engineers who've actually shipped with AI — not demo'd it, shipped it — say the same thing when you ask what unlocked it. They fixed infrastructure that had nothing to do with AI. Boring work that should have been done years earlier. They just finally had a reason.
+
+Fix the floor. The agents will follow.

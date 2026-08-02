@@ -1,0 +1,33 @@
+---
+title: "You're Paying 15x for Parallelism You Didn't Need"
+description: "A subagent returns roughly 30:1 compression on your attention. Multi-agent work runs at roughly 15x the tokens of a single chat. Both numbers are real, and only one of them is optional."
+publishDate: 2026-07-23
+author: "Sunny Kolattukudy"
+tags: ["ai", "agentic-ai", "context-management", "llm", "developer-tools"]
+---
+
+Delegating to a subagent is a trade, and most teams are making it without noticing they made a choice at all. It's a trade of attention for money, and both sides of that trade are real numbers, not vibes.
+
+## Thirty to One, on Attention
+
+A subagent can spend fifty thousand tokens exploring a codebase — reading files, running searches, chasing dead ends that don't pan out — and hand back a summary landing around fifteen hundred to two thousand tokens. That's roughly thirty to one compression between what it spent doing the work and what the orchestrator actually has to hold in its own context.
+
+That compression is the entire reason delegation is worth doing at all. It's the same reason a manager delegates a task instead of doing it personally — not to save the employee's time, but to protect the manager's attention, which is the genuinely scarce resource in that relationship. The subagent does the reading, the searching, the false starts. The orchestrator reads a report instead of a transcript.
+
+## Fifteen Times, on Money
+
+Here's the side of the trade that gets left out of the pitch. Multi-agent work — a real fan-out across several subagents working a problem from different angles — runs at roughly fifteen times the token cost of a single chat interaction. A normal single-agent session runs around four times a plain chat. Multi-agent isn't a modest premium over that. It's a genuinely different cost tier.
+
+That's not a criticism of the approach. It's the price of admission, and it's worth paying exactly when the task decomposes into directions that are actually independent of each other.
+
+## Fan-Out Only Works If the Branches Are Independent
+
+This is where the trade goes wrong in practice. If subagent B needs subagent A's findings before it can meaningfully start, running them in parallel doesn't buy you the parallelism you paid for — it buys you serial execution, at the token cost of parallel execution, which is the worst version of both bills arriving at once.
+
+The check worth running before fanning out: could each branch actually start immediately with the information available right now, or is one secretly waiting on another? If it's waiting, it's not a fan-out. It's a sequence with extra steps and a bigger invoice.
+
+## Pick the Scarce Resource on Purpose
+
+The decision that actually matters isn't "should I delegate." It's which resource you're short on for this specific task. Short on your own attention, with a task that genuinely splits into independent directions — pay the fifteen times and get the thirty-to-one compression back, because that's the trade doing exactly what it's for. Short on budget, or working a task that doesn't actually decompose — a single well-scoped session, or one subagent instead of five, is the cheaper and often faster path to the same answer.
+
+Model tier and effort level are two more dials wired to the same bill, and they deserve the same deliberateness. Letting either one default — always reaching for the strongest model, always maxing out the effort setting — isn't a shortcut. It's an invoice that arrives later, itemized, for a decision nobody remembers consciously making.

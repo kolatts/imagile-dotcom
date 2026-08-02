@@ -14,10 +14,12 @@ interface Props {
 
 const { title, description, publishDate, author, tags, id, image } = Astro.props;
 
+// timeZone: 'UTC' avoids an off-by-one day shift -- see BlogLayout.astro.
 const formattedDate = new Date(publishDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
-  day: 'numeric'
+  day: 'numeric',
+  timeZone: 'UTC'
 });
 
 const canonicalTags = getCanonicalTags(tags ?? []);

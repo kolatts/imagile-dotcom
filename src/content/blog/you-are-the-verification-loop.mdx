@@ -1,0 +1,63 @@
+---
+title: "You Are the Verification Loop Whether You Signed Up or Not"
+description: "Research, plan, and implement hand over to an agent cleanly. Verification doesn't. Unless you build something that takes the job, it lands on your most expensive person by default."
+publishDate: 2026-05-24
+author: "Sunny Kolattukudy"
+tags: ["ai", "agentic-ai", "engineering-principles", "developer-tools"]
+---
+
+Watch what actually moves when a team adopts agentic coding, and it's not what the pitch decks describe.
+
+Research moves first. An agent reads faster than any human, holds more of the codebase in view at once, and doesn't get tired of grepping. Planning moves next — decent agents produce a genuinely useful implementation plan, and a senior engineer editing one is faster than writing one from nothing. Implementation follows close behind, because typing was never the bottleneck anyone thought it was.
+
+Then there's verification. It doesn't move. It just quietly becomes someone's entire job.
+
+## Three Phases Hand Over Cleanly. The Fourth Doesn't
+
+This isn't a complaint about the tools. It's a structural fact about what an agent actually is: a system that stops when the output *looks* correct, not when it *is* correct. Nothing in that loop checks its own homework unless you built the checking in advance.
+
+Every team I've watched adopt this well made the same discovery in the same order. Delegating research felt safe immediately — worst case, the summary is incomplete, and you notice. Delegating planning felt safe within a week — a bad plan is obviously bad, and you catch it before a single line changes. Delegating implementation felt safe once the first two were solid.
+
+Verification never got its "felt safe" moment. It just accumulated onto whoever was already the most careful reader on the team, because nobody had explicitly assigned it anywhere else.
+
+## "Looks Done" Is the Only Signal It Has
+
+Here's the part that's easy to miss: an agent isn't being lazy or cutting corners when it declares a task complete after code that merely runs without erroring. It has no other information to work with. Tests passed, or there were no tests to fail. The diff resembles the ask. Nothing screamed. By every signal available to it, the task is done.
+
+Polish makes this worse, not better. The more coherent an agent's output looks — clean formatting, sensible variable names, a changelog entry it wrote for itself — the less anyone, human or agent, feels compelled to check it. That's backwards. Polish is a formatting signal. It has never once been a correctness signal, and treating it as one is exactly how a beautifully-written function that queries the database in a loop ships to production with a thumbs-up emoji in the PR.
+
+## Every "The Agent Got It Wrong" Complaint I've Heard Was a Missing Check
+
+Not a missing model. Not a prompting failure. A missing check.
+
+I've sat in enough of these debriefs to notice the pattern holds without exception. Someone describes an agent that "hallucinated an API," and the actual cause is no type check existed that would have caught the made-up method name before it shipped. Someone describes an agent that "broke the auth flow," and the actual cause is no auth-specific test existed in the suite at all — human engineers had been manually clicking through the login page for two years. Someone describes an agent that "missed an edge case," and the edge case in question had never once been written down anywhere the agent could have found it.
+
+In every case, a smarter model wouldn't have helped. The gap wasn't intelligence. It was that nothing in the loop was capable of returning a *fail*.
+
+## A Check Is Anything That Says Pass or Fail
+
+This is a lower bar than "comprehensive test suite," and that's deliberate. A check is any mechanism that returns a clear, binary verdict the agent can read and act on without a human in the loop. A type system that refuses to compile. A linter that flags the exact line. An end-to-end test that fails with a stack trace instead of a green checkmark it never earned.
+
+The spell-check analogy is the cleanest way I've found to say this out loud. Spell-check didn't replace writers, and nobody ever claimed it would. What it replaced was the question "did anyone proofread this?" — because now something always has, even if imperfectly, even before a human ever opens the document. A red squiggly line under a typo is a check. It's not comprehensive. It's not intelligent. It is, however, always running, and that's worth more than a smarter model with nothing running at all.
+
+Agentic coding needs the equivalent at every layer, and most teams have it at zero layers. No type safety strict enough to catch a wrong assumption. No lint rule enforcing the pattern the codebase actually depends on. No end-to-end test touching the flow that actually makes the product money.
+
+## The E2E Suite You Skipped Is Now the Expensive One
+
+This is the bill arriving late. Every team that treated end-to-end tests as a nice-to-have — slow to write, slower to run, always the first thing cut when a deadline got tight — is now discovering that the same tests were the one thing standing between "agent shipped a feature" and "agent shipped a feature that silently breaks checkout for users on Safari."
+
+The debt didn't change shape. It changed who pays it. Before agents, a missing E2E suite cost you a human QA cycle, painful but bounded. Now it costs you the entire premise of unattended delegation, because there is nothing left to notice the regression before a customer does.
+
+## Narrated Verification Is Not Verification
+
+The most common failure mode I see isn't teams skipping verification entirely. It's teams asking the agent to *describe* what it verified, and treating the description as the verification. "I ran the tests and they passed" is not evidence unless something outside the agent's own narration confirms it. An agent summarizing its own work is not a second opinion. It's the same opinion, formatted as a report.
+
+Real verification runs independently of the thing being verified — a CI pipeline the agent doesn't control the outcome of, a test suite it can't edit to make pass, a human who actually reads the diff instead of reading the summary of the diff. The moment verification and implementation share an author, you've built a system that can lie to itself convincingly, which is worse than a system that can't verify at all — at least the second one is honest about the gap.
+
+## The Fix Isn't a Smarter Agent
+
+It's building something the agent can fail against, before you hand it the keys. That's a genuinely different investment than the one most "AI transformation" budgets are pointed at. It's not a better prompt library. It's the unglamorous work of writing the test that was always supposed to exist, adding the type constraint that was always technically optional, wiring CI to actually block a merge instead of just commenting on it.
+
+The day you do that, something changes that no amount of model upgrades will match: "did anyone verify this?" stops being a question anyone has to ask, because the answer is already sitting in a log somewhere, pass or fail, independent of whoever's watching.
+
+Until then, you're the verification loop. Not because you signed up for it. Because nothing else in the system was built to take the job.

@@ -1,0 +1,38 @@
+---
+title: "Your Repository Layer Causes the Problem It Was Supposed to Prevent"
+description: "A Get(int id) repository signature can only be called in a loop. The real conversation isn't about the pattern -- it's about the difference between objectively wrong and merely preferred."
+publishDate: 2026-03-22
+author: "Sunny Kolattukudy"
+tags: ["dotnet", "architecture", "engineering-principles", "engineering"]
+---
+
+An N+1 query is objectively wrong. Nobody argues about it in code review — you show the generated SQL, count the round trips, and the conversation is over in a minute. A repository layer over EF Core is a preference. People argue about that one for years, on the same teams, without resolving it.
+
+The interesting part is that the second thing regularly causes the first, and almost nobody notices the connection while it's happening.
+
+## DbSet Is Already a Repository
+
+EF Core's `DbSet<T>` is already the abstraction people reach for a repository to provide — a queryable collection with change tracking, already decoupled from the raw ADO.NET underneath it. Wrapping it in another interface doesn't add abstraction. It adds a second layer between the query you're writing and the query that actually runs, and that gap is exactly where the N+1 gets born.
+
+## The Signature Is the Bug
+
+Here's the mechanism, concretely. A repository interface built around `Get(int id)` — fetch one entity, return it, done — can only be called one way when you need several: in a loop. Call it once per ID in a list of orders and you've generated one query per order instead of one query for the whole batch, and the interface itself is what forced that shape. It wasn't a mistake made while writing the loop. It was a mistake made when the interface was designed, months earlier, by someone who never saw this call site.
+
+This is the conversation worth having in review, and it's more useful than "please don't use repositories." It's objectively true that the N+1 is wrong. It is a defensible position that the pattern generating it deserves to be questioned, specifically because of that connection — not as a style preference, but as a mechanism with a real, traceable cost.
+
+## Compose Late, Execute Once
+
+The alternative that actually avoids this: extension methods over `IQueryable<TEntity>` that project into `IQueryable<TModel>`, composed at the call site and executed once, as late as possible.
+
+```csharp
+public static IQueryable<OrderSummary> ProjectToSummary(this IQueryable<Order> orders) =>
+    orders.Select(o => new OrderSummary(o.Id, o.CustomerName, o.Total));
+```
+
+Filtering, sorting, and paging all compose on top of that before anything executes — one query, shaped by everything the caller actually needed, instead of one query per row because the interface never gave the caller a way to ask for more than one row at a time.
+
+## You Should Be Able to Say Why the Pattern Exists
+
+None of this is an argument that every pattern needs re-litigating on every PR. Staying on an established pattern is frequently the right call — consistency has real value, and a codebase that argues about its own conventions every sprint ships slower than one that just picks something and moves on.
+
+But you should be able to answer why the pattern exists when someone asks, in terms of the actual problem it solves. "We've always done it this way" isn't an answer. Neither is "it's more testable" when the untested alternative composes just as cleanly. If nobody on the team can say what a repository layer over EF Core is protecting you from — and in most codebases I've reviewed, nobody can, because EF Core already provides the thing it's allegedly protecting you from — the pattern doesn't deserve defending. It deserves removing, carefully, one N+1 query at a time.

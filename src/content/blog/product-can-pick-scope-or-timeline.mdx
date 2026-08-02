@@ -1,0 +1,35 @@
+---
+title: "Product Can Pick Scope or Timeline. Not Both, and Never the Approach."
+description: "The negotiation everyone gets backwards: product asking for scope, timeline, and a faster technical approach. Concede the third one and you're funding a second migration later."
+publishDate: 2026-07-29
+author: "Sunny Kolattukudy"
+tags: ["product-engineering", "team-structure", "architecture", "migration", "startups"]
+---
+
+The negotiation that goes wrong follows a predictable shape. Product asks for a feature, a date, and — implicitly, sometimes explicitly — a say in how it gets built, usually in the form of "can we just do the fast version." Two of those three are legitimately product's to own. The third was never on the table, and conceding it is how a team ends up owing a second migration a year later to pay for the first one's shortcuts.
+
+## Three Levers, You Get One
+
+Scope and timeline trade against each other directly — less scope, sooner; more scope, later — and that tradeoff is product's to make, because it's product's job to know what the business actually needs by when. The technical approach isn't a third lever on the same dial. It's a separate decision, owned by engineering, about how to reach whichever scope-and-timeline combination product picked.
+
+The negotiations that go badly are the ones where "can we ship the fast version" gets treated as equivalent to "can we ship less of it" — a scope conversation wearing a technical-approach costume. They're not the same ask, and answering the technical one as if it were the scope one is how corners get cut without anyone officially deciding to cut them.
+
+## Bundle the Debt Into the Thing They Actually Want
+
+The move that avoids the negotiation entirely, most of the time: find the version of the ask that pays down existing debt while delivering the feature, and let the feature fund the cleanup instead of asking for cleanup as its own line item nobody wants to prioritize.
+
+The pattern I've used most: an old AngularJS and .NET Framework app, product wants a substantial new feature, and instead of building it inside the legacy stack — the version that would ship fast and get slower to touch with every future feature — build it in a modern facade, Angular and current .NET, layered in front of the legacy app. The new feature ships in the modern stack. Nothing about the legacy app has to move yet. Functionality migrates over incrementally, one feature at a time, each one funded because each one was already getting built anyway.
+
+## The Facade Ships Value on Day One
+
+This isn't a proposal to slow the roadmap down for a rewrite nobody asked for. It's the opposite — the facade approach ships the requested feature on a normal timeline, in the modern stack, and the migration happens as a side effect of continuing to build features instead of as a separate initiative competing for the same calendar.
+
+Product gets what they asked for on the date they asked for it. Engineering gets a system that's incrementally less legacy after every feature instead of more legacy, which is what happens by default when every new feature gets bolted onto the stack everyone already agrees is a problem.
+
+## "How Do We Get There Faster" Is a Different Question Than "Where Do We Cut"
+
+The honest version of this conversation, said out loud instead of implied: product can absolutely ask "how do we ship this faster." That's a legitimate question, and sometimes the honest answer is scope reduction — fewer edge cases handled at launch, a simpler version that covers the common case and defers the rest.
+
+What product can't productively ask is "build it the fast, cheap way instead" — because that's not a scope question with an honest tradeoff attached. It's the technical-approach lever again, relabeled, and the actual cost of granting it doesn't show up on this quarter's roadmap. It shows up eighteen months later, as the reason the codebase can't absorb the next feature without another negotiation just like this one.
+
+Ignoring technical debt and lift-and-shifting around it are the same decision in different clothes — both defer the bill, both add interest while they wait, and both eventually land back in a room having the same negotiation, except now with less runway to solve it in.

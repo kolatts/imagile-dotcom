@@ -1,0 +1,41 @@
+---
+title: "An Agent Can Change Forty Files in Ninety Seconds"
+description: "Your commit history stopped being something you personally wrote. Binary search across forty commits resolves in about six answers. Reading every diff doesn't scale the same way."
+publishDate: 2026-05-31
+author: "Sunny Kolattukudy"
+tags: ["ai", "git", "engineering", "developer-tools", "agentic-ai"]
+---
+
+Git was always sold as version control, and most engineers used maybe a third of what that actually means. Commit, push, the occasional revert when something obviously broke. That was enough, because the person changing the code was the same person who'd remember what they changed and why.
+
+That assumption is gone. An agent can touch forty files in the time it takes to read this sentence, made by something that has no memory of yesterday's session and no instinct for which of those forty changes was the risky one.
+
+## Your History Is No Longer Autobiographical
+
+A commit history used to be a diary you could half-remember without reading it — you knew roughly what happened because you were the one who made it happen. That's no longer true when a meaningful share of the changes were generated, reviewed quickly, and merged without the same depth of personal recall a human author would have.
+
+The gap between volume of change and personal knowledge of that change is exactly the gap a recorded history exists to close. Most people were taught Git as bookkeeping. Under delegation, it's closer to a time machine — the tool you reach for specifically because you can no longer trust memory to do the job.
+
+## Two Commits Around Every Run
+
+The habit worth building is small and mechanical: commit before turning an agent loose on a task, and commit again once you've actually checked its work. Not because either commit is beautiful — because it means every agent-driven change sits between two states you can trust, and reverting to either one is a single command instead of an archaeology project.
+
+Skip this and a bad session doesn't cost you the session. It costs you the last known-good state, because there's no longer a clean boundary between "before the agent touched this" and "whatever happened after."
+
+## The Summary Is a Claim. The Diff Is Evidence.
+
+An agent's account of what it did is testimony, not proof — a claim about the work, delivered with the same fluent confidence whether the work was right or not. The diff is the only thing in the loop that can't lie about itself. It shows exactly what changed, and reading it is the one step that doesn't depend on trusting the summary that came with it.
+
+This is the same discipline good code review always demanded, just applied with less patience for skipping it. Reading the receipt instead of the sales pitch was always the job. It's just that the pitch used to be a coworker who'd feel bad about oversimplifying, and now it's a summary with no stake in whether you actually check.
+
+## Six Answers, Forty Commits
+
+The payoff shows up when something breaks and nobody's sure when. Binary search across history — checking the midpoint, narrowing by half, repeating — resolves forty commits of suspect history in about six checks. Reading every commit in order to find the one that broke something doesn't scale the same way; the search does, precisely because it stops depending on remembering what each commit was for.
+
+That only works if the history is real — actual commits at real boundaries, not one enormous squashed change covering three hours of unsupervised work. The forty-file agent run is exactly the scenario `git bisect` was built for, and exactly the scenario most engineers have never needed it enough to learn.
+
+## The Net Was Always There
+
+None of this is a new feature. Git could always do this. What changed is the rate at which you're generating change you didn't personally author step by step — and at that rate, the safety net that felt optional at human speed stops being optional at all.
+
+You just never worked at a height where you needed it.
