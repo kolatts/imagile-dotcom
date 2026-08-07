@@ -31,7 +31,7 @@ const currentYear = new Date().getFullYear();
 
     <div class="footer-bottom">
       <p class="footer-copyright">
-        © {currentYear} Imagile. All rights reserved.
+        &copy; {currentYear} Imagile. All rights reserved. <a href="/privacy" class="footer-legal-link">Privacy Policy</a>
       </p>
       <div class="footer-accent-line"></div>
     </div>
@@ -127,6 +127,18 @@ const currentYear = new Date().getFullYear();
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;
+  }
+
+  .footer-legal-link {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    margin-left: 0.5rem;
+    opacity: 0.7;
+  }
+
+  .footer-legal-link:hover {
+    color: var(--color-primary);
+    opacity: 1;
   }
 
   .footer-accent-line {
