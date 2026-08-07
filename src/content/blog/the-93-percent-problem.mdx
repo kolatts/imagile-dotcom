@@ -1,0 +1,47 @@
+---
+title: "You've Already Stopped Reading Your Permission Prompts"
+description: "Anthropic's own telemetry shows people approve 93% of permission prompts — that's not caution, it's a reflex, and the fix is a policy you set before you're tired."
+publishDate: 2026-08-01
+author: "Sunny Kolattukudy"
+tags: ["ai", "claude-code", "security", "developer-training"]
+---
+
+Anthropic looked at its own telemetry and found something uncomfortable: people approve roughly 93 percent of the permission prompts Claude Code shows them. Ninety-three percent isn't a security posture. It's a reflex.
+
+And the more prompts you see in a session, the less attention each one gets. Which means the rare surprising prompt — the one actually worth stopping for — is exactly the one a habituated yes will wave through on its way out the door.
+
+I've watched this happen to good engineers. Not careless ones — people who genuinely know better. By hour three of a long session, the thumb has taken over from the judgment.
+
+## Volume Kills Attention, Not Diligence
+
+Every prompt looks the same on screen: a command, a one-line reason, three options. After the fortieth one that starts "Bash command: npm test," your brain files "Bash command:" as safe and stops reading past the colon.
+
+That's not a discipline failure. That's how attention works under repetition. The fix isn't reading harder — it's designing so fewer things need reading at all.
+
+## Decide the Defaults Once, Not Every Time
+
+The fix is a policy, set before you're tired, not a vow to concentrate harder next time. Almost everything you'll ever see in a coding agent sorts cleanly into one of three buckets.
+
+Anything read-only gets a standing yes, forever. `git status`, `git diff`, a `SELECT` against a replica, `Get-Process` — none of these can change state, so asking a human is pure latency. Allowlist the pattern and stop paying attention tax on it. The queue moves faster, and that's the actual point of automating the boring part.
+
+Anything that changes state but is bounded and reversible — an install, a push, an `UPDATE` with a `WHERE` clause on staging, a service restart on a dev box — gets approved per use, every time, by a person who's actually looking. This is where the judgment lives. Not in the read-only stuff.
+
+Anything irreversible, anything touching production, anything sourced from content you didn't write yourself — a "cleanup script" someone pasted in, a `curl | sudo bash` — gets denied by default, written as a deny rule in the tool's settings. Not because you'll remember to say no at 3am. Because a tired person shouldn't be able to misclick past it.
+
+## The Grant Is Bigger Than the Request
+
+Here's the rule people get wrong even when they're paying attention: an allow decision doesn't approve the command sitting in front of you. It approves the pattern.
+
+Say yes to `rm -rf node_modules` today, and if you allowlisted the pattern instead of the instance, you've also said yes to `rm -rf src` next Thursday — without ever seeing that prompt.
+
+The discipline is narrow allowlisting. Approve exactly the specifier you read, not a wildcard that happens to also cover it. If the tool lets you scope a rule to `npm run test *` instead of `npm *`, use the narrower one, every time. You're not saving yourself a future prompt. You're deciding, in advance and without looking, what a future version of the agent is allowed to do.
+
+## If You're Still Calibrating, Default to Plan Mode
+
+If you don't yet have a fast, confident read on which bucket a command belongs in, don't try to build that judgment live, mid-session, with a prompt already waiting on you. Work in plan mode instead — the agent can read and reason but can't touch anything — until you can sort requests into the three buckets without hesitating.
+
+Calibrate somewhere the mistakes are free. Then turn the agent loose with defaults you set while you were thinking clearly, not ones you improvise under pressure.
+
+None of this requires reading every prompt closely. It requires deciding, once, which prompts don't need reading at all — so the attention you do have is available for the 7 percent that actually deserve it. If you want to drill that judgment somewhere the mistakes are free, [context-overflow.dev](https://context-overflow.dev) has an arcade module built around exactly this: a queue of permission prompts you have to sort correctly, fast, before the next one arrives.
+
+That queue never stops. Neither does yours.

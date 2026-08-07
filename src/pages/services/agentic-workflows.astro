@@ -1,0 +1,249 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Hero from '../../components/Hero.astro';
+import Prose from '../../components/Prose.astro';
+import PostCard from '../../components/PostCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { readingTime } from '../../lib/reading-time';
+
+const RELEVANT_TAGS = ['agentic-ai', 'mcp', 'context-management', 'product-engineering'];
+
+const relatedPosts = (await getCollection('blog'))
+  .filter((p) => p.data.tags.some((t) => RELEVANT_TAGS.includes(t)))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+  .slice(0, 3);
+
+const pricing = [
+  { name: 'Strategy Intensive', detail: '3 focused hours, written recommendation, credits forward', price: '$900' },
+  { name: 'AI Readiness / Discovery Sprint', detail: '2 weeks, remote-first, fixed fee', price: '$8,500' },
+  { name: 'Agentic workflow pilot', detail: 'Single use case, 4–8 weeks, scoped', price: '$25,000–$50,000' },
+  { name: 'Ongoing retainer', detail: '~20 hrs/mo, 3-month minimum', price: '$6,000/mo' },
+  { name: 'Fractional AI leadership', detail: 'Up to 3 days/week, scoped', price: 'from $10,000/mo' },
+];
+---
+
+<Layout
+  title="Agentic Workflows"
+  description="Design and ship the agents, pipelines, and automations that remove operational busywork — a verification loop the team can run, not a demo that never ships."
+>
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="Service 02"
+      title="Agents that <em>ship</em>, not agents that demo."
+      subtitle="I design and build the agents, pipelines, and automations that take operational busywork off your team's plate — with a verification loop baked in from the first prototype, so it's still running in six months."
+      primaryCta={{ href: '/contact', label: 'Book a strategy intensive · $900' }}
+      secondaryCta={{ href: '/work', label: 'See the work' }}
+      size="md"
+    />
+
+    <section class="section section--tight who">
+      <div class="container">
+        <p class="eyebrow">Who this is for</p>
+        <h2 class="who__title">Two people, one root cause</h2>
+        <div class="who__grid">
+          <div class="who__card card" data-reveal>
+            <span class="card-tag">01</span>
+            <h3>The ops leader drowning in manual triage</h3>
+            <p>
+              Someone on your team is copy-pasting between three tools every morning, manually routing tickets or
+              reconciling records, and calling it "the job" because it's always been the job. It doesn't have to be.
+            </p>
+          </div>
+          <div class="who__card card" data-reveal>
+            <span class="card-tag">02</span>
+            <h3>The founder who wants a pilot that ships</h3>
+            <p>
+              You've seen a slick agent demo. You want the version that survives contact with real data, real edge
+              cases, and a real production environment — not another proof of concept that quietly dies in a repo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section villain grid-ground" data-reveal>
+      <div class="container">
+        <p class="eyebrow">The failure mode</p>
+        <h2 class="villain__title">The pilot that never ships</h2>
+        <p class="villain__text">
+          Here's the villain of this whole category: an agent that works great in the demo, gets a round of applause,
+          and then never touches production because nobody built a way to know when it's wrong. It has no
+          verification loop, no owner, no path from "looks good in the recording" to "runs unattended on Tuesday."
+          Six months later it's a slide in a deck nobody opens. I don't build those.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--tight happens">
+      <div class="container">
+        <p class="eyebrow">What happens</p>
+        <h2 class="happens__title">Verification loop first, automation second</h2>
+        <Prose>
+          <p>
+            Every engagement starts by finding the check, not the prompt. Before I write a single agent step, I
+            establish how we'll know the output is correct — a test harness, a human-in-the-loop review gate, a
+            comparison against ground truth, or an automated eval suite scoped to your actual data. That
+            verification loop is the spine everything else hangs off of.
+          </p>
+          <p>
+            From there I build the smallest version of the pipeline that can run end-to-end against real inputs,
+            not sample data. It's instrumented from day one — logging what it did, why, and how confident it was —
+            so failures are visible instead of silent. We run it in shadow mode alongside the manual process until
+            the numbers earn trust, then cut over.
+          </p>
+          <p>
+            The stack is chosen for what the problem needs, not what's trending — sometimes that's an MCP server
+            wired into your existing tools, sometimes it's a plain scheduled job with an LLM call in the middle of
+            it. The agent framework is the least interesting part of this. The verification loop is the part that
+            decides whether it's still running next quarter.
+          </p>
+        </Prose>
+      </div>
+    </section>
+
+    <section class="section section--tight walkaway grid-ground">
+      <div class="container">
+        <p class="eyebrow">What you walk away with</p>
+        <h2 class="walkaway__title">A working pipeline, not a slide deck</h2>
+        <ul class="walkaway__list">
+          <li data-reveal>
+            <h3>A pipeline running in production</h3>
+            <p>Deployed against your real systems, handling your real inputs — not a sandboxed demo environment.</p>
+          </li>
+          <li data-reveal>
+            <h3>A verification loop your team can maintain</h3>
+            <p>Documented, instrumented, and owned by someone on your team — not dependent on me staying on retainer forever.</p>
+          </li>
+          <li data-reveal>
+            <h3>A written account of what it can't do yet</h3>
+            <p>Every agent has edges. You'll know exactly where they are instead of finding out from an angry customer.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tight pricing">
+      <div class="container">
+        <p class="eyebrow">How pricing works</p>
+        <h2 class="pricing__title">Real numbers, not a contact form</h2>
+        <div class="pricing__table-wrap">
+          <table class="pricing__table">
+            <thead>
+              <tr>
+                <th>Engagement</th>
+                <th>Detail</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pricing.map((row) => (
+                <tr>
+                  <td>{row.name}</td>
+                  <td>{row.detail}</td>
+                  <td class="pricing__price">{row.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="pricing__philosophy">
+          Every engagement starts with a $900 Strategy Intensive — three focused hours and a written recommendation,
+          credited toward whatever comes next. Remote work is priced the same as the work; on-site carries a
+          day-rate premium plus travel at cost, never a surprise change order. These are real numbers, not a
+          "contact us" form.
+        </p>
+      </div>
+    </section>
+
+    {relatedPosts.length > 0 && (
+      <section class="section section--tight related">
+        <div class="container">
+          <p class="eyebrow">Related reading</p>
+          <h2 class="related__title">From the blog</h2>
+          <div class="related__grid">
+            {relatedPosts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                publishDate={post.data.publishDate}
+                tags={post.data.tags}
+                slug={post.id}
+                readingTime={readingTime(post.body ?? '')}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <CtaBand
+      title="Bring the workflow that's actually broken."
+      body="A strategy intensive is three hours and $900 — walk out with a written recommendation either way."
+    />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .who__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .who__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
+  .who__card h3 { font-size: var(--text-lg); margin: 0.5rem 0 0.6rem; }
+  .who__card p { color: var(--color-muted); }
+
+  .villain__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .villain__text {
+    max-width: 64ch;
+    font-size: var(--text-lg);
+    color: var(--color-muted);
+    border-left: 2px solid var(--color-accent);
+    padding-left: var(--space-md);
+  }
+
+  .happens__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+
+  .walkaway__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-lg); }
+  .walkaway__list { display: grid; grid-template-columns: 1fr; gap: var(--space-lg); }
+  .walkaway__list li { border-top: 1px solid var(--color-line); padding-top: var(--space-sm); }
+  .walkaway__list h3 { font-size: var(--text-lg); margin-bottom: 0.5rem; }
+  .walkaway__list p { color: var(--color-muted); max-width: 42ch; }
+
+  .pricing__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .pricing__table-wrap { overflow-x: auto; margin-bottom: var(--space-md); }
+  .pricing__table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+  .pricing__table th,
+  .pricing__table td {
+    border: 1px solid var(--color-line);
+    padding: 0.65em 0.85em;
+    text-align: left;
+    vertical-align: top;
+  }
+  .pricing__table th {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+  }
+  .pricing__table td { color: var(--color-ink); }
+  .pricing__price { font-family: var(--font-mono); white-space: nowrap; color: var(--color-accent); }
+  .pricing__philosophy { color: var(--color-muted); max-width: 64ch; }
+
+  .related__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .related__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+
+  @media (min-width: 720px) {
+    .who__grid { grid-template-columns: repeat(2, 1fr); }
+    .walkaway__list { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 640px) {
+    .related__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .related__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>

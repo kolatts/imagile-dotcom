@@ -1,0 +1,35 @@
+---
+title: "A Spec Is Not a Plan"
+description: "Research, Plan, Implement, Verify is just the ordinary shape of software work, finally said out loud — and the spec/plan mix-up inside it is costing teams more than they realize."
+publishDate: 2026-06-12
+author: "Sunny Kolattukudy"
+tags: ["ai", "agentic-ai", "engineering-principles", "product-engineering"]
+---
+
+Everyone's suddenly talking about Research, Plan, Implement, Verify like it's a new methodology for working with agents. It isn't. It's what you already do without one.
+
+You find out what's actually true before you touch anything — read the code, reproduce the bug, run `git blame` on the weird part, ask the person who was there. You decide the approach and the order of operations, even if that decision only ever lived in your head on the walk back from lunch. You write the code. Then you prove it worked — not "it compiles," but "it satisfies what was asked." Research, Plan, Implement, Verify isn't a framework invented for machines. It's the ordinary shape of software work, finally named out loud so you can decide, phase by phase, which parts you're comfortable handing off.
+
+The recognizable failure isn't handing a phase to an agent. It's skipping one. Jump straight from request to changed files — under deadline pressure, or because nobody told the agent there was another way — and you don't get bad code. You get *wrong* code: fluent, well-formatted, and solving a problem nobody had.
+
+## Two of the Four Phases Keep Getting Conflated
+
+Research and Verify are pretty well understood. Implement is the visible part of the job, which is why it gets mistaken for the whole job. The real confusion lives in Plan — specifically, in what people mean when they say "the plan."
+
+A spec is not a plan. A spec states what and why. A plan states how, for this attempt. They come from different places, get written by different people, and have completely different shelf lives — and most of the pain I've watched teams cause themselves comes from filing one where the other belongs.
+
+Take a real example: rate limiting an API. The spec says clients over 100 requests a minute get a 429 with a `Retry-After` header, clients under the limit notice nothing, and the reason is that one integration partner is hammering `/search` and degrading it for everyone else. That's durable. It's still true after ship, and it's still true even if the approach changes.
+
+The plan says something else entirely: add request-counting middleware, track counts in Redis keyed by client ID, return 429 past the limit, write an end-to-end test at 101 requests a minute, roll out behind a flag in staging first. That's disposable. On Tuesday, step two became in-memory counters instead of Redis because Redis was overkill for the traffic involved. The plan changed. The spec didn't move an inch, because the spec was never about Redis.
+
+That asymmetry is the entire lesson. Mix the two up and you'll find yourself re-litigating "the plan" three files into implementation — when what actually changed is the spec, and nobody labeled it as the document that's supposed to hold still.
+
+## Put the Plan Where the Code Is, the Spec Where the Non-Builders Already Look
+
+This is where it gets practical. The plan belongs in source control, next to the code it describes, committed like anything else — because a plan that only exists in a chat window evaporates the moment the conversation gets compacted. The spec starts life as a user story or a feature memo, and its job is to be readable by people who will never open the repository. A well-written ticket, with real acceptance criteria and the constraint that ruled out the obvious approach, is most of Research already done before anyone opens an editor.
+
+Working with an agent sharpens this rather than complicating it. An agent can assist enormously with the plan — sequencing steps, spotting the missing case, drafting the file. The spec mostly can't be delegated the same way. It lives or dies on human expectations of what you're actually trying to accomplish, and an agent has no way to know that unless a person tells it.
+
+Writing a spec is compiling intent into something that can execute without you in the room. That's not paperwork between you and the work — it's the thing that lets you not be there when the work runs.
+
+Conflating what-and-why with how is why "the plan" keeps getting re-litigated three files into implementation. Write the spec once. Expect the plan to be rewritten as often as reality requires, and don't grieve it when it is.

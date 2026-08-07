@@ -1,4 +1,18 @@
 ---
+// Imported here (JS-level), not via CSS @import in global.css: Vite only
+// processes/copies the woff2 url() assets and rewrites their paths when the
+// fontsource CSS is pulled in through the JS module graph. A CSS @import
+// nested inside an .astro <style> block never resolves those files, and
+// they 404 in the built output while still passing a local `astro dev` check.
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-sans/700.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+
 interface Props {
   title: string;
   description?: string;

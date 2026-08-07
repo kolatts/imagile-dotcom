@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Hero from '../components/Hero.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<Layout title="Contact" description="Book a $900 strategy intensive or send a message — I reply within one business day, no CRM drip.">
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="Get in touch"
+      title="Talk it <em>through.</em>"
+      subtitle="The lowest-friction way in is a strategy intensive — three focused hours and a written recommendation for $900. Or just send a message below and I'll tell you if that's the right first step."
+      size="md"
+      showMark={false}
+    />
+
+    <section class="section section--tight contact">
+      <div class="container contact__grid">
+        <div class="contact__form-col" data-reveal>
+          <ContactForm />
+        </div>
+
+        <div class="contact__info-col" data-reveal>
+          <p class="eyebrow">What happens next</p>
+          <h2 class="contact__info-title">No CRM drip, no sales queue.</h2>
+          <p class="contact__info-body">
+            Your message lands as a ticket I see within minutes, not a CRM drip. I reply within one business day —
+            usually sooner. If it's not a fit, I'll tell you that too, and point you somewhere better if I can.
+          </p>
+          <p class="contact__info-body">
+            Prefer email directly? Write to <a href="mailto:sunny@imagile.dev" class="contact__email">sunny@imagile.dev</a>.
+            Same inbox, same one-business-day reply.
+          </p>
+          <div class="contact__note">
+            <p class="contact__note-label">Before you write</p>
+            <p class="contact__note-body">
+              The more specific the ask, the faster the reply — a stack, a timeline, a rough budget range. "Not sure
+              yet" is a fine answer too; that's what the strategy intensive is for.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .contact__form-col { min-width: 0; }
+
+  .contact__info-col { max-width: 42ch; }
+
+  .contact__info-title {
+    font-size: var(--text-2xl);
+    margin: 0.5rem 0 var(--space-md);
+  }
+
+  .contact__info-body {
+    color: var(--color-muted);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-md);
+  }
+
+  .contact__email {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .contact__note {
+    border-left: 2px solid var(--color-line-strong);
+    padding-left: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  .contact__note-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .contact__note-body {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  @media (min-width: 860px) {
+    .contact__grid {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Hero from '../components/Hero.astro';
+import Prose from '../components/Prose.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<Layout title="About" description="Imagile is Sunny Kolattukudy — a solo, senior-led practice built on a decade of engineering, a stint in medicine, and a metal band.">
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="About"
+      title="Imagile is <em>Sunny Kolattukudy.</em>"
+      subtitle="No team page, because there's no team to page. One staff-level engineer, ten-plus years in, doing the work himself."
+      size="md"
+      showMark={false}
+    />
+
+    <section class="section about">
+      <div class="container about__inner">
+        <Prose>
+          <p>
+            I started in medicine — Case Western Reserve University and the Cleveland Clinic Lerner College of
+            Medicine. That chapter wasn't really about becoming a doctor, in the end. It was about learning to help
+            people well: understand the problem fully before you act on it, and know that getting it wrong has real
+            consequences for real people. That standard stuck with me longer than the coursework did.
+          </p>
+          <p>
+            Somewhere in the middle of that I co-founded <a href="https://www.youtube.com/@DEADIRONvideos" target="_blank" rel="noopener">Deadiron</a>,
+            a melodic thrash metal band. Building something creative with a small group, where everyone has to be
+            fully invested or the whole thing falls apart, turned out to be a pretty good model for what a
+            high-functioning team actually looks like — long before I was leading one professionally.
+          </p>
+          <p>
+            Then a decade of software engineering, across finance at PNC Bank, HR tech at Arcoro, and now
+            AI-native product work at Verifiable. Different industries, same pattern each time: modernize the
+            solution, build a team that actually collaborates, and level up the organization's engineering
+            practices so every person on it can contribute and grow — not just the senior few.
+          </p>
+          <p>
+            Imagile exists because of a gap I kept seeing from the inside of those companies: the distance between
+            the people building enterprise software and the people who have to use it. Big consultancies close that
+            gap with headcount and process. I wanted to close it by staying small — one expert, hands-on, doing the
+            work instead of managing the people who do it. Not thought leadership. Practical work, written up
+            honestly, including what didn't work.
+          </p>
+        </Prose>
+
+        <div class="about__credentials" data-reveal>
+          <img src="/profile-pic.png" alt="Sunny Kolattukudy, founder of Imagile" class="about__photo" />
+          <div>
+            <p class="about__cred-line">
+              Staff-level engineer. 10+ years in .NET and C#, Blazor WASM, and Angular.
+            </p>
+            <p class="about__cred-line">
+              Based in Lewis Center, Ohio — Columbus metro. On-site in Central Ohio and remote everywhere else,
+              equally first-class; remote isn't a fallback tier here.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CtaBand
+      title="Talk it through — no pitch deck required."
+      body="A strategy intensive is three hours and $900. If it's not a fit, I'll tell you that too."
+    />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .about__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .about__credentials {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: flex-start;
+    max-width: var(--measure);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .about__photo {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-line);
+    flex: none;
+  }
+
+  .about__cred-line {
+    font-size: var(--text-base);
+    color: var(--color-muted);
+    max-width: 46ch;
+  }
+  .about__cred-line + .about__cred-line { margin-top: 0.6rem; }
+
+  @media (min-width: 640px) {
+    .about__credentials { flex-direction: row; align-items: center; }
+  }
+</style>

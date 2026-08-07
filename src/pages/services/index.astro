@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Hero from '../../components/Hero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+
+const services = [
+  {
+    index: '01',
+    title: 'AI Developer Training',
+    body: "Your engineers, fluent in agentic development — judgment and workflow, not tool tutorials. On-site in Central Ohio or remote to a distributed team, equally first-class.",
+    href: '/services/developer-training',
+    priceSignal: 'Workshops from $3,000 · Cohorts from $15,000',
+  },
+  {
+    index: '02',
+    title: 'Agentic Workflow Building',
+    body: 'Design and ship the agents, pipelines, and automations that remove the operational busywork — with a verification loop, not a demo that never ships.',
+    href: '/services/agentic-workflows',
+    priceSignal: 'Discovery Sprint $8,500 · Pilot from $25,000',
+  },
+  {
+    index: '03',
+    title: 'Custom Software Development',
+    body: 'The software behind it, built by the person who builds it. .NET, Azure, AWS — senior-led, no handoffs.',
+    href: '/services/custom-software',
+    priceSignal: '$300/hr · Production builds from $50,000',
+  },
+];
+---
+
+<Layout title="Services" description="Three ways to work with Imagile: developer training, agentic workflow building, and custom software — all senior-led, no handoffs.">
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="What Imagile does"
+      title="Train the team, build the workflow, ship the <em>software.</em>"
+      subtitle="Three lines of work, one person doing all of them — pick the one that matches where you're stuck."
+      size="md"
+    />
+
+    <section class="section services">
+      <div class="container">
+        <div class="services__grid">
+          {services.map((s) => <ServiceCard {...s} />)}
+        </div>
+      </div>
+    </section>
+
+    <CtaBand
+      title="Not sure which one you need?"
+      body="A strategy intensive is three hours and $900 — it tells you before you commit to more."
+    />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .services__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
+
+  @media (min-width: 720px) {
+    .services__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

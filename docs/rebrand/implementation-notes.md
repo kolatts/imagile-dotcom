@@ -110,9 +110,108 @@ no `prompt.md`, off-brand — photographic, not on the drafting-diagram
 language). Left in place, not used, not deleted (not this project's file to
 remove without asking).
 
-## Site build: not yet started
+## Site build: foundation shipped, content in progress
 
-Page inventory, blog-URL-preservation fix, and content are all still
-pending — see conversation history for the full phased plan (design
-checkpoint → site skeleton → pages/content checkpoint → blog backfill
-checkpoint → imagile-app changes → contact form → verification → ship).
+Committed to `claude/imagile-rebrand-tggl17` (imagile-dotcom):
+
+- Design tokens, self-hosted fonts (@fontsource: IBM Plex Sans, IBM Plex
+  Mono, Archivo — Archivo used only for `.btn`, per the font-fix
+  amendment), `@astrojs/sitemap`, hand-authored theme-aware favicon.svg
+  + rasterized fallbacks, robots.txt, 404 page.
+- `Layout.astro`: RSS autodiscovery, `ProfessionalService` + `BlogPosting`
+  JSON-LD, shared `motion.js` (parallax + scroll-reveal, gated on
+  `prefers-reduced-motion`, reused pattern from kolatts.github.io).
+- New shared components: SiteHeader, SiteFooter, Hero, PathPicker,
+  ServiceCard, ProofItem, CtaBand, PostCard, Prose, ContactForm.
+- Blog migrated to Astro 5 content-layer API; fixed the dead
+  `?tag=`/`?page=` filtering with real static routes
+  (`blog/page/[page]`, `blog/tag/[tag]`). **Verified byte-identical**
+  to all 11 existing `/blog/<slug>` URLs on `main` (mechanical diff, not
+  just eyeballed).
+- Homepage written directly (hero, villain framing, path picker, 3
+  services, honest proof strip, engagement steps, latest posts, Context
+  Overflow cross-promo with org code `IMAGILE`, CTA band).
+- `npm run build` verified clean at each checkpoint.
+
+Remaining pages (services × 4, work, about, contact) and 7 blog backfill
+posts were fanned out via a Workflow (14 parallel/pipelined subagents) —
+see the workflow's own results for exact files written; review each
+before treating as final, especially the blog posts' voice and the
+service pages' pricing-row accuracy against the menu below.
+
+## Pricing (decided, real numbers — not TODO placeholders)
+
+$300/hr anchor, publicly stated, plus a fixed price menu grounded in
+independent-AI-consultant market research the user supplied:
+
+| Offering | Price |
+|---|---|
+| Advisory / hands-on hourly | $300/hr |
+| Remote day rate | $2,000/day |
+| On-site day rate | $2,400/day + travel at cost |
+| Strategy Intensive (front door) | $900, credits toward anything next |
+| AI Readiness / Discovery Sprint | $8,500 |
+| Half-day team workshop (≤12) | $3,000 |
+| Full-day team workshop (≤12) | $5,000 |
+| 4-week team enablement cohort (≤12) | from $15,000 |
+| Agentic workflow pilot (4–8 wks) | typically $25,000–$50,000, scoped |
+| Production build with integrations | typically $50,000–$100,000, scoped |
+| Ongoing retainer (~20 hrs/mo, 3-mo min) | $6,000/month |
+| Fractional AI leadership (≤3 days/wk) | from $10,000/month, scoped |
+
+Each service page shows only its relevant subset (see the workflow prompts
+for the exact split); a shared philosophy paragraph appears on each page
+rather than a separate `/pricing` page, to avoid a cross-page dependency
+during parallel content generation.
+
+## imagile-app: lead pipeline shipped
+
+Branch `feature/intake-github-lead-issues`, off `main` (NOT off
+`kolatts/60-sunny-contact`, which had unrelated pre-existing uncommitted
+work — see below). Full solution builds clean, all 55 predeployment
+tests pass (4 new for `GitHubLeadIssueService`).
+
+- `GitHubLeadIssueService`: creates a `lead`-labeled GitHub issue in
+  imagile-app itself (private — not the public imagile-dotcom, since
+  leads carry PII) via a scoped PAT, with a fenced ` ```json ` block in
+  the issue body for the Discord workflow to parse. Best-effort,
+  disabled by default (`GitHubIssues.Enabled=false`), same
+  never-fail-the-visitor semantics as the existing email path.
+- `IntakeService.cs`: calls it after the durable table write, in its own
+  try/catch (sibling of the existing email try/catch).
+- `.github/workflows/discord-notify.yml`: ported from
+  `kolatts/pncli`'s pattern, filtered to the `lead` label, richer embed
+  (name/company/email/service-line fields + message).
+- `Program.cs`: added `UseForwardedHeaders()` (ForwardLimit 1, no
+  configured proxies/networks) so the intake rate limiter and Turnstile's
+  `remoteip` key on the real visitor IP behind Container Apps ingress,
+  not the ingress proxy's IP.
+- `appsettings.prod.json`: added apex `https://imagile.dev` to
+  `Cors.MarketingOrigins` (only `www` was allowed before).
+- Found and worked around a real serialization gotcha: System.Text.Json's
+  default encoder escapes backticks as ``` in the wire JSON — not a
+  bug (GitHub decodes it back to a literal backtick when it parses the
+  issue body), but the test originally asserted against the raw wire
+  string instead of the parsed `.body` field. Fixed to parse-then-assert.
+
+**Found the user's own in-progress work** on `kolatts/60-sunny-contact`
+(uncommitted, unrelated: swapping `hello@imagile.dev` → `sunny@imagile.dev`
+across legal pages). Stashed it safely, built this feature from `main` on
+its own branch, and restored the user's stash exactly afterward — verified
+via diff-stat before and after. Nothing of theirs was touched or lost.
+
+Manual steps still owed to the user before this does anything in prod:
+1. Fine-grained PAT (imagile-app only, Issues: Read & Write) → Key Vault
+   secret `GitHubIssuesToken`.
+2. `DISCORD_WEBHOOK` Actions secret on imagile-app.
+3. A `lead` label needs to exist on imagile-app (one `gh label create`).
+4. Confirm Turnstile's Cloudflare dashboard allows both `www.imagile.dev`
+   and `imagile.dev` as hostnames.
+
+## Design-system note: minor observation, out of scope
+
+`appsettings.prod.json` in imagile-app has `LocalAuth.Enabled: true` with
+seeded demo credentials (`superadmin@example.com` / `Super1234!`, etc.)
+— this looks like it may be live in production, not just local/qa. Not
+touched, not investigated further; flagging only because it's the kind
+of thing worth a second look. Outside this task's scope.
