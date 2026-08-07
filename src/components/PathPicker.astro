@@ -1,0 +1,70 @@
+---
+const paths = [
+  {
+    tag: 'PATH-A',
+    label: 'I lead an engineering org',
+    body: 'Stacks, mechanisms, and what actually changes in the SDLC. No vague AI-pilot promises.',
+    href: '/services/developer-training',
+    cta: 'See the training approach',
+  },
+  {
+    tag: 'PATH-B',
+    label: 'I run a business',
+    body: 'Time, cost, risk, and capacity — in plain terms, with a price attached.',
+    href: '/services',
+    cta: 'See what Imagile does',
+  },
+];
+---
+
+<section class="section section--tight path-picker">
+  <div class="container">
+    <div class="path-picker__grid">
+      {paths.map((p) => (
+        <a href={p.href} class="path-picker__card card" data-reveal>
+          <span class="card-tag">{p.tag}</span>
+          <h2 class="path-picker__label">{p.label}</h2>
+          <p class="path-picker__body">{p.body}</p>
+          <span class="path-picker__link">{p.cta} →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .path-picker__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+  }
+
+  .path-picker__card {
+    background: var(--color-surface);
+    padding: var(--space-lg) var(--space-md);
+    border: none;
+    transition: background var(--duration-fast) var(--ease-out);
+  }
+
+  .path-picker__card:hover { background: var(--color-bg); }
+
+  .path-picker__label {
+    font-size: var(--text-xl);
+    margin: 0.6rem 0 0.5rem;
+  }
+
+  .path-picker__body { color: var(--color-muted); margin-bottom: 1.1rem; max-width: 40ch; }
+
+  .path-picker__link {
+    font-family: var(--font-action);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 760px) {
+    .path-picker__grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

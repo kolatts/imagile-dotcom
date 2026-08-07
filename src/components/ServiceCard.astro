@@ -1,0 +1,33 @@
+---
+interface Props {
+  index: string;
+  title: string;
+  body: string;
+  href: string;
+  priceSignal: string;
+}
+
+const { index, title, body, href, priceSignal } = Astro.props;
+---
+
+<a href={href} class="service-card card" data-reveal>
+  <span class="card-tag">SVC-{index}</span>
+  <h3 class="service-card__title">{title}</h3>
+  <p class="service-card__body">{body}</p>
+  <span class="service-card__price">{priceSignal}</span>
+</a>
+
+<style>
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  }
+
+  .service-card:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+
+  .service-card__title { font-size: var(--text-xl); margin: 0.5rem 0 0.6rem; }
+  .service-card__body { color: var(--color-muted); margin-bottom: auto; padding-bottom: 1rem; }
+  .service-card__price { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink); }
+</style>

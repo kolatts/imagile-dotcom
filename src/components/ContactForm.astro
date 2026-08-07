@@ -1,0 +1,201 @@
+---
+interface Props {
+  defaultInterest?: string;
+}
+const { defaultInterest } = Astro.props;
+
+const services = [
+  { value: 'developer-training', label: 'Developer Training' },
+  { value: 'agentic-workflows', label: 'Agentic Workflows' },
+  { value: 'custom-software', label: 'Custom Software' },
+  { value: 'not-sure', label: "Not sure yet" },
+];
+---
+
+<form id="contact-form" class="contact-form" novalidate>
+  <div class="contact-form__row">
+    <label for="cf-name">Name</label>
+    <input id="cf-name" name="name" type="text" autocomplete="name" required minlength="2" />
+  </div>
+
+  <div class="contact-form__row">
+    <label for="cf-email">Email</label>
+    <input id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required />
+  </div>
+
+  <div class="contact-form__row">
+    <label for="cf-company">Company <span class="contact-form__optional">(optional)</span></label>
+    <input id="cf-company" name="company" type="text" autocomplete="organization" />
+  </div>
+
+  <div class="contact-form__row">
+    <label for="cf-interest">What's this about</label>
+    <select id="cf-interest" name="interest">
+      {services.map((s) => (
+        <option value={s.value} selected={s.value === defaultInterest}>{s.label}</option>
+      ))}
+    </select>
+  </div>
+
+  <div class="contact-form__row">
+    <label for="cf-message">Message</label>
+    <textarea id="cf-message" name="message" rows="6" required minlength="10" maxlength="5000"></textarea>
+  </div>
+
+  <!-- Honeypot: visible in the DOM (not display:none) so bots that fill every
+       field trip it, but visually hidden and unreachable by keyboard for
+       real visitors. Server rejects any submission where this is non-empty. -->
+  <div class="contact-form__honeypot" aria-hidden="true">
+    <label for="cf-website">Website</label>
+    <input id="cf-website" name="websiteUrl" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <input type="hidden" name="sourceUrl" id="cf-source" />
+
+  <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAED2hq95425ROypd'}></div>
+
+  <button type="submit" class="btn btn--primary contact-form__submit">
+    <span class="contact-form__submit-label">Send it</span>
+  </button>
+
+  <p class="contact-form__fallback">
+    Prefer email? <a href="mailto:sunny@imagile.dev">sunny@imagile.dev</a>
+  </p>
+
+  <div class="contact-form__status" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="contact-form__noscript">
+      This form needs JavaScript for spam protection. Email me instead:
+      <a href="mailto:sunny@imagile.dev">sunny@imagile.dev</a>
+    </p>
+  </noscript>
+</form>
+
+<script>
+  const INTAKE_URL = `${import.meta.env.PUBLIC_INTAKE_API_URL || 'https://api.imagile.dev'}/api/intake/contact`;
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const sourceField = document.getElementById('cf-source') as HTMLInputElement | null;
+  if (sourceField) sourceField.value = window.location.href;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = form.querySelector('.contact-form__status') as HTMLElement;
+    const submitBtn = form.querySelector('.contact-form__submit') as HTMLButtonElement;
+    const submitLabel = form.querySelector('.contact-form__submit-label') as HTMLElement;
+
+    const data = new FormData(form);
+    const turnstileToken = (window as any).turnstile?.getResponse?.() ?? '';
+
+    const payload = {
+      name: data.get('name'),
+      email: data.get('email'),
+      company: data.get('company') || null,
+      interest: data.get('interest'),
+      message: data.get('message'),
+      turnstileToken,
+      sourceUrl: data.get('sourceUrl'),
+      websiteUrl: data.get('websiteUrl'),
+    };
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Sending…';
+    status.textContent = '';
+    status.className = 'contact-form__status';
+
+    try {
+      const res = await fetch(INTAKE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        form.hidden = true;
+        status.className = 'contact-form__status contact-form__status--success';
+        status.textContent = "Landed. You'll hear from me within one business day.";
+        (window as any).trackEvent?.('ContactSubmitted');
+        return;
+      }
+
+      if (res.status === 429) {
+        status.textContent = "Too many tries from this connection — give it ten minutes, or just email me at sunny@imagile.dev.";
+      } else {
+        const body = await res.json().catch(() => null);
+        status.textContent = body?.detail || body?.title || 'Something went wrong on my end. Your message is still in the box below — try again, or email sunny@imagile.dev.';
+      }
+      status.className = 'contact-form__status contact-form__status--error';
+      (window as any).trackEvent?.('ContactFailed', { reason: String(res.status) });
+    } catch {
+      status.className = 'contact-form__status contact-form__status--error';
+      status.textContent = 'Network hiccup — your message is still in the box below. Try again, or email sunny@imagile.dev.';
+      (window as any).trackEvent?.('ContactFailed', { reason: 'network' });
+    } finally {
+      submitBtn.disabled = false;
+      submitLabel.textContent = 'Send it';
+      (window as any).turnstile?.reset?.();
+    }
+  });
+</script>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 40rem;
+  }
+
+  .contact-form__row { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .contact-form__row label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .contact-form__optional { text-transform: none; letter-spacing: 0; }
+
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    min-height: 44px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface);
+    color: var(--color-ink);
+    padding: 0.65rem 0.8rem;
+    font-size: var(--text-base);
+    border-radius: var(--radius-sm);
+  }
+
+  .contact-form textarea { min-height: 10rem; resize: vertical; }
+
+  .contact-form input:focus-visible,
+  .contact-form select:focus-visible,
+  .contact-form textarea:focus-visible { border-color: var(--color-accent); }
+
+  .contact-form__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .contact-form__submit { align-self: flex-start; margin-top: 0.25rem; }
+
+  .contact-form__fallback { font-size: var(--text-sm); color: var(--color-muted); }
+  .contact-form__fallback a { color: var(--color-accent); text-decoration: underline; }
+
+  .contact-form__status { font-size: var(--text-base); }
+  .contact-form__status--success { color: var(--color-accent); font-size: var(--text-lg); font-weight: 500; }
+  .contact-form__status--error { color: #c0392b; }
+
+  .contact-form__noscript { color: var(--color-muted); font-size: var(--text-sm); }
+</style>

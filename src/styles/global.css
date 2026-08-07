@@ -1,339 +1,301 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;600;700&display=swap');
+/* ============================================================
+   Imagile — design tokens & base styles ("Workbench" direction)
+   Engineering-drafting aesthetic: fine grid, mono annotations,
+   sharp corners, one accent used the way a blueprint uses red ink.
+   Dark mode is CSS-only via prefers-color-scheme — no toggle, no JS.
+   ============================================================ */
+
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/archivo/500.css';
+@import '@fontsource/archivo/600.css';
 
 :root {
-  /* Bold orange-dominant palette */
-  --color-primary: #FF6B00;
-  --color-primary-dark: #CC5500;
-  --color-primary-light: #FF8C33;
-  --color-bg-dark: #0A0A0A;
-  --color-bg-medium: #1A1A1A;
-  --color-bg-light: #2A2A2A;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #CCCCCC;
-  --color-accent: #00FFD1;
+  /* ---- color: light (default) ---- */
+  --color-bg: #f6f7f6;
+  --color-surface: #ffffff;
+  --color-ink: #17191b;
+  --color-muted: #5c6670;
+  --color-accent: #e85d04;
+  --color-accent-ink: #ffffff;
+  --color-line: rgba(23, 25, 27, 0.16);
+  --color-line-strong: rgba(23, 25, 27, 0.32);
+  --color-grid: rgba(23, 25, 27, 0.055);
+  --color-focus: #1b6fe0;
 
-  /* Typography */
-  --font-display: 'Archivo Black', sans-serif;
-  --font-body: 'Work Sans', sans-serif;
+  /* ---- type ---- */
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-action: 'Archivo', var(--font-body);
 
-  /* Spacing */
-  --space-xs: 0.5rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3rem;
+  --text-2xl: clamp(1.6rem, 1.35rem + 1.1vw, 2.15rem);
+  --text-3xl: clamp(2.1rem, 1.6rem + 2.2vw, 3.25rem);
+  --text-display: clamp(2.6rem, 1.7rem + 4vw, 4.75rem);
+  --leading-tight: 1.1;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+
+  /* ---- space (4px base) ---- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
   --space-sm: 1rem;
-  --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 8rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 8.5rem;
 
-  /* Effects */
-  --shadow-brutal: 8px 8px 0 var(--color-primary);
-  --shadow-soft: 0 20px 60px rgba(255, 107, 0, 0.3);
+  /* ---- shape ---- */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --grid-size: 24px;
+  --max-width: 1180px;
+  --measure: 62ch;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 160ms;
+  --duration-base: 320ms;
+
+  color-scheme: light dark;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1214;
+    --color-surface: #171b1e;
+    --color-ink: #e6e9eb;
+    --color-muted: #8b98a3;
+    --color-accent: #ff7a26;
+    --color-accent-ink: #0f1214;
+    --color-line: rgba(230, 233, 235, 0.16);
+    --color-line-strong: rgba(230, 233, 235, 0.3);
+    --color-grid: rgba(230, 233, 235, 0.05);
+    --color-focus: #6fb2ff;
+  }
 }
+
+/* ============================================================
+   Reset
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
 
 html {
+  color-scheme: light dark;
   scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100svh;
+  background: var(--color-bg);
+  color: var(--color-ink);
   font-family: var(--font-body);
-  background: var(--color-bg-dark);
-  color: var(--color-text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
-  position: relative;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Retro scanline effect */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(255, 107, 0, 0.02) 2px,
-    rgba(255, 107, 0, 0.02) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
+img, picture, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  line-height: 1.1;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
+p { text-wrap: pretty; }
+
+ul, ol { list-style: none; padding: 0; }
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
 }
 
-h1 {
-  font-size: clamp(3rem, 8vw, 8rem);
-  margin-bottom: var(--space-md);
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-h2 {
-  font-size: clamp(2rem, 5vw, 5rem);
-  margin-bottom: var(--space-md);
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-h3 {
-  font-size: clamp(1.5rem, 3vw, 3rem);
-  margin-bottom: var(--space-sm);
-}
+/* ============================================================
+   Layout primitives
+   ============================================================ */
 
-p {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  max-width: 65ch;
-  line-height: 1.8;
-  font-weight: 400;
-}
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--color-primary-light);
-}
-
-/* Utility Classes */
 .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--space-md);
+  width: min(100% - 2.5rem, var(--max-width));
+  margin-inline: auto;
 }
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+.section--tight { padding-block: var(--space-xl); }
+
+.prose { max-width: var(--measure); }
+
+/* Fine drafting grid — an ambient background texture, never decorative on
+   its own; it reads as "instrumented" precisely because it's this quiet. */
+.grid-ground {
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.eyebrow b { color: var(--color-accent); font-weight: 500; }
+
+/* Registration-mark bullet, used sparingly where a list genuinely IS a
+   measured sequence (not decoration for its own sake). */
+.eyebrow::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ============================================================
+   Buttons — Archivo, not mono: the one friendly element on a
+   precision instrument panel is the thing you're meant to press.
+   ============================================================ */
 
 .btn {
-  display: inline-block;
-  padding: 1.25rem 3rem;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--color-primary);
-  color: var(--color-bg-dark);
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.75rem 1.3rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: var(--font-action);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  letter-spacing: -0.005em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: transform var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 }
 
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: var(--color-primary-dark);
-  transition: left 0.4s ease;
-  z-index: -1;
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
-.btn:hover::before {
-  left: 0;
-}
-
-.btn:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: var(--shadow-brutal);
-}
-
-.btn-secondary {
+.btn--ghost {
   background: transparent;
-  border: 3px solid var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-line-strong);
+  color: var(--color-ink);
 }
 
-.btn-secondary:hover {
-  background: var(--color-primary);
-  color: var(--color-bg-dark);
+.btn--ghost:hover { border-color: var(--color-accent); }
+
+.btn--sm { min-height: 36px; padding: 0.5rem 0.9rem; font-size: var(--text-xs); }
+
+/* ============================================================
+   Tag pills — shared across post cards, the blog index, and
+   individual post pages so they only need styling once.
+   ============================================================ */
+
+.tag-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  border: 1px solid var(--color-line);
+  padding: 0.15rem 0.5rem;
 }
 
-/* Geometric decorative elements */
-.geometric-shape {
+.tag-pill:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+/* ============================================================
+   Cards
+   ============================================================ */
+
+.card {
+  position: relative;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  padding: var(--space-md);
+}
+
+.card-tag {
   position: absolute;
-  z-index: -1;
-  opacity: 0.1;
+  top: -0.6rem;
+  left: 0.85rem;
+  background: var(--color-bg);
+  padding: 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
 }
 
-.shape-circle {
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--color-primary), transparent);
+/* ============================================================
+   Scroll motion — one shared, tiny script drives both effects.
+   Fully inert under prefers-reduced-motion (src/scripts/motion.js
+   checks the media query itself and no-ops entirely).
+   ============================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
 }
 
-.shape-square {
-  width: 300px;
-  height: 300px;
-  background: var(--color-primary);
-  transform: rotate(45deg);
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
 }
 
-.shape-line {
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; }
 }
 
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.slide-in-right {
-  animation: slideInRight 0.8s ease-out forwards;
-}
-
-/* Blog Content Styles */
-article {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-article h1,
-article h2,
-article h3 {
-  margin-top: 2rem;
-}
-
-article p {
-  margin-bottom: 1.5rem;
-}
-
-article ul,
-article ol {
-  margin-bottom: 1.5rem;
-  padding-left: 2rem;
-}
-
-article li {
-  margin-bottom: 0.5rem;
-  line-height: 1.8;
-}
-
-article blockquote {
-  border-left: 4px solid var(--color-primary);
-  padding-left: 1.5rem;
-  margin: 2rem 0;
-  font-style: italic;
-  color: var(--color-text-secondary);
-}
-
-article code {
-  background: var(--color-bg-medium);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-article pre {
-  background: var(--color-bg-medium);
-  padding: 1.5rem;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 2rem 0;
-  border: 1px solid var(--color-bg-light);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  :root {
-    --space-lg: 3rem;
-    --space-xl: 5rem;
-  }
-
-  .container {
-    padding: 0 1.5rem;
-  }
-
-  .btn {
-    padding: 1rem 2rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced blog content padding on mobile */
-  article {
-    padding: 0 1.25rem;
-  }
-
-  article h1 {
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  article h2 {
-    font-size: 1.5rem;
-  }
-
-  article h3 {
-    font-size: 1.25rem;
-  }
-
-  article p {
-    font-size: 1.05rem;
-    line-height: 1.75;
-  }
-
-  article ul,
-  article ol {
-    padding-left: 1.5rem;
-  }
-
-  article blockquote {
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-  }
-
-  article pre {
-    padding: 1rem;
-    margin: 1.5rem -1.25rem;
-    border-radius: 0;
-  }
-
-  article code {
-    font-size: 0.85em;
-  }
+[data-parallax] {
+  transform: translate3d(0, var(--parallax-y, 0), 0);
+  will-change: transform;
 }

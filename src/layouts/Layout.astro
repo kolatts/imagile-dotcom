@@ -8,16 +8,20 @@ interface Props {
     author: string;
     tags: string[];
   };
+  /** Suppress the ProfessionalService block on pages where it doesn't belong (blog posts). */
+  professionalService?: boolean;
 }
 
-const { 
-  title, 
-  description = 'Imagile - Expert Software Development & Cloud Solutions',
-  image = '/logo-splash.png',
-  article
+const {
+  title,
+  description = "Imagile helps companies put AI to work — training engineers to build with it, designing the agentic workflows that remove the busywork, and shipping the custom software behind it.",
+  image = '/og-default.png',
+  article,
+  professionalService = true,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteTitle = title === 'Imagile' ? title : `${title} — Imagile`;
 ---
 
 <!DOCTYPE html>
@@ -25,11 +29,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->
+    <meta property="og:site_name" content="Imagile" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
@@ -39,7 +45,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <>
         <meta property="article:published_time" content={article.publishedTime} />
         <meta property="article:author" content={article.author} />
-        {article.tags.map(tag => (
+        {article.tags.map((tag) => (
           <meta property="article:tag" content={tag} />
         ))}
       </>
@@ -52,49 +58,84 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
     <!-- Icons -->
-    <link rel="icon" type="image/png" href="/logo-icon.png" />
-    <link rel="apple-touch-icon" href="/logo-icon.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <title>{title}</title>
+    <!-- Feed -->
+    <link rel="alternate" type="application/rss+xml" title="Imagile Blog" href="/rss.xml" />
 
-    <!-- JSON-LD Structured Data -->
+    <title>{siteTitle}</title>
+
+    <!-- JSON-LD: BlogPosting for articles -->
     {article && (
       <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": title,
-        "description": description,
-        "image": new URL(image, Astro.site),
-        "datePublished": article.publishedTime,
-        "author": {
-          "@type": "Person",
-          "name": article.author
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        image: new URL(image, Astro.site),
+        datePublished: article.publishedTime,
+        author: { '@type': 'Person', name: article.author, url: 'https://www.imagile.dev/about' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Imagile',
+          logo: { '@type': 'ImageObject', url: new URL('/favicon-32.png', Astro.site) },
         },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Imagile",
-          "logo": {
-            "@type": "ImageObject",
-            "url": new URL('/logo-icon.png', Astro.site)
-          }
+        keywords: article.tags.join(', '),
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
+      })} />
+    )}
+
+    <!-- JSON-LD: ProfessionalService, site-wide except on blog posts -->
+    {professionalService && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        name: 'Imagile',
+        description: 'AI transformation consulting: developer training, agentic workflow design, and custom software development.',
+        url: 'https://www.imagile.dev',
+        image: new URL('/favicon-32.png', Astro.site),
+        priceRange: '$300/hr',
+        areaServed: [
+          { '@type': 'City', name: 'Columbus' },
+          { '@type': 'AdministrativeArea', name: 'Ohio' },
+          { '@type': 'Country', name: 'Remote — anywhere' },
+        ],
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Lewis Center',
+          addressRegion: 'OH',
+          addressCountry: 'US',
         },
-        "keywords": article.tags.join(', '),
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": canonicalURL
-        }
+        founder: {
+          '@type': 'Person',
+          name: 'Sunny Kolattukudy',
+          url: 'https://www.imagile.dev/about',
+          sameAs: [
+            'https://context-overflow.dev',
+            'https://github.com/kolatts',
+            'https://linkedin.com/in/sunnyjk',
+          ],
+        },
+        sameAs: ['https://context-overflow.dev', 'https://github.com/kolatts'],
+        makesOffer: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'AI Developer Training', url: 'https://www.imagile.dev/services/developer-training' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Agentic Workflow Building', url: 'https://www.imagile.dev/services/agentic-workflows' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Custom Software Development', url: 'https://www.imagile.dev/services/custom-software' } },
+        ],
       })} />
     )}
   </head>
   <body>
     <slot />
+    <script src="../scripts/motion.js"></script>
   </body>
 </html>
 
 <script>
   import { initializeAppInsights } from '../lib/appInsights';
-  
-  // Initialize Application Insights on client side
+
   const connectionString = import.meta.env.PUBLIC_APPINSIGHTS_CONNECTION_STRING;
   if (connectionString) {
     initializeAppInsights(connectionString);
