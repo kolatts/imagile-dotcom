@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<Layout title="Page not found" description="That page doesn't exist.">
+  <SiteHeader />
+  <main>
+    <section class="section not-found grid-ground">
+      <div class="container">
+        <p class="eyebrow">404</p>
+        <h1 class="not-found__title">Off the grid.</h1>
+        <p class="not-found__body">That page doesn't exist, or moved. Every real blog URL still works — start over from one of these.</p>
+        <div class="not-found__actions">
+          <a href="/" class="btn btn--primary">Home</a>
+          <a href="/blog" class="btn btn--ghost">Blog</a>
+          <a href="/contact" class="btn btn--ghost">Contact</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .not-found { padding-block: var(--space-3xl); text-align: left; }
+  .not-found__title { font-size: var(--text-3xl); margin: 0.6rem 0 1rem; }
+  .not-found__body { color: var(--color-muted); max-width: 46ch; margin-bottom: var(--space-lg); font-size: var(--text-lg); }
+  .not-found__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+</style>

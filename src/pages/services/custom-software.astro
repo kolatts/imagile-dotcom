@@ -1,0 +1,201 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Hero from '../../components/Hero.astro';
+import Prose from '../../components/Prose.astro';
+import PostCard from '../../components/PostCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { readingTime } from '../../lib/reading-time';
+
+const RELEVANT_TAGS = ['azure', 'dotnet', 'architecture', 'cloud', 'software-engineering'];
+
+const pricing = [
+  { row: 'Advisory / hands-on hourly', price: '$300/hr' },
+  { row: 'Day engagements, remote or on-site', price: 'Quoted up front' },
+  { row: 'Production build with integrations', price: 'Scoped after discovery' },
+  { row: 'Ongoing retainer', price: 'Scoped to your cadence' },
+];
+
+const related = (await getCollection('blog'))
+  .filter((p) => p.data.tags.some((t) => RELEVANT_TAGS.includes(t)))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+  .slice(0, 3);
+---
+
+<Layout title="Custom Software" description="Production software on .NET, Azure, and AWS — built by the person who builds it. Senior-led, no handoffs, no bench.">
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="Service 03"
+      title="The software behind it, built by <em>the person who builds it.</em>"
+      subtitle=".NET, Azure, AWS — senior-led, no handoffs, no bench. If the plan is real, someone has to build it. That's this."
+      primaryCta={{ href: '/contact', label: 'Get in touch' }}
+      secondaryCta={{ href: '/work', label: 'See the work' }}
+      size="md"
+      markImage="/images/services/custom-software.webp"
+    />
+
+    <section class="section section--tight who">
+      <div class="container">
+        <p class="eyebrow">Who this is for</p>
+        <h2 class="who__title">A business that needs real software built, not just advised on</h2>
+        <Prose>
+          <p>
+            This is for teams past the strategy conversation — you know what needs to exist, and you need it
+            built to run in production, not sketched in a deck. Maybe it's an internal tool nobody else will
+            prioritize, an integration between systems that don't want to talk to each other, or a customer-facing
+            product that has to hold up under real load. If the deliverable is working software, this is the
+            service.
+          </p>
+          <p>
+            It's not for teams that want a headcount-shaped hire, or a body to sit in standups indefinitely.
+            One senior engineer, scoped work, a defined handoff — that's the shape.
+          </p>
+        </Prose>
+      </div>
+    </section>
+
+    <section class="section section--tight what-happens grid-ground">
+      <div class="container">
+        <p class="eyebrow">What happens</p>
+        <h2 class="what-happens__title">Scope it, build it, ship it — same person the whole way</h2>
+        <Prose>
+          <p>
+            Every build starts with the scope: what it needs to do, what it integrates with, and what "done"
+            actually means, written down before any code gets written. Architecture decisions get made up
+            front and explained, not discovered three months in. Then it gets built — on .NET and Azure or
+            AWS, with CI/CD from day one, not bolted on after the fact.
+          </p>
+          <p>
+            This isn't theoretical. <a href="/work">Imagile-app and Context Overflow are public</a> — you can
+            read the code, see the deploy pipeline, and judge the engineering for yourself instead of taking
+            my word for it. That's the standard the work you're paying for is held to as well.
+          </p>
+          <p>
+            If the software itself needs AI in it — not just AI used to build it — that's a platform decision as
+            much as a coding one. I can help you choose and wire up AWS Bedrock, Azure AI Foundry, or Microsoft's
+            Agent Framework, or bill directly against Anthropic's or OpenAI's APIs, depending on what your
+            compliance, cost, and latency constraints actually require.
+          </p>
+        </Prose>
+      </div>
+    </section>
+
+    <section class="section section--tight walk-away">
+      <div class="container">
+        <p class="eyebrow">What you walk away with</p>
+        <h2 class="walk-away__title">Production software, not a prototype</h2>
+        <div class="walk-away__grid">
+          <div class="card" data-reveal>
+            <span class="card-tag">DELIVERABLE</span>
+            <h3>Working, deployed software</h3>
+            <p>Running in your environment, under your control — not a demo folder or a Figma file.</p>
+          </div>
+          <div class="card" data-reveal>
+            <span class="card-tag">DELIVERABLE</span>
+            <h3>A pipeline, not a snapshot</h3>
+            <p>CI/CD wired up so the next change ships the same way the first one did.</p>
+          </div>
+          <div class="card" data-reveal>
+            <span class="card-tag">DELIVERABLE</span>
+            <h3>Documentation your team can run with</h3>
+            <p>Architecture decisions and operational notes written down, not left in one person's head.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight pricing grid-ground">
+      <div class="container">
+        <p class="eyebrow">How pricing works</p>
+        <h2 class="pricing__title">Real numbers, not a "contact us" form</h2>
+        <div class="pricing__table-wrap">
+          <table class="pricing__table">
+            <thead>
+              <tr><th>Engagement</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+              {pricing.map((p) => (
+                <tr>
+                  <td>{p.row}</td>
+                  <td>{p.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="pricing__note">
+          Most engagements start with a short AI transformation strategy session — a focused conversation and a
+          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
+          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are
+          real numbers, not a "contact us" form.
+        </p>
+      </div>
+    </section>
+
+    {related.length > 0 && (
+      <section class="section section--tight reading">
+        <div class="container">
+          <p class="eyebrow">Related reading</p>
+          <h2 class="reading__title">From the blog</h2>
+          <div class="reading__grid">
+            {related.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                publishDate={post.data.publishDate}
+                tags={post.data.tags}
+                slug={post.id}
+                readingTime={readingTime(post.body ?? '')}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <CtaBand title="Scope the build before you commit to it." />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .who__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); max-width: 36ch; }
+  .what-happens__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); max-width: 40ch; }
+
+  .walk-away__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .walk-away__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
+  .walk-away__grid h3 { font-size: var(--text-lg); margin-bottom: 0.5rem; }
+  .walk-away__grid p { color: var(--color-muted); }
+
+  .pricing__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .pricing__table-wrap { overflow-x: auto; border: 1px solid var(--color-line); background: var(--color-surface); }
+  .pricing__table { width: 100%; border-collapse: collapse; font-size: var(--text-base); }
+  .pricing__table th, .pricing__table td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid var(--color-line); }
+  .pricing__table th {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .pricing__table tbody tr:last-child td { border-bottom: none; }
+  .pricing__table td:last-child { font-family: var(--font-mono); font-size: var(--text-sm); white-space: nowrap; }
+  .pricing__note { color: var(--color-muted); max-width: var(--measure); margin-top: var(--space-md); }
+
+  .reading__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .reading__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+
+  @media (min-width: 720px) {
+    .walk-away__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 640px) {
+    .reading__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .reading__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>

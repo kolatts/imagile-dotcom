@@ -1,0 +1,33 @@
+---
+title: "The AI Didn't Do It. One of Three Things Did."
+description: "Model, harness, and tools are three different jobs — and the coding agent's terminal access is why it can do things a chatbot never could."
+publishDate: 2026-06-18
+author: "Sunny Kolattukudy"
+tags: ["ai", "claude-code", "developer-tools", "developer-training"]
+---
+
+"The AI did it" doesn't hold up as an explanation. Not because it's imprecise — because "the AI" is actually three different components with three different jobs, and figuring out which one acted is the difference between fixing the problem and guessing at it.
+
+## Three parts, one label
+
+The **model** predicts text. That's the whole job. Claude, GPT, Gemini — whichever family — takes tokens in and returns tokens out. It has never opened a file, run a command, or reached outside its own weights. Ask it something about your codebase and it will answer with total confidence whether or not it has ever seen that codebase, because seeing was never part of the job.
+
+The **harness** is the program built around the model that runs the loop: gather context, send it to the model, read the response, execute whatever tool calls come back, repeat. Claude Code is a harness. So is Claude.ai. So are Cursor and GitHub Copilot. Put the same model inside different harnesses and behavior changes every time, because the harness decides what the model can see and what it's permitted to do about it.
+
+The **tools** are the only piece that reaches anything real — a file read, a shell command, an API call. Everything upstream of that is prediction and routing.
+
+Anthropic's own engineering writeup on agent design, [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents), draws roughly the same line: an LLM becomes useful for real work once it's augmented with retrieval, tools, and memory, with an orchestration layer deciding how those augmentations get used. The model supplies judgment; everything that touches the world sits outside it.
+
+That split explains a few things that otherwise look mysterious. A model producing different results in different products isn't the model changing — it's the wiring around it. An agent "deciding" to run your test suite is really the model emitting a structured string and the harness choosing to execute it; the model itself has never run anything. It's also where debugging starts: wrong output means check the context the harness assembled before the call, and nothing happening means check whether a tool call actually fired versus just got described, convincingly, in prose.
+
+## What a terminal actually hands over
+
+A chat interface gives the model a fixed menu — search, maybe render a document, nothing more. A coding agent's harness gives the model a shell, and that one difference is bigger than it looks. A shell isn't a single capability. It's access to every command-line program already sitting on that machine.
+
+Point it at `gh` and it can open PRs, close issues, and cut releases across every repo you can reach. Point it at `az` or `aws` and it can spin up or tear down whatever's in that account. None of these tools were built with an agent in mind — the agent inherits all of them the moment it can run a command, with zero integration work from anyone. An authenticated CLI in an agent's hands can do exactly what that CLI can do, nothing less. That's the entire reason permission prompts exist, and it's worth pausing on before clicking through them out of habit.
+
+## Where responsibility actually sits
+
+When something breaks — a branch force-pushed, a resource group gone — "the AI did it" isn't wrong so much as incomplete. The model emitted a call. The harness ran it. Somebody, earlier, decided that harness should hold those credentials.
+
+The model can't take the blame, because it never touched anything to be blamed for. Responsibility sits with the harness and with whoever configured its access — those are the two parts of the sentence actually capable of doing damage. The more useful question after an incident isn't what the AI did. It's what the harness was allowed to run, and who set that up.

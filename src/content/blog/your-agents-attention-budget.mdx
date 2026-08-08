@@ -1,0 +1,33 @@
+---
+title: "Your Agent's Attention Budget Is Already Spent"
+description: "Context rot isn't a cliff a model falls off — it's a gradient, and the fix is curating what's in the window, not waiting for a collapse."
+publishDate: 2026-07-22
+author: "Sunny Kolattukudy"
+tags: ["ai", "context-management", "agentic-ai", "agentic-workflows"]
+---
+
+An agent session that's been running a couple of hours starts to feel different from one that just started. It's still producing output, still passing the eye test on individual diffs, but it's stopped holding on to things you told it thirty exchanges ago. For a while I assumed something had broken under the hood. What's actually happening is simpler: the context window has a budget, and it's been spending down the whole session.
+
+## What Actually Happens As Context Fills
+
+A model's attention isn't unlimited, and it doesn't fail the way a program crashes. Every token sitting in the window — old file contents, a tool call that didn't work, a correction you already gave once — is competing for the same fixed pool of attention as everything else in there.
+
+Chroma measured this across a range of leading models, and the [research is public](https://research.trychroma.com/context-rot): recall starts slipping well before a context window is anywhere near full, and how much depends on where the relevant fact sits and how much other material is crowding around it. Nothing collapses. The tenth file you had it read doesn't erase the second one — it just makes the second one a little harder to reach.
+
+## Compaction Buys Space, Not Memory
+
+Compaction is the tool most people reach for once a session starts to drag, and it does shrink the number — the token count drops and the context bar goes back to green. What it doesn't do is restore the recall you already lost getting there.
+
+Check accuracy right before a compaction and right after, and they're roughly the same. A session that had drifted through a couple of ignored corrections is still drifted after compaction — it just has more room to keep drifting in. The only thing that actually resets recall is a genuinely new session.
+
+## Curating the Window
+
+Anthropic's own guidance on this puts it well: aim for the [smallest set of high-signal tokens](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) that make the outcome you want likely. That's a curation problem, not a capacity problem — the goal isn't fitting more in, it's making sure only the right things are in there at all.
+
+In practice, that means fetching a file or running a query at the moment it's needed rather than pre-loading everything that might matter later. It also means treating your folder structure as information the model reads, not scaffolding it politely ignores: `test_utils.py` sitting under `tests/` tells a human something different than the same file under `src/core_logic/`, and it hands the model the same signal for free, before it's opened either one.
+
+Reasoning effort draws on this same account. Turning it up costs more of the window before you see anything readable, though it can pay for itself — get the answer right on the first attempt and there's less retried, failed output left in context arguing for attention it didn't earn.
+
+None of this matters much while someone's watching every turn. It starts to matter a great deal once an agent runs unattended, because a long session with no curation isn't autonomy — it's a bag someone kept stuffing things into without ever taking anything back out, until nobody, including the model, can find what actually matters. That's usually how the wrong module gets confidently refactored at 3 a.m., with a tidy little pull request waiting for you when you check in the next morning.
+
+Curating context doesn't make the budget any bigger. It just makes sure that whatever's sitting in the window has earned its place there.

@@ -1,118 +1,85 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import BlogPostCard from '../../components/blog/BlogPostCard.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import PostCard from '../../components/PostCard.astro';
+import { readingTime } from '../../lib/reading-time';
 
-// Get all blog posts and sort by date (newest first)
-const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+const POSTS_PER_PAGE = 12;
+
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
-
-// Get tag filter from URL query params
-const url = new URL(Astro.request.url);
-const tagFilter = url.searchParams.get('tag');
-
-// Filter posts by tag if specified
-const posts = tagFilter 
-  ? sortedPosts.filter(post => post.data.tags.includes(tagFilter))
-  : sortedPosts;
-
-// Pagination settings
-const postsPerPage = 12;
-const currentPage = parseInt(url.searchParams.get('page') || '1');
-const totalPages = Math.ceil(posts.length / postsPerPage);
-const startIndex = (currentPage - 1) * postsPerPage;
-const endIndex = startIndex + postsPerPage;
-const paginatedPosts = posts.slice(startIndex, endIndex);
-
-// Get all unique tags from all posts
-const allTags = [...new Set(allPosts.flatMap(post => post.data.tags))].sort();
+const pagePosts = allPosts.slice(0, POSTS_PER_PAGE);
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
 ---
 
-<Layout 
-  title="Blog - Imagile" 
-  description="Insights, tutorials, and updates from the Imagile team on AI-powered development, cloud solutions, and software engineering best practices."
+<Layout
+  title="Blog"
+  description="Notes on AI-assisted development, agentic workflows, and building software that ships — from Sunny Kolattukudy."
 >
-  <Header />
+  <SiteHeader />
   <main>
-    <section class="blog-header">
-      <div class="container">
-        <h1 class="blog-title">Blog</h1>
-        <p class="blog-subtitle">
-          Insights, tutorials, and updates from the Imagile team
+    <section class="section section--tight">
+      <div class="container blog-index__head">
+        <p class="eyebrow">Writing</p>
+        <h1 class="blog-index__title">The blog</h1>
+        <p class="blog-index__sub">
+          Notes on AI-assisted development, agentic workflows, and building software that ships.
+          No thought leadership — see <a href="/blog/welcome-to-imagile-blog">why</a>.
         </p>
+        {allTags.length > 0 && (
+          <div class="blog-index__tags">
+            {allTags.map((tag) => (
+              <a href={`/blog/tag/${tag}`} class="tag-pill">{tag}</a>
+            ))}
+          </div>
+        )}
       </div>
     </section>
 
-    {tagFilter && (
-      <div class="container" style="padding-top: var(--space-md);">
-        <p style="text-align: center; color: var(--color-text-secondary);">
-          Filtering by tag: <span style="color: var(--color-primary); font-weight: 600;">{tagFilter}</span>
-          <a href="/blog" style="margin-left: 1rem; text-decoration: underline;">Clear filter</a>
-        </p>
+    <section class="section section--tight">
+      <div class="container blog-index__grid">
+        {pagePosts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            publishDate={post.data.publishDate}
+            tags={post.data.tags}
+            slug={post.id}
+            readingTime={readingTime(post.body ?? '')}
+          />
+        ))}
       </div>
-    )}
-
-    <section class="container">
-      {paginatedPosts.length > 0 ? (
-        <div class="blog-grid">
-          {paginatedPosts.map(post => (
-            <BlogPostCard
-              title={post.data.title}
-              description={post.data.description}
-              publishDate={post.data.publishDate}
-              author={post.data.author}
-              tags={post.data.tags}
-              slug={post.slug}
-              image={post.data.image}
-            />
-          ))}
-        </div>
-      ) : (
-        <div style="text-align: center; padding: var(--space-xl) 0;">
-          <p style="color: var(--color-text-secondary); font-size: 1.25rem;">
-            No blog posts found for this tag.
-          </p>
-          <a href="/blog" class="btn" style="margin-top: var(--space-md);">View All Posts</a>
-        </div>
-      )}
 
       {totalPages > 1 && (
-        <div class="pagination">
-          <a 
-            href={currentPage > 1 ? `/blog?page=${currentPage - 1}${tagFilter ? `&tag=${tagFilter}` : ''}` : '#'}
-            class={`pagination-button ${currentPage === 1 ? 'disabled' : ''}`}
-            aria-disabled={currentPage === 1}
-          >
-            Previous
-          </a>
-          
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <a
-              href={`/blog?page=${page}${tagFilter ? `&tag=${tagFilter}` : ''}`}
-              class={`pagination-button ${page === currentPage ? 'active' : ''}`}
-            >
-              {page}
-            </a>
-          ))}
-          
-          <a
-            href={currentPage < totalPages ? `/blog?page=${currentPage + 1}${tagFilter ? `&tag=${tagFilter}` : ''}` : '#'}
-            class={`pagination-button ${currentPage === totalPages ? 'disabled' : ''}`}
-            aria-disabled={currentPage === totalPages}
-          >
-            Next
-          </a>
+        <div class="container blog-index__pagination">
+          <a href="/blog/page/2" class="btn btn--ghost btn--sm">Older posts →</a>
         </div>
       )}
     </section>
   </main>
-  <Footer />
+  <SiteFooter />
 </Layout>
 
 <style>
-  @import '../../styles/blog.css';
+  .blog-index__head { max-width: 60ch; }
+  .blog-index__title { font-size: var(--text-3xl); margin: 0.5rem 0 0.8rem; }
+  .blog-index__sub { color: var(--color-muted); font-size: var(--text-lg); }
+  .blog-index__sub a { color: var(--color-accent); text-decoration: underline; }
+
+  .blog-index__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--space-md); }
+
+  .blog-index__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .blog-index__pagination { margin-top: var(--space-lg); }
+
+  @media (min-width: 640px) { .blog-index__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .blog-index__grid { grid-template-columns: 1fr 1fr 1fr; } }
 </style>

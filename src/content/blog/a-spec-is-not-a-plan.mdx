@@ -1,0 +1,33 @@
+---
+title: "A Spec Is Not a Plan"
+description: "Research, Plan, Implement, Verify is just the ordinary shape of software work, finally said out loud — and the spec/plan mix-up inside it is costing teams more than they realize."
+publishDate: 2026-06-12
+author: "Sunny Kolattukudy"
+tags: ["ai", "agentic-ai", "engineering-principles", "product-engineering"]
+---
+
+Research-Plan-Implement is having a moment. [Kilo's write-up of the pattern](https://path.kilo.ai/introduction/patterns/rpi/) frames it as a way to keep an AI assistant from turning into, as they put it, "an expensive random code generator" — structure traded for predictability. It's a fair description, but it undersells how old the pattern actually is. Long before there was an assistant in the loop, this was just how careful engineers worked.
+
+You find out what's true before touching anything: read the code, reproduce the bug, run `git blame` on the line that looks wrong, ask the person who was there. You decide an approach and an order of operations, even if that decision only ever lived in your head on the walk back from lunch. You write the code. Then — the part that's easiest to skip under pressure — you prove it did what you meant it to do, not just that it compiled.
+
+I put a fourth word on the usual three: Verify. Kilo's version folds verification into gates inside each phase — tests pass, the build succeeds, a linter is happy before you move on. That's real, but it's a narrower claim than the one I want to make. Done properly, Verify doesn't just close out the work you just did; it's where the next Research phase starts. Whatever you learn proving a change works — the edge case the test caught, the log line that surprised you — is exactly the context the next round needs. Treat Verify as a dead end and you throw that context away every time.
+
+The failure worth worrying about is skipping a phase, not handing one to an agent. Go straight from a request to changed files — deadline pressure, or nobody told the agent there was another way to work — and what comes back usually isn't bad code. It's fluent, well-formatted code that solves a problem nobody actually had.
+
+## Where "the Plan" Quietly Becomes Two Documents
+
+Research and Verify are reasonably well understood on most teams. Implement is the part everyone can see, which is why it gets treated as the whole job. The real confusion sits inside "the plan," because people use that one word for two documents that don't behave the same way.
+
+A spec says what the system should do and why. A plan says how you're doing it this time. [Martin Fowler's recent writing on spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html) describes a spec as a "structured, behavior-oriented artifact... that expresses software functionality" — durable enough to guide an agent, or a person, without you standing over their shoulder the whole time. A plan carries no such ambition. It only needs to survive until the code ships.
+
+Here's what that looks like on an actual feature. The spec for a rate limiter says: clients over 100 requests a minute get a 429 with a `Retry-After` header, everyone else notices nothing, and the reason is that one integration partner is hammering `/search` hard enough to degrade it for everyone else. That statement holds next month too, no matter how it gets implemented.
+
+The plan says: request-counting middleware, counts stored in Redis keyed by client ID, a 429 past the limit, an end-to-end test at 101 requests a minute, rollout behind a flag in staging first. On Tuesday, step two turned into in-memory counters — Redis was overkill for the traffic involved, as it often is. The plan changed. The spec didn't, because the spec was never about Redis to begin with.
+
+## Two Documents, Two Homes
+
+Commit the plan to source control, next to the code it describes. A plan that lives only in a chat transcript disappears the moment that conversation gets summarized or the context window rolls over, and rebuilding it from memory a week later costs more than writing it once did. The spec belongs somewhere a product manager or support engineer would actually look — a ticket, a feature memo — not a file three folders deep in a repo they'll never open.
+
+An agent can carry real weight on the plan side: sequencing steps, catching the missing case, drafting the file. The spec resists that kind of delegation. It's built from what people expect the system to do, and an agent has no way to know that unless someone tells it first.
+
+Write the spec once and let it hold still. Expect the plan to get rewritten as often as reality requires — that's not the plan failing, that's the plan doing its job.

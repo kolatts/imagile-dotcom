@@ -1,20 +1,195 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
-import Features from '../components/Features.astro';
-import CallToAction from '../components/CallToAction.astro';
-import Footer from '../components/Footer.astro';
+import PathPicker from '../components/PathPicker.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import PostCard from '../components/PostCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { readingTime } from '../lib/reading-time';
+
+const services = [
+  {
+    index: '01',
+    title: 'AI Developer Training',
+    body: "Your engineers, fluent in agentic development — judgment and workflow, not tool tutorials. On-site in Central Ohio or remote to a distributed team, equally first-class.",
+    href: '/services/developer-training',
+    priceSignal: 'Workshops from $3,000 · Cohorts from $15,000',
+  },
+  {
+    index: '02',
+    title: 'Automate Your Business Processes',
+    body: 'The repetitive work your team does by hand — intake, triage, reporting, follow-ups — designed into reliable automation that gets verified before anything ships.',
+    href: '/services/agentic-workflows',
+    priceSignal: 'Scoped after a free 15-minute consultation',
+  },
+  {
+    index: '03',
+    title: 'Custom Software Development',
+    body: 'The software behind it, built by the person who builds it. .NET, Azure, AWS — senior-led, no handoffs.',
+    href: '/services/custom-software',
+    priceSignal: '$300/hr · Builds scoped after discovery',
+  },
+  {
+    index: '04',
+    title: 'Technical Advisory & Fractional CTO',
+    body: 'Senior technical judgment on retainer — architecture reviews, AI strategy, vendor and hiring calls — without the full-time hire.',
+    href: '/contact',
+    priceSignal: 'Monthly retainer · scoped to your cadence',
+  },
+];
+
+const latestPosts = (await getCollection('blog'))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+  .slice(0, 3);
 ---
 
-<Layout title="Imagile - AI-Powered Software Development & Cloud Solutions">
-  <Header />
+<Layout title="Imagile">
+  <SiteHeader />
   <main>
-    <Hero />
-    <About />
-    <Features />
-    <CallToAction />
+    <Hero
+      eyebrow="AI consulting · Columbus, Ohio"
+      title="AI that actually <em>ships.</em>"
+      subtitle="Training for engineering teams, agentic workflows that hold up in production, and custom software — all of it from the person who does the work, not a bench you never meet."
+      primaryCta={{ href: '/contact', label: 'Get in touch' }}
+      secondaryCta={{ href: '/work', label: 'See the work' }}
+    />
+
+    <PathPicker />
+
+    <section class="section services">
+      <div class="container">
+        <p class="eyebrow">What Imagile does</p>
+        <h2 class="services__title">Four ways in</h2>
+        <div class="services__grid">
+          {services.map((s) => <ServiceCard {...s} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight context-overflow grid-ground" data-reveal>
+      <div class="container context-overflow__inner">
+        <div>
+          <p class="eyebrow">Free, self-serve</p>
+          <h2 class="context-overflow__title">New to agentic development? Start there, not here.</h2>
+          <p class="context-overflow__body">
+            <a href="https://context-overflow.dev" target="_blank" rel="noopener">Context Overflow</a> is a free,
+            self-paced way to get fluent in how these tools actually work — no sales call required. Enroll with
+            org code <code class="context-overflow__code">IMAGILE</code> for the Imagile track.
+          </p>
+        </div>
+        <a href="https://context-overflow.dev" target="_blank" rel="noopener" class="btn btn--ghost">Start understanding AI ↗</a>
+      </div>
+    </section>
+
+    <section class="section section--tight method">
+      <div class="container">
+        <p class="eyebrow">How an engagement starts</p>
+        <h2 class="method__title">Three steps, not a sales funnel</h2>
+        <ol class="method__list">
+          <li data-reveal>
+            <span class="method__num">01</span>
+            <div>
+              <h3>AI transformation strategy</h3>
+              <p>A short, focused session to figure out what's actually worth doing — and a written recommendation you keep either way.</p>
+            </div>
+          </li>
+          <li data-reveal>
+            <span class="method__num">02</span>
+            <div>
+              <h3>Discovery sprint</h3>
+              <p>Two weeks, remote-first, fixed fee. You get a scoped plan before any open-ended engagement begins.</p>
+            </div>
+          </li>
+          <li data-reveal>
+            <span class="method__num">03</span>
+            <div>
+              <h3>Build, train, or retain</h3>
+              <p>Implementation, a training cohort, or an ongoing retainer — whichever the sprint says you actually need.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    {latestPosts.length > 0 && (
+      <section class="section section--tight writing">
+        <div class="container">
+          <p class="eyebrow">Latest writing</p>
+          <h2 class="writing__title">From the blog</h2>
+          <div class="writing__grid">
+            {latestPosts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                publishDate={post.data.publishDate}
+                tags={post.data.tags}
+                slug={post.id}
+                readingTime={readingTime(post.body ?? '')}
+              />
+            ))}
+          </div>
+          <a href="/blog" class="btn btn--ghost btn--sm writing__more">All posts →</a>
+        </div>
+      </section>
+    )}
+
+    <CtaBand
+      title="The conversation costs an hour. Waiting is billed by the quarter."
+      body="A short call now, or the same call a few releases from now — the only difference is what it costs to catch up."
+    />
   </main>
-  <Footer />
+  <SiteFooter />
 </Layout>
+
+<style>
+  .services__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .services__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
+
+  .proof__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.8rem; max-width: 32ch; }
+  .proof__body { color: var(--color-muted); max-width: 58ch; margin-bottom: var(--space-lg); }
+  .proof__body a { color: var(--color-accent); text-decoration: underline; }
+  .proof__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+
+  .method__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-lg); }
+  .method__list { display: grid; grid-template-columns: 1fr; gap: var(--space-lg); }
+  .method__list li { display: flex; gap: var(--space-sm); align-items: flex-start; }
+  .method__num { font-family: var(--font-mono); color: var(--color-muted); font-size: var(--text-sm); flex: none; padding-top: 0.2em; }
+  .method__list h3 { font-size: var(--text-lg); margin-bottom: 0.4rem; }
+  .method__list p { color: var(--color-muted); max-width: 42ch; }
+
+  .writing__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .writing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); margin-bottom: var(--space-md); }
+  .writing__more { display: inline-flex; }
+
+  .context-overflow__inner { display: flex; flex-direction: column; gap: var(--space-md); align-items: flex-start; }
+  .context-overflow__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.7rem; max-width: 26ch; }
+  .context-overflow__body { color: var(--color-muted); max-width: 46ch; }
+  .context-overflow__body a { color: var(--color-accent); text-decoration: underline; }
+  .context-overflow__code {
+    font-family: var(--font-mono);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    padding: 0.1em 0.4em;
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 720px) {
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
+    .proof__grid { grid-template-columns: repeat(3, 1fr); }
+    .method__list { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 640px) {
+    .writing__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .writing__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  @media (min-width: 760px) {
+    .context-overflow__inner { flex-direction: row; align-items: center; justify-content: space-between; }
+  }
+</style>

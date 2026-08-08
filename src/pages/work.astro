@@ -1,0 +1,233 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Hero from '../components/Hero.astro';
+import ProofItem from '../components/ProofItem.astro';
+import Prose from '../components/Prose.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const currentRole = {
+  role: 'Staff Engineer / Developer Experience Guild Leader',
+  company: 'Verifiable',
+  dates: '2025–Present',
+  bullets: [
+    'Built an AI-powered code review pipeline targeting the Claude platform with automatic fallback to Codex — a reusable GitHub Actions workflow that keeps reviews running through provider service disruptions and cut PR review time by 30+ minutes per pull request.',
+    'Shipped Source Warden to production: an AI ops pipeline that proactively triages Datadog alerts and surfaces the fix and the investigation behind it — with proof in the form of embedded screenshots — directly to engineers.',
+    'Architected the Engineering Internal Developer Portal in .NET and Blazor WASM — AI-native, with agent skills, self-healing workflows, and E2E test history so engineers and coding agents work against a fully realistic environment.',
+  ],
+};
+
+const earlierRoles = [
+  {
+    role: 'Principal Software Engineer',
+    company: 'Arcoro',
+    dates: '2021–2025',
+    bullets: [
+      "Pioneered Arcoro Hub — now the company's central product platform — a technical vision to scale 10x in .NET, Blazor Hybrid WASM, and .NET MAUI with a live sync bridge to legacy applications.",
+      'Tripled feature delivery speed across all product teams by building a new SPA and API for ExakTime in Angular and .NET while preserving a seamless experience for existing users.',
+      'Rewrote a bug-ridden event-driven architecture on Azure Event Hubs, Functions, and Storage — 98% performance improvement and stopped customer data loss.',
+    ],
+  },
+  {
+    role: 'Principal Software Engineer',
+    company: 'PNC Bank',
+    dates: '2016–2021',
+    bullets: [
+      'Led rewrites of two legacy institutional asset management systems into .NET — 86%+ performance improvement on workloads handling millions of dollars per hour, passing internal audit.',
+      'Increased QA deployment frequency from once per month to 4+ per day by building CI/CD pipelines with Azure DevOps and IBM UrbanCode Deploy.',
+      'Mentored a developer focused on code quality and simplicity — who now leads a team of 7 on the same applications.',
+    ],
+  },
+];
+
+const publicBuilds = [
+  {
+    index: 'BUILD-01',
+    title: 'Context Overflow',
+    body: 'A gamified AI-fluency learning platform — React 19 SPA and a .NET 9 Azure Functions API, four shipped training modules on agentic development.',
+    href: 'https://context-overflow.dev',
+    linkLabel: 'context-overflow.dev ↗',
+  },
+  {
+    index: 'BUILD-02',
+    title: 'imagile-app',
+    body: 'The multi-tenant B2B SaaS platform behind Imagile itself: .NET, Blazor WASM, Azure Container Apps.',
+  },
+  {
+    index: 'BUILD-03',
+    title: "This site's blog pipeline",
+    body: 'A GitHub Actions workflow where a Claude Code agent drafts posts from filed issues, opens a PR, and iterates on review feedback.',
+    href: '/blog',
+    linkLabel: 'Read the posts →',
+  },
+  {
+    index: 'BUILD-04',
+    title: 'pncli',
+    body: 'An open-source CLI tool.',
+    href: 'https://github.com/kolatts/pncli',
+    linkLabel: 'github.com/kolatts/pncli ↗',
+  },
+];
+---
+
+<Layout title="Work" description="A decade of shipped engineering work — AI pipelines, platform rewrites, measurable outcomes at Verifiable, Arcoro, and PNC Bank — plus Imagile's own public builds you can inspect today.">
+  <SiteHeader />
+  <main>
+    <Hero
+      eyebrow="Proof"
+      title="A <em>decade</em> of shipped work. All of it checkable."
+      subtitle="Ten years of the work Imagile does — AI pipelines, platform rewrites, delivery systems that hold up in production — with the outcomes attached and the companies named. Plus the builds shipped under the Imagile name, live and open for inspection right now."
+      size="md"
+    />
+
+    <section class="section section--tight intro">
+      <div class="container">
+        <Prose>
+          <p>
+            Two kinds of evidence here: outcomes from a decade in staff and principal roles, attributed to the
+            companies where I shipped them — and builds released under the Imagile name, open for you to judge
+            firsthand.
+          </p>
+        </Prose>
+      </div>
+    </section>
+
+    <section class="section section--tight stats grid-ground">
+      <div class="container">
+        <p class="eyebrow">The headline numbers</p>
+        <div class="stats__grid">
+          <ProofItem stat="30+ min" label="cut from PR review time, per pull request" source="AI code review pipeline, Verifiable" />
+          <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite, Arcoro" />
+          <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild, PNC Bank" />
+          <ProofItem stat="86%+" label="performance improvement on institutional asset management workloads" source="Legacy system rewrite, PNC Bank" />
+          <ProofItem stat="Hours/wk" label="of engineering time returned by agentic workflows and self-healing systems" source="Developer experience work, Verifiable" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section role-section" data-reveal>
+      <div class="container">
+        <p class="eyebrow">Current role</p>
+        <h2 class="role-section__title">What I'm shipping right now</h2>
+        <p class="role-section__note">
+          Done as Staff Engineer at Verifiable — the same AI-native engineering Imagile brings to every
+          engagement, running in production today.
+        </p>
+
+        <div class="role-block">
+          <div class="role-block__header">
+            <h3>{currentRole.role}</h3>
+            <p class="role-block__meta">{currentRole.company} · {currentRole.dates}</p>
+          </div>
+          <ul class="role-block__list">
+            {currentRole.bullets.map((b) => <li>{b}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight role-section" data-reveal>
+      <div class="container">
+        <p class="eyebrow">Earlier roles</p>
+        <h2 class="role-section__title">The decade before that</h2>
+        <div class="role-block__group">
+          {earlierRoles.map((r) => (
+            <div class="role-block">
+              <div class="role-block__header">
+                <h3>{r.role}</h3>
+                <p class="role-block__meta">{r.company} · {r.dates}</p>
+              </div>
+              <ul class="role-block__list">
+                {r.bullets.map((b) => <li>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight builds grid-ground" data-reveal>
+      <div class="container">
+        <p class="eyebrow">Public builds</p>
+        <h2 class="role-section__title">Built under the Imagile name</h2>
+        <p class="role-section__note">
+          Shipped and maintained in the open. Don't take my word for any of it — click through and judge the
+          work yourself.
+        </p>
+        <div class="builds__grid">
+          {publicBuilds.map((build) => (
+            <div class="card builds__card" data-reveal>
+              <span class="card-tag">{build.index}</span>
+              <h3 class="builds__title">{build.title}</h3>
+              <p class="builds__body">{build.body}</p>
+              {build.href && (
+                <a href={build.href} class="builds__link" target={build.href.startsWith('http') ? '_blank' : undefined} rel={build.href.startsWith('http') ? 'noopener' : undefined}>
+                  {build.linkLabel}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <CtaBand title="That's the proof. Want to talk about the work?" />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .intro :global(.prose-content) { color: var(--color-muted); }
+
+  .stats__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+
+  .role-section__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.6rem; max-width: 36ch; }
+  .role-section__note { color: var(--color-muted); max-width: 58ch; margin-bottom: var(--space-lg); }
+
+  .role-block__group { display: grid; grid-template-columns: 1fr; gap: var(--space-xl); }
+
+  .role-block__header { margin-bottom: var(--space-sm); }
+  .role-block__header h3 { font-size: var(--text-xl); }
+  .role-block__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin-top: 0.25rem;
+  }
+
+  .role-block__list { display: grid; gap: var(--space-sm); }
+  .role-block__list li {
+    color: var(--color-muted);
+    border-top: 1px solid var(--color-line);
+    padding-top: var(--space-sm);
+    max-width: var(--measure);
+  }
+
+  .builds__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); margin-top: var(--space-lg); }
+
+  .builds__card { display: flex; flex-direction: column; gap: 0.6rem; }
+  .builds__title { font-size: var(--text-lg); }
+  .builds__body { color: var(--color-muted); }
+  .builds__link {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    text-decoration: underline;
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+
+  @media (min-width: 640px) {
+    .stats__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 720px) {
+    .role-block__group { grid-template-columns: repeat(2, 1fr); }
+    .builds__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 980px) {
+    .stats__grid { grid-template-columns: repeat(5, 1fr); }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  stat: string;
+  label: string;
+  source: string;
+}
+const { stat, label, source } = Astro.props;
+---
+
+<div class="proof-item" data-reveal>
+  <p class="proof-item__stat">{stat}</p>
+  <p class="proof-item__label">{label}</p>
+  <p class="proof-item__source">{source}</p>
+</div>
+
+<style>
+  .proof-item { padding: var(--space-sm) 0; border-top: 1px solid var(--color-line); }
+  .proof-item__stat {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .proof-item__label { font-size: var(--text-sm); margin-bottom: 0.25rem; }
+  .proof-item__source { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-muted); }
+</style>

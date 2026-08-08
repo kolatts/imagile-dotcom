@@ -1,0 +1,217 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Hero from '../../components/Hero.astro';
+import Prose from '../../components/Prose.astro';
+import PostCard from '../../components/PostCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { readingTime } from '../../lib/reading-time';
+
+const RELEVANT_TAGS = ['developer-training', 'claude-code', 'mentorship', 'engineering'];
+
+const relatedPosts = (await getCollection('blog'))
+  .filter((p) => p.data.tags.some((t) => RELEVANT_TAGS.includes(t)))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+  .slice(0, 3);
+
+const pricingRows = [
+  { name: 'AI Transformation Strategy', detail: 'A focused session + written recommendation, credited toward what comes next', price: '$900' },
+  { name: 'Half-day workshop', detail: 'Up to 12 developers, single focused topic', price: '$3,000' },
+  { name: 'Full-day workshop', detail: 'Up to 12 developers, full workflow arc', price: '$5,000' },
+  { name: '4-week enablement cohort', detail: 'Up to 12 developers, habits that outlast the training', price: 'from $15,000' },
+];
+---
+
+<Layout title="Developer Training" description="Training engineers to build with AI — judgment and workflow, not tool tutorials. On-site in Central Ohio or remote to a distributed team, equally first-class.">
+  <SiteHeader />
+  <main>
+    <Hero
+      size="md"
+      eyebrow="Service 01"
+      title="Train engineers to build with AI — <em>judgment</em>, not tool tutorials."
+      subtitle="Anyone can demo Claude Code, Codex, or Copilot in a lunch-and-learn. The harder job is teaching a team when to trust the suggestion, when to stop and read the diff, and how review discipline has to change once the code is drafted in seconds instead of hours."
+      primaryCta={{ href: '/contact', label: 'Get in touch' }}
+      secondaryCta={{ href: '#pricing', label: 'See pricing' }}
+      markImage="/images/services/developer-training.webp"
+    />
+
+    <section class="section section--tight who" data-reveal>
+      <div class="container">
+        <p class="eyebrow">Who this is for</p>
+        <h2 class="who__title">Three people who bring me in</h2>
+        <div class="who__grid">
+          <div class="who__card card">
+            <h3>The engineering director rolling out a coding assistant org-wide</h3>
+            <p>Claude Code, Codex, or Copilot is already approved and already installed. What's missing is a shared standard for how the team uses it — so ten engineers don't invent ten different habits, half of them bad.</p>
+          </div>
+          <div class="who__card card">
+            <h3>The team lead protecting code review discipline</h3>
+            <p>Velocity went up the week AI-assisted code showed up in pull requests. So did the temptation to rubber-stamp it. This person wants the speed without losing the review culture that catches the expensive mistakes.</p>
+          </div>
+          <div class="who__card card">
+            <h3>The CTO who needs a permission policy, not a vibe</h3>
+            <p>Model harness tools can read files, run commands, and open pull requests on their own. Someone has to decide — in writing — what an agent is allowed to touch unattended and what still needs a human in the loop.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight happens grid-ground">
+      <div class="container">
+        <p class="eyebrow">What happens</p>
+        <h2 class="happens__title">A workshop or cohort, on-site or remote — equally first-class</h2>
+        <Prose>
+          <p>
+            Format is a half-day or full-day workshop for a single team, or a 4-week cohort for teams that want the
+            habits to actually stick past the training day. I run this on-site in Central Ohio, or remote to a
+            distributed team over video and a shared repo — remote is not a fallback version of the in-person
+            session, it's the same curriculum, the same live coding, the same Q&A, priced the same.
+          </p>
+          <p>
+            The work is hands-on, not a slide deck. We work through real pull requests — yours, if you can share
+            them, or representative ones if you can't — and build the muscle for reading an AI-drafted diff the way
+            you'd read a junior engineer's: fast where it's boilerplate, slow where it touches anything that can
+            fail quietly. We talk through what a permission prompt is actually protecting you from, and where teams
+            get burned by clicking through it out of habit.
+          </p>
+          <p>
+            Cohorts add spaced repetition: a kickoff session, two working sessions with real assignments in between,
+            and a wrap session where the team codifies what worked into something the next new hire can read instead
+            of re-learning by trial and error.
+          </p>
+        </Prose>
+      </div>
+    </section>
+
+    <section class="section section--tight walkaway" data-reveal>
+      <div class="container">
+        <p class="eyebrow">What you walk away with</p>
+        <h2 class="walkaway__title">Artifacts, not vibes</h2>
+        <ul class="walkaway__list">
+          <li>
+            <h3>A trained team</h3>
+            <p>Every engineer who sat through it has actually driven the tools on real code, not watched a demo.</p>
+          </li>
+          <li>
+            <h3>A written permission-policy playbook</h3>
+            <p>What an agent can do unattended, what needs a human to approve first, and why — specific to your stack, not a generic checklist.</p>
+          </li>
+          <li>
+            <h3>Review-discipline habits that hold under speed</h3>
+            <p>A shared standard for what "reviewed" means when the diff took thirty seconds to generate instead of thirty minutes.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="pricing" class="section section--tight pricing grid-ground">
+      <div class="container">
+        <p class="eyebrow">How pricing works</p>
+        <h2 class="pricing__title">Real numbers, not a contact form</h2>
+        <div class="pricing__table-wrap">
+          <table class="pricing__table">
+            <thead>
+              <tr>
+                <th>Engagement</th>
+                <th>What it is</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pricingRows.map((row) => (
+                <tr>
+                  <td data-label="Engagement">{row.name}</td>
+                  <td data-label="What it is">{row.detail}</td>
+                  <td data-label="Price" class="pricing__price">{row.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="pricing__philosophy">
+          Most engagements start with a short AI transformation strategy session — a focused conversation and a
+          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
+          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are real
+          numbers, not a "contact us" form.
+        </p>
+      </div>
+    </section>
+
+    {relatedPosts.length > 0 && (
+      <section class="section section--tight related">
+        <div class="container">
+          <p class="eyebrow">Related reading</p>
+          <h2 class="related__title">More on this</h2>
+          <div class="related__grid">
+            {relatedPosts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                publishDate={post.data.publishDate}
+                tags={post.data.tags}
+                slug={post.id}
+                readingTime={readingTime(post.body ?? '')}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <CtaBand title="Bring this to your team." />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .who__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .who__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
+  .who__card h3 { font-size: var(--text-lg); margin-bottom: 0.5rem; }
+  .who__card p { color: var(--color-muted); }
+
+  .happens__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); max-width: 34ch; }
+
+  .walkaway__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-lg); }
+  .walkaway__list { display: grid; grid-template-columns: 1fr; gap: var(--space-lg); list-style: none; padding: 0; }
+  .walkaway__list h3 { font-size: var(--text-lg); margin-bottom: 0.4rem; }
+  .walkaway__list p { color: var(--color-muted); max-width: 42ch; }
+
+  .pricing__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .pricing__table-wrap { overflow-x: auto; margin-bottom: var(--space-lg); }
+  .pricing__table { width: 100%; border-collapse: collapse; min-width: 520px; }
+  .pricing__table th, .pricing__table td {
+    text-align: left;
+    padding: 0.75em 0.9em;
+    border: 1px solid var(--color-line);
+    vertical-align: top;
+  }
+  .pricing__table th {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    background: var(--color-surface);
+  }
+  .pricing__table td { color: var(--color-muted); }
+  .pricing__table td:first-child { color: var(--color-ink); font-weight: 600; }
+  .pricing__price { font-family: var(--font-mono); white-space: nowrap; color: var(--color-ink) !important; }
+  .pricing__philosophy { color: var(--color-muted); max-width: 62ch; }
+
+  .related__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
+  .related__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+
+  @media (min-width: 720px) {
+    .who__grid { grid-template-columns: repeat(3, 1fr); }
+    .walkaway__list { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 640px) {
+    .related__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .related__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>
