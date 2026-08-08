@@ -19,7 +19,7 @@ const formattedDate = new Date(publishDate).toLocaleDateString('en-US', {
 
 <article class="post-card card" data-reveal>
   <p class="post-card__meta">
-    <time datetime={new Date(publishDate).toISOString()}>{formattedDate}</time>
+    <time datetime={new Date(publishDate).toISOString()} data-relative>{formattedDate}</time>
     {readingTime && <span> · {readingTime} min read</span>}
   </p>
   <h3 class="post-card__title"><a href={`/blog/${slug}`}>{title}</a></h3>

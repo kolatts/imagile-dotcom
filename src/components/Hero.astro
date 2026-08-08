@@ -15,9 +15,8 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
 ---
 
 <section class={`hero hero--${size} grid-ground`}>
-  <canvas class="hero__ambient" data-ambient aria-hidden="true"></canvas>
   <div class="hero__streaks" aria-hidden="true">
-    <i></i><i></i><i></i>
+    <i></i><i></i><i></i><i></i><i></i>
   </div>
   <div class="container hero__inner">
     <div class="hero__copy">
@@ -40,11 +39,6 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
 
     {showMark && !markImage && (
       <div class="hero__mark" aria-hidden="true">
-        <svg class="hero__mark-ring" viewBox="0 0 400 400" data-parallax="0.03">
-          <g class="hero__mark-ring-spin">
-            <circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-ink)" stroke-width="1.25" stroke-dasharray="2 10" opacity="0.35" />
-          </g>
-        </svg>
         <div class="hero__clock" data-parallax="0.1">
           <img
             class="hero__clock-face"
@@ -60,23 +54,35 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
           <div class="hero__clock-hand hero__clock-hand--second"></div>
           <div class="hero__clock-cap"></div>
         </div>
+        <p class="hero__elapsed">T+<span data-elapsed>00:00</span> on this page</p>
       </div>
     )}
 
     <script is:inline>
       // Set the hero clock to the visitor's real time; CSS animations sweep
-      // the hands forward from there. Runs before paint-critical nothing --
-      // purely decorative.
+      // the hands forward from there. The elapsed ticker counts time spent
+      // on this page -- the honest version of "the clock is running."
       (function () {
         var clock = document.querySelector('.hero__clock');
-        if (!clock) return;
-        var now = new Date();
-        var s = now.getSeconds() + now.getMilliseconds() / 1000;
-        var m = now.getMinutes() + s / 60;
-        var h = (now.getHours() % 12) + m / 60;
-        clock.style.setProperty('--sec0', s * 6 + 'deg');
-        clock.style.setProperty('--min0', m * 6 + 'deg');
-        clock.style.setProperty('--hr0', h * 30 + 'deg');
+        if (clock) {
+          var now = new Date();
+          var s = now.getSeconds() + now.getMilliseconds() / 1000;
+          var m = now.getMinutes() + s / 60;
+          var h = (now.getHours() % 12) + m / 60;
+          clock.style.setProperty('--sec0', s * 6 + 'deg');
+          clock.style.setProperty('--min0', m * 6 + 'deg');
+          clock.style.setProperty('--hr0', h * 30 + 'deg');
+        }
+        var el = document.querySelector('[data-elapsed]');
+        if (el) {
+          var t0 = Date.now();
+          setInterval(function () {
+            var total = Math.floor((Date.now() - t0) / 1000);
+            var mm = Math.floor(total / 60);
+            var ss = total % 60;
+            el.textContent = (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+          }, 1000);
+        }
       })();
     </script>
   </div>
@@ -85,14 +91,6 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
 <style>
   .hero { position: relative; padding-block: var(--space-2xl) var(--space-xl); overflow: clip; }
   .hero--md { padding-block: var(--space-xl) var(--space-lg); }
-
-  .hero__ambient {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
 
   .hero__inner {
     position: relative;
@@ -137,20 +135,6 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
     aspect-ratio: 1;
     transform: translateY(-52%);
     pointer-events: none;
-  }
-
-  .hero__mark-ring {
-    position: absolute;
-    inset: -9%;
-    width: 118%;
-    height: 118%;
-  }
-
-  /* The dashed ring turns like an escapement — slow enough that you notice
-     it only once you've already noticed it. */
-  .hero__mark-ring-spin {
-    transform-box: fill-box;
-    transform-origin: center;
   }
 
   /* A working clock: generated dial, real hands set to the visitor's time
@@ -210,18 +194,21 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
     border: 2px solid var(--color-bg);
   }
 
+  .hero__elapsed {
+    margin-top: var(--space-2xs);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+  }
+
+  .hero__elapsed span { color: var(--color-accent); font-variant-numeric: tabular-nums; }
+
   @media (prefers-reduced-motion: no-preference) {
-    .hero__mark-ring-spin {
-      animation: ring-turn 90s linear infinite;
-    }
     .hero__clock-hand--second { animation: sweep-sec 60s linear infinite; }
     .hero__clock-hand--minute { animation: sweep-min 3600s linear infinite; }
     .hero__clock-hand--hour { animation: sweep-hr 43200s linear infinite; }
-  }
-
-  @keyframes ring-turn {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
   }
 
   @keyframes sweep-sec {
@@ -261,34 +248,43 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
 
   .hero__streaks i {
     position: absolute;
-    left: -45%;
-    width: 42%;
-    height: 74px;
+    left: -55%;
+    width: 52%;
+    height: 110px;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-accent) 55%, transparent) 55%, transparent);
-    filter: blur(26px);
-    opacity: 0.1;
-    transform: rotate(-9deg);
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-accent) 60%, transparent) 55%, transparent);
+    filter: blur(22px);
+    opacity: 0.22;
+    transform: rotate(-10deg);
   }
 
-  .hero__streaks i:nth-child(1) { top: 18%; }
+  .hero__streaks i:nth-child(1) { top: 12%; }
   .hero__streaks i:nth-child(2) {
-    top: 46%;
-    height: 48px;
-    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-ink) 45%, transparent) 55%, transparent);
-    opacity: 0.07;
+    top: 34%;
+    height: 64px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-ink) 55%, transparent) 55%, transparent);
+    opacity: 0.14;
   }
-  .hero__streaks i:nth-child(3) { top: 70%; height: 58px; opacity: 0.08; }
+  .hero__streaks i:nth-child(3) { top: 52%; height: 88px; opacity: 0.18; }
+  .hero__streaks i:nth-child(4) {
+    top: 68%;
+    height: 52px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-ink) 50%, transparent) 55%, transparent);
+    opacity: 0.12;
+  }
+  .hero__streaks i:nth-child(5) { top: 84%; height: 72px; opacity: 0.16; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hero__streaks i { animation: streak-drift 11s linear infinite; }
-    .hero__streaks i:nth-child(2) { animation-duration: 15s; animation-delay: -6s; }
-    .hero__streaks i:nth-child(3) { animation-duration: 19s; animation-delay: -11s; }
+    .hero__streaks i { animation: streak-drift 7s linear infinite; }
+    .hero__streaks i:nth-child(2) { animation-duration: 9.5s; animation-delay: -4s; }
+    .hero__streaks i:nth-child(3) { animation-duration: 6s; animation-delay: -2.5s; }
+    .hero__streaks i:nth-child(4) { animation-duration: 11s; animation-delay: -7s; }
+    .hero__streaks i:nth-child(5) { animation-duration: 8s; animation-delay: -5.5s; }
   }
 
   @keyframes streak-drift {
-    from { transform: translateX(0) rotate(-9deg); }
-    to { transform: translateX(340%) rotate(-9deg); }
+    from { transform: translateX(0) rotate(-10deg); }
+    to { transform: translateX(400%) rotate(-10deg); }
   }
 
   @media (min-width: 860px) {
