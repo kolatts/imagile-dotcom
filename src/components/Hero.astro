@@ -45,19 +45,40 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
             <circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-ink)" stroke-width="1.25" stroke-dasharray="2 10" opacity="0.35" />
           </g>
         </svg>
-        <div class="hero__mark-hang" data-parallax="0.1">
+        <div class="hero__clock" data-parallax="0.1">
           <img
-            class="hero__mark-instrument"
-            src="/images/hero-instrument.webp"
+            class="hero__clock-face"
+            src="/images/hero-clockface.webp"
             alt=""
             width="720"
-            height="774"
+            height="720"
             loading="lazy"
             decoding="async"
           />
+          <div class="hero__clock-hand hero__clock-hand--hour"></div>
+          <div class="hero__clock-hand hero__clock-hand--minute"></div>
+          <div class="hero__clock-hand hero__clock-hand--second"></div>
+          <div class="hero__clock-cap"></div>
         </div>
       </div>
     )}
+
+    <script is:inline>
+      // Set the hero clock to the visitor's real time; CSS animations sweep
+      // the hands forward from there. Runs before paint-critical nothing --
+      // purely decorative.
+      (function () {
+        var clock = document.querySelector('.hero__clock');
+        if (!clock) return;
+        var now = new Date();
+        var s = now.getSeconds() + now.getMilliseconds() / 1000;
+        var m = now.getMinutes() + s / 60;
+        var h = (now.getHours() % 12) + m / 60;
+        clock.style.setProperty('--sec0', s * 6 + 'deg');
+        clock.style.setProperty('--min0', m * 6 + 'deg');
+        clock.style.setProperty('--hr0', h * 30 + 'deg');
+      })();
+    </script>
   </div>
 </section>
 
@@ -132,26 +153,70 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
     transform-origin: center;
   }
 
-  .hero__mark-hang {
+  /* A working clock: generated dial, real hands set to the visitor's time
+     by the inline script (--hr0/--min0/--sec0), swept forward by CSS. */
+  .hero__clock {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1;
   }
 
-  /* The instrument hangs from its top loop and sways, the way the real
-     thing would on a hook. Origin sits at the suspension ring. */
-  .hero__mark-instrument {
+  .hero__clock-face {
     width: 100%;
     height: auto;
     opacity: 0.94;
-    transform-origin: 50% 3%;
+  }
+
+  .hero__clock-hand {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: 50% 100%;
+    border-radius: 999px;
+    background: var(--color-ink);
+  }
+
+  .hero__clock-hand--hour {
+    width: 2.4%;
+    height: 22%;
+    margin-left: -1.2%;
+    transform: rotate(var(--hr0, 305deg));
+  }
+
+  .hero__clock-hand--minute {
+    width: 1.6%;
+    height: 32%;
+    margin-left: -0.8%;
+    transform: rotate(var(--min0, 118deg));
+  }
+
+  .hero__clock-hand--second {
+    width: 0.7%;
+    height: 38%;
+    margin-left: -0.35%;
+    background: var(--color-accent);
+    transform: rotate(var(--sec0, 0deg));
+  }
+
+  .hero__clock-cap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 3.4%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--color-accent);
+    border: 2px solid var(--color-bg);
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero__mark-ring-spin {
       animation: ring-turn 90s linear infinite;
     }
-    .hero__mark-instrument {
-      animation: instrument-sway 12s ease-in-out infinite;
-    }
+    .hero__clock-hand--second { animation: sweep-sec 60s linear infinite; }
+    .hero__clock-hand--minute { animation: sweep-min 3600s linear infinite; }
+    .hero__clock-hand--hour { animation: sweep-hr 43200s linear infinite; }
   }
 
   @keyframes ring-turn {
@@ -159,15 +224,26 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
     to { transform: rotate(360deg); }
   }
 
-  @keyframes instrument-sway {
-    0%, 100% { transform: rotate(-1.6deg); }
-    50% { transform: rotate(1.6deg); }
+  @keyframes sweep-sec {
+    from { transform: rotate(var(--sec0, 0deg)); }
+    to { transform: rotate(calc(var(--sec0, 0deg) + 360deg)); }
   }
 
-  /* Line art is warm near-black over transparency; in dark mode flip its
-     lightness while keeping the terracotta accent roughly in place. */
+  @keyframes sweep-min {
+    from { transform: rotate(var(--min0, 118deg)); }
+    to { transform: rotate(calc(var(--min0, 118deg) + 360deg)); }
+  }
+
+  @keyframes sweep-hr {
+    from { transform: rotate(var(--hr0, 305deg)); }
+    to { transform: rotate(calc(var(--hr0, 305deg) + 360deg)); }
+  }
+
+  /* Dial art is warm near-black over transparency; in dark mode flip its
+     lightness while keeping the terracotta accent roughly in place. The
+     hands live outside the img so they take theme tokens directly. */
   @media (prefers-color-scheme: dark) {
-    .hero__mark-instrument {
+    .hero__clock-face {
       filter: invert(1) hue-rotate(180deg) saturate(1.3) brightness(1.05);
       opacity: 0.9;
     }

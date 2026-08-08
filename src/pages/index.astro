@@ -57,16 +57,6 @@ const latestPosts = (await getCollection('blog'))
       secondaryCta={{ href: '/work', label: 'See the work' }}
     />
 
-    <section class="section section--tight villain" data-reveal>
-      <div class="container">
-        <p class="villain__text">
-          Most AI initiatives don't fail at the model. They fail because nobody engineered the workflow around it —
-          so the pilot stays a pilot, the training is obsolete before the cohort finishes, and the demo never ships.
-          That's the failure mode Imagile exists to route around.
-        </p>
-      </div>
-    </section>
-
     <PathPicker />
 
     <section class="section services">
@@ -146,20 +136,15 @@ const latestPosts = (await getCollection('blog'))
       </section>
     )}
 
-    <CtaBand title="Talk it through before you commit to it." />
+    <CtaBand
+      title="The conversation costs an hour. Waiting is billed by the quarter."
+      body="A short call now, or the same call a few releases from now — the only difference is what it costs to catch up."
+    />
   </main>
   <SiteFooter />
 </Layout>
 
 <style>
-  .villain__text {
-    max-width: 62ch;
-    font-size: var(--text-lg);
-    color: var(--color-muted);
-    border-left: 2px solid var(--color-accent);
-    padding-left: var(--space-md);
-  }
-
   .services__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
   .services__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
 
