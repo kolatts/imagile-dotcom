@@ -71,13 +71,13 @@ const publicBuilds = [
 ];
 ---
 
-<Layout title="Work" description="No client list yet — a decade of verifiable engineering work instead, honestly framed as employment history, plus the public builds that are Imagile's own.">
+<Layout title="Work" description="A decade of shipped engineering work — AI pipelines, platform rewrites, measurable outcomes at Verifiable, Arcoro, and PNC Bank — plus Imagile's own public builds you can inspect today.">
   <SiteHeader />
   <main>
     <Hero
       eyebrow="Proof"
-      title="No client list yet. A <em>decade</em> of the same work instead."
-      subtitle="Imagile hasn't billed a client. It doesn't need to borrow credibility to prove the work is real — a decade of it is public record under someone else's letterhead, and the builds that are Imagile's own are verifiable right now."
+      title="A <em>decade</em> of shipped work. All of it checkable."
+      subtitle="Ten years of the work Imagile does — AI pipelines, platform rewrites, delivery systems that hold up in production — with the outcomes attached and the companies named. Plus the builds shipped under the Imagile name, live and open for inspection right now."
       size="md"
     />
 
@@ -85,10 +85,9 @@ const publicBuilds = [
       <div class="container">
         <Prose>
           <p>
-            Here's the honest version: Imagile is a new business with zero client engagements. What follows isn't
-            a client list, because there isn't one yet. It's two things instead — a decade of the same kind of
-            work, done as an employee at companies that will confirm it, and a handful of things I've built and
-            shipped publicly under the Imagile name, which anyone can go look at right now.
+            Two kinds of evidence here: outcomes from a decade in staff and principal roles, attributed to the
+            companies where I shipped them — and builds released under the Imagile name, open for you to judge
+            firsthand.
           </p>
         </Prose>
       </div>
@@ -102,6 +101,7 @@ const publicBuilds = [
           <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite, Arcoro" />
           <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild, PNC Bank" />
           <ProofItem stat="86%+" label="performance improvement on institutional asset management workloads" source="Legacy system rewrite, PNC Bank" />
+          <ProofItem stat="Hours/wk" label="of engineering time returned by agentic workflows and self-healing systems" source="Developer experience work, Verifiable" />
         </div>
       </div>
     </section>
@@ -109,10 +109,10 @@ const publicBuilds = [
     <section class="section role-section" data-reveal>
       <div class="container">
         <p class="eyebrow">Current role</p>
-        <h2 class="role-section__title">Employment experience, not Imagile client work</h2>
+        <h2 class="role-section__title">What I'm shipping right now</h2>
         <p class="role-section__note">
-          This is what I do full-time, for an employer — stated outright so it's never mistaken for something
-          Imagile delivered to a client.
+          Done as Staff Engineer at Verifiable — the same AI-native engineering Imagile brings to every
+          engagement, running in production today.
         </p>
 
         <div class="role-block">
@@ -130,7 +130,7 @@ const publicBuilds = [
     <section class="section section--tight role-section" data-reveal>
       <div class="container">
         <p class="eyebrow">Earlier roles</p>
-        <h2 class="role-section__title">Also employment experience, not Imagile client work</h2>
+        <h2 class="role-section__title">The decade before that</h2>
         <div class="role-block__group">
           {earlierRoles.map((r) => (
             <div class="role-block">
@@ -150,9 +150,10 @@ const publicBuilds = [
     <section class="section section--tight builds grid-ground" data-reveal>
       <div class="container">
         <p class="eyebrow">Public builds</p>
-        <h2 class="role-section__title">This part is Imagile — publicly shippable, verifiable today</h2>
+        <h2 class="role-section__title">Built under the Imagile name</h2>
         <p class="role-section__note">
-          No employer letterhead on these. Built, shipped, and maintained under the Imagile name — go check them.
+          Shipped and maintained in the open. Don't take my word for any of it — click through and judge the
+          work yourself.
         </p>
         <div class="builds__grid">
           {publicBuilds.map((build) => (
@@ -227,6 +228,6 @@ const publicBuilds = [
   }
 
   @media (min-width: 980px) {
-    .stats__grid { grid-template-columns: repeat(4, 1fr); }
+    .stats__grid { grid-template-columns: repeat(5, 1fr); }
   }
 </style>

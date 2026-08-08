@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
-    .ink { stroke: #17191b; fill: #17191b; }
-    .paper { fill: #f6f7f6; }
+    .ink { stroke: #1c1915; fill: #1c1915; }
+    .paper { fill: #faf8f4; }
     @media (prefers-color-scheme: dark) {
-      .ink { stroke: #e6e9eb; fill: #e6e9eb; }
-      .paper { fill: #0f1214; }
+      .ink { stroke: #ece7df; fill: #ece7df; }
+      .paper { fill: #16130f; }
     }
   </style>
-  <rect class="paper" width="32" height="32" rx="4" />
+  <rect class="paper" width="32" height="32" rx="7" />
   <circle class="ink" cx="16" cy="8.5" r="2.25" fill="none" stroke-width="2" />
   <line class="ink" x1="16" y1="10.5" x2="9.5" y2="26" stroke-width="2" stroke-linecap="round" />
   <line class="ink" x1="16" y1="10.5" x2="22.5" y2="26" stroke-width="2" stroke-linecap="round" />
   <circle class="ink" cx="9.5" cy="26.5" r="1.4" />
-  <circle cx="22.5" cy="26.5" r="1.6" fill="#e85d04" />
+  <circle cx="22.5" cy="26.5" r="1.6" fill="#c25d33" />
 </svg>

@@ -61,10 +61,10 @@ const current = Astro.url.pathname;
     align-items: center;
     gap: 0.5rem;
     margin-right: auto;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 1.05rem;
-    letter-spacing: 0.01em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
   }
 
   .site-header__mark { color: var(--color-ink); flex: none; }
@@ -93,7 +93,8 @@ const current = Astro.url.pathname;
   .site-header__nav ul {
     display: flex;
     gap: 1.6rem;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    font-weight: 500;
     font-size: var(--text-sm);
   }
 
