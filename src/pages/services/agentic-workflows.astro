@@ -19,7 +19,7 @@ const relatedPosts = (await getCollection('blog'))
 const pricing = [
   { name: 'AI Transformation Strategy', detail: 'A focused session, written recommendation, credits forward', price: '$900' },
   { name: 'AI Readiness / Discovery Sprint', detail: '2 weeks, remote-first, fixed fee', price: '$8,500' },
-  { name: 'Agentic workflow pilot', detail: 'Single use case, 4–8 weeks, scoped', price: '$25,000–$50,000' },
+  { name: 'Automation pilot', detail: 'Single process, 4–8 weeks, scoped', price: '$25,000–$50,000' },
   { name: 'Ongoing retainer', detail: 'Continuing improvement after the build ships', price: 'Scoped to your cadence' },
   { name: 'Fractional AI leadership', detail: 'Up to 3 days/week, scoped', price: 'from $10,000/mo' },
 ];
@@ -34,7 +34,7 @@ const pricing = [
     <Hero
       eyebrow="Service 02"
       title="Automate your <em>business processes.</em>"
-      subtitle="The repetitive work your team does by hand — intake, triage, reporting, follow-ups — designed into automation that runs reliably and gets checked before anything ships. Built on the same agentic tooling I write about, without you needing to care what it's called."
+      subtitle="The repetitive work your team does by hand — intake, triage, reporting, follow-ups — handed off to AI that's been tested against your real work and proven trustworthy before it takes anything over."
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '/work', label: 'See the work' }}
       size="md"
@@ -58,8 +58,8 @@ const pricing = [
             <span class="card-tag">02</span>
             <h3>The founder who wants a pilot that ships</h3>
             <p>
-              You've seen a slick agent demo. You want the version that survives contact with real data, real edge
-              cases, and a real production environment — not another proof of concept that quietly dies in a repo.
+              You've seen a slick AI demo. You want the version that holds up against real customers, real
+              paperwork, and real exceptions — not another proof of concept that quietly dies after the meeting.
             </p>
           </div>
         </div>
@@ -71,10 +71,9 @@ const pricing = [
         <p class="eyebrow">The failure mode</p>
         <h2 class="villain__title">The pilot that never ships</h2>
         <p class="villain__text">
-          Here's the villain of this whole category: an agent that works great in the demo, gets a round of applause,
-          and then never touches production because nobody built a way to know when it's wrong. It has no
-          verification loop, no owner, no path from "looks good in the recording" to "runs unattended on Tuesday."
-          Six months later it's a slide in a deck nobody opens. I don't build those.
+          Here's the villain of this whole category: an AI tool that looks great in the demo, gets a round of
+          applause, and then never gets trusted with real work — because nobody built a way to know when it's
+          wrong, and nobody owns it. Six months later it's a slide in a deck nobody opens. I don't build those.
         </p>
       </div>
     </section>
@@ -82,25 +81,24 @@ const pricing = [
     <section class="section section--tight happens">
       <div class="container">
         <p class="eyebrow">What happens</p>
-        <h2 class="happens__title">Verification loop first, automation second</h2>
+        <h2 class="happens__title">First we map the work. Then AI takes the right parts.</h2>
         <Prose>
           <p>
-            Every engagement starts by finding the check, not the prompt. Before I write a single agent step, I
-            establish how we'll know the output is correct — a test harness, a human-in-the-loop review gate, a
-            comparison against ground truth, or an automated eval suite scoped to your actual data. That
-            verification loop is the spine everything else hangs off of.
+            We start by sitting down with the people who actually do the work and breaking the process into
+            steps — what comes in, what decision gets made, what goes out, and where the hours really go. Most
+            processes have three or four steps that eat most of the time. Those are the ones worth handing to AI;
+            the judgment calls stay with your team.
           </p>
           <p>
-            From there I build the smallest version of the pipeline that can run end-to-end against real inputs,
-            not sample data. It's instrumented from day one — logging what it did, why, and how confident it was —
-            so failures are visible instead of silent. We run it in shadow mode alongside the manual process until
-            the numbers earn trust, then cut over.
+            Then I bring in industry-standard AI from OpenAI and Anthropic — the same technology behind ChatGPT
+            and Claude — and wire it into the tools you already use: your inbox, your spreadsheets, your CRM,
+            your ticketing system. No rip-and-replace, no new software for your team to learn.
           </p>
           <p>
-            The stack is chosen for what the problem needs, not what's trending — sometimes that's an MCP server
-            wired into your existing tools, sometimes it's a plain scheduled job with an LLM call in the middle of
-            it. The agent framework is the least interesting part of this. The verification loop is the part that
-            decides whether it's still running next quarter.
+            Before anything takes over, it has to prove itself. The automation runs alongside your team on real
+            work while we compare its answers to what your people would have done. You see the accuracy numbers
+            before you rely on them, and a person stays in the loop for the calls that matter. Only when the
+            results earn your trust does it take the routine work off your team's plate for good.
           </p>
         </Prose>
       </div>
@@ -109,19 +107,19 @@ const pricing = [
     <section class="section section--tight walkaway grid-ground">
       <div class="container">
         <p class="eyebrow">What you walk away with</p>
-        <h2 class="walkaway__title">A working pipeline, not a slide deck</h2>
+        <h2 class="walkaway__title">Working automation, not a slide deck</h2>
         <ul class="walkaway__list">
           <li data-reveal>
-            <h3>A pipeline running in production</h3>
-            <p>Deployed against your real systems, handling your real inputs — not a sandboxed demo environment.</p>
+            <h3>Automation doing real work</h3>
+            <p>Running inside the tools you already use, handling your real volume — not a demo environment.</p>
           </li>
           <li data-reveal>
-            <h3>A verification loop your team can maintain</h3>
-            <p>Documented, instrumented, and owned by someone on your team — not dependent on me staying on retainer forever.</p>
+            <h3>Proof you can see</h3>
+            <p>Plain-English reports of what it did and how accurate it is, owned by someone on your team — not dependent on me staying on retainer forever.</p>
           </li>
           <li data-reveal>
-            <h3>A written account of what it can't do yet</h3>
-            <p>Every agent has edges. You'll know exactly where they are instead of finding out from an angry customer.</p>
+            <h3>A clear list of what still needs a person</h3>
+            <p>Every automation has limits. You'll know exactly which decisions stay with your team instead of finding out from an angry customer.</p>
           </li>
         </ul>
       </div>

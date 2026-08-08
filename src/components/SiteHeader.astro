@@ -11,13 +11,10 @@ const current = Astro.url.pathname;
 <header class="site-header">
   <div class="container site-header__inner">
     <a href="/" class="site-header__logo" aria-label="Imagile home">
-      <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" class="site-header__mark">
-        <circle cx="16" cy="8.5" r="2.25" fill="none" stroke="currentColor" stroke-width="2" />
-        <line x1="16" y1="10.5" x2="9.5" y2="26" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="16" y1="10.5" x2="22.5" y2="26" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <circle cx="9.5" cy="26.5" r="1.4" fill="currentColor" />
-        <circle cx="22.5" cy="26.5" r="1.6" fill="var(--color-accent)" />
-      </svg>
+      <picture>
+        <source srcset="/images/imagile-mark-dark.png" media="(prefers-color-scheme: dark)" />
+        <img src="/images/imagile-mark.png" width="26" height="26" alt="" class="site-header__mark" />
+      </picture>
       imagile
     </a>
 
@@ -67,7 +64,7 @@ const current = Astro.url.pathname;
     letter-spacing: -0.01em;
   }
 
-  .site-header__mark { color: var(--color-ink); flex: none; }
+  .site-header__mark { display: block; flex: none; }
 
   .site-header__toggle-input { display: none; }
 

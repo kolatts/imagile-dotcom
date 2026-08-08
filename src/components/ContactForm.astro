@@ -74,6 +74,22 @@ const services = [
   </noscript>
 </form>
 
+<div id="cf-success" class="contact-success" hidden tabindex="-1">
+  <svg class="contact-success__check" viewBox="0 0 52 52" aria-hidden="true">
+    <circle class="contact-success__circle" cx="26" cy="26" r="23" fill="none" />
+    <path class="contact-success__tick" fill="none" d="M15 27l8 8 15-16" />
+  </svg>
+  <h3 class="contact-success__title">Landed.</h3>
+  <p class="contact-success__body">
+    Thanks<span id="cf-success-name"></span> — your message is in my inbox. Expect a personal reply
+    at <strong id="cf-success-email"></strong> within one business day.
+  </p>
+  <p class="contact-success__meta">
+    Forgot something? Email <a href="mailto:sunny@imagile.dev">sunny@imagile.dev</a> or
+    <button type="button" class="contact-success__again" id="cf-again">send another message</button>.
+  </p>
+</div>
+
 <script>
   const INTAKE_URL = `${import.meta.env.PUBLIC_INTAKE_API_URL || 'https://api.imagile.dev'}/api/intake/contact`;
 
@@ -114,9 +130,20 @@ const services = [
       });
 
       if (res.ok) {
+        const panel = document.getElementById('cf-success');
+        const nameSlot = document.getElementById('cf-success-name');
+        const emailSlot = document.getElementById('cf-success-email');
+        const firstName = String(data.get('name') || '').trim().split(/\s+/)[0];
+        if (nameSlot) nameSlot.textContent = firstName ? `, ${firstName}` : '';
+        if (emailSlot) emailSlot.textContent = String(data.get('email') || '');
+
         form.hidden = true;
-        status.className = 'contact-form__status contact-form__status--success';
-        status.textContent = "Landed. You'll hear from me within one business day.";
+        if (panel) {
+          panel.hidden = false;
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          panel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+          panel.focus({ preventScroll: true });
+        }
         (window as any).trackEvent?.('ContactSubmitted');
         return;
       }
@@ -139,6 +166,17 @@ const services = [
       (window as any).turnstile?.reset?.();
     }
   });
+
+  document.getElementById('cf-again')?.addEventListener('click', () => {
+    const panel = document.getElementById('cf-success');
+    if (panel) panel.hidden = true;
+    if (form) {
+      form.reset();
+      form.hidden = false;
+      (document.getElementById('cf-name') as HTMLInputElement | null)?.focus();
+    }
+    (window as any).turnstile?.reset?.();
+  });
 </script>
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -150,6 +188,9 @@ const services = [
     gap: var(--space-md);
     max-width: 40rem;
   }
+
+  /* The flex display above outranks the UA's [hidden] rule. */
+  .contact-form[hidden] { display: none; }
 
   .contact-form__row { display: flex; flex-direction: column; gap: 0.4rem; }
 
@@ -200,4 +241,80 @@ const services = [
   .contact-form__status--error { color: #c0392b; }
 
   .contact-form__noscript { color: var(--color-muted); font-size: var(--text-sm); }
+
+  .contact-success {
+    max-width: 40rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-top: 3px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg) var(--space-md);
+    outline: none;
+    animation: cf-success-in 0.45s var(--ease-out) both;
+  }
+
+  .contact-success__check {
+    width: 52px;
+    height: 52px;
+    margin-bottom: var(--space-xs);
+    color: var(--color-accent);
+  }
+
+  .contact-success__circle {
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-dasharray: 145;
+    stroke-dashoffset: 145;
+    animation: cf-draw 0.6s var(--ease-out) 0.15s forwards;
+  }
+
+  .contact-success__tick {
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 34;
+    stroke-dashoffset: 34;
+    animation: cf-draw 0.35s var(--ease-out) 0.65s forwards;
+  }
+
+  .contact-success__title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-success__body { font-size: var(--text-lg); max-width: 46ch; }
+
+  .contact-success__meta {
+    margin-top: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .contact-success__meta a { color: var(--color-accent); text-decoration: underline; }
+
+  .contact-success__again {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--color-accent);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  @keyframes cf-success-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes cf-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-success { animation: none; }
+    .contact-success__circle,
+    .contact-success__tick { animation: none; stroke-dashoffset: 0; }
+  }
 </style>

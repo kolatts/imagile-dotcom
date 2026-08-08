@@ -24,13 +24,13 @@ const related = (await getCollection('blog'))
   .slice(0, 3);
 ---
 
-<Layout title="Custom Software" description="Production software on .NET, Azure, and AWS — built by the person who builds it. Senior-led, no handoffs, no bench.">
+<Layout title="Custom Software" description="You know your industry. I turn that knowledge into working software — scoped, built, and launched by one senior engineer, explained in plain English the whole way.">
   <SiteHeader />
   <main>
     <Hero
       eyebrow="Service 03"
-      title="The software behind it, built by <em>the person who builds it.</em>"
-      subtitle=".NET, Azure, AWS — senior-led, no handoffs, no bench. If the plan is real, someone has to build it. That's this."
+      title="You know the industry. <em>I build the software.</em>"
+      subtitle="You've spent years inside a business and can see the product it's missing. I turn that into working software — scoped, built, and launched by one senior engineer, explained in plain English the whole way."
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '/work', label: 'See the work' }}
       size="md"
@@ -40,14 +40,20 @@ const related = (await getCollection('blog'))
     <section class="section section--tight who">
       <div class="container">
         <p class="eyebrow">Who this is for</p>
-        <h2 class="who__title">A business that needs real software built, not just advised on</h2>
+        <h2 class="who__title">People who know exactly what should exist — and need someone to build it</h2>
         <Prose>
           <p>
-            This is for teams past the strategy conversation — you know what needs to exist, and you need it
-            built to run in production, not sketched in a deck. Maybe it's an internal tool nobody else will
-            prioritize, an integration between systems that don't want to talk to each other, or a customer-facing
-            product that has to hold up under real load. If the deliverable is working software, this is the
-            service.
+            Most often that's a domain expert with a startup idea. You've spent a career in insurance, logistics,
+            healthcare, construction — some industry where you can see the product everyone needs and nobody has
+            built. You don't need to learn to code, and you don't need to gamble on a technical co-founder on day
+            one. You need a first version real customers can use, built by someone who's shipped software for
+            twenty years and can explain every decision without the jargon.
+          </p>
+          <p>
+            It's also for established businesses past the strategy conversation — an internal tool nobody else
+            will prioritize, an integration between systems that don't want to talk to each other, a
+            customer-facing product that has to hold up under real load. If the deliverable is working software,
+            this is the service.
           </p>
           <p>
             It's not for teams that want a headcount-shaped hire, or a body to sit in standups indefinitely.
@@ -63,21 +69,25 @@ const related = (await getCollection('blog'))
         <h2 class="what-happens__title">Scope it, build it, ship it — same person the whole way</h2>
         <Prose>
           <p>
-            Every build starts with the scope: what it needs to do, what it integrates with, and what "done"
-            actually means, written down before any code gets written. Architecture decisions get made up
-            front and explained, not discovered three months in. Then it gets built — on .NET and Azure or
-            AWS, with CI/CD from day one, not bolted on after the fact.
+            Every build starts with the scope: what it needs to do, who uses it, and what "done" actually
+            means — written down in plain English before any code gets written. The big decisions get made up
+            front and explained, not discovered three months in. Then it gets built, with the ability to ship
+            updates continuously from day one, so version two costs a fraction of version one.
           </p>
           <p>
-            This isn't theoretical. <a href="/work">Imagile-app and Context Overflow are public</a> — you can
-            read the code, see the deploy pipeline, and judge the engineering for yourself instead of taking
-            my word for it. That's the standard the work you're paying for is held to as well.
+            Under the hood it's the same enterprise-grade technology large companies run on (.NET, Azure, AWS) —
+            but you don't have to care about any of that. What you have to know is that it launches, holds up,
+            and can grow with you.
           </p>
           <p>
-            If the software itself needs AI in it — not just AI used to build it — that's a platform decision as
-            much as a coding one. I can help you choose and wire up AWS Bedrock, Azure AI Foundry, or Microsoft's
-            Agent Framework, or bill directly against Anthropic's or OpenAI's APIs, depending on what your
-            compliance, cost, and latency constraints actually require.
+            This isn't theoretical. <a href="/work">Imagile-app and Context Overflow are public</a> — you, or any
+            engineer you trust, can read the code and judge the work directly instead of taking my word for it.
+            That's the standard the software you're paying for is held to as well.
+          </p>
+          <p>
+            If your product needs AI inside it, I bring in the industry standards from OpenAI and Anthropic —
+            the technology behind ChatGPT and Claude — and pick the setup that fits your costs, your customers,
+            and your compliance requirements.
           </p>
         </Prose>
       </div>
@@ -95,13 +105,13 @@ const related = (await getCollection('blog'))
           </div>
           <div class="card" data-reveal>
             <span class="card-tag">DELIVERABLE</span>
-            <h3>A pipeline, not a snapshot</h3>
-            <p>CI/CD wired up so the next change ships the same way the first one did.</p>
+            <h3>A way to keep shipping</h3>
+            <p>The next improvement releases as easily as the first — no rebuild, no starting over.</p>
           </div>
           <div class="card" data-reveal>
             <span class="card-tag">DELIVERABLE</span>
-            <h3>Documentation your team can run with</h3>
-            <p>Architecture decisions and operational notes written down, not left in one person's head.</p>
+            <h3>Documentation your next hire can run with</h3>
+            <p>Every decision and how-it-works written down in plain language, not left in one person's head.</p>
           </div>
         </div>
       </div>

@@ -7,17 +7,21 @@ technical drawing, not a stock marketing site.
 
 ## Palette
 
+These are the shipped site tokens from `src/styles/global.css` ("Workbench,
+refined" — warm editorial). Match them exactly.
+
 | Role | Name | Hex | RGB |
 |------|------|-----|-----|
-| Ink (dark ground) | Graphite | `#17191B` | rgb(23, 25, 27) |
-| Surface (light ground) | Drafting Paper | `#F6F7F6` | rgb(246, 247, 246) |
-| Accent | Marker Orange | `#E85D04` | rgb(232, 93, 4) |
-| Accent (dark-mode variant) | Marker Orange Bright | `#FF7A26` | rgb(255, 122, 38) |
-| Muted line / annotation | Slate | `#5C6670` | rgb(92, 102, 112) |
-| Grid line (near-invisible) | Graphite at 5% | `rgba(23,25,27,0.06)` | — |
+| Ink (dark ground / linework) | Warm Ink | `#1c1915` | rgb(28, 25, 21) |
+| Surface (light ground) | Ivory Paper | `#faf8f4` | rgb(250, 248, 244) |
+| Card surface | Warm White | `#fffefb` | rgb(255, 254, 251) |
+| Accent | Terracotta | `#c25d33` | rgb(194, 93, 51) |
+| Accent (dark-mode variant) | Terracotta Light | `#e08356` | rgb(224, 131, 86) |
+| Muted line / annotation | Warm Slate | `#6b6459` | rgb(107, 100, 89) |
+| Grid line (near-invisible) | Warm Ink at 5% | `rgba(28,25,21,0.05)` | — |
 
-Use Graphite or Drafting Paper as the dominant ground depending on requested
-mode. Marker Orange is the ONLY color allowed to pop, and only for the one
+Use Warm Ink or Ivory Paper as the dominant ground depending on requested
+mode. Terracotta is the ONLY color allowed to pop, and only for the one
 element that matters most in the frame (under 10% of the frame's area) —
 treat it like a highlighter mark or a single dimension-line callout, never
 as a fill for large shapes.
@@ -51,7 +55,9 @@ as a fill for large shapes.
 
 - Purple-to-blue gradients, or any gradient mesh
 - Emoji as iconography, or anything that reads as a sticker/mascot
-- Generic neural-network / circuit-brain / glowing orb "AI" imagery
+- Generic neural-network / glowing orb "AI" imagery (exception: the official
+  Imagile circuit-brain logomark — `public/images/imagile-mark.png` — is the
+  corporate logo and is reproduced deliberately, never reinvented)
 - Stock-photo people, handshake photos, laptop-with-code-on-screen clichés
 - Photorealism (this is a diagram/drafting language, not a photograph)
 - Lens flares, bevels, drop shadows, glossy 3D
