@@ -1,5 +1,26 @@
 # imagile.dev rebrand — implementation notes
 
+## SHIPPED 2026-08-08
+
+PR #10 merged to main; GitHub Pages deploy. Final state at ship differs from
+the original brief in these reviewed-and-approved ways: warm editorial
+restyle ("Workbench, refined" — Source Serif 4 display, Fira Code accents,
+ivory/terracotta palette); live animated hero clock showing the visitor's
+real time with an elapsed-page-time ticker; four service cards including
+Technical Advisory / Fractional CTO; the business-automation line framed
+non-technically ("Automate Your Business Processes"); villain paragraph
+removed; pricing softened everywhere except training workshops and the
+$300/hr anchor; no "no clients yet" framing on /work; blog backfill reduced
+to 6 posts (verification-loop post folded into the spec-vs-plan one) with
+primary-source citations; relative dates on post cards.
+
+Still open after ship (imagile-app PR #76, NOT merged): merging deploys
+prod, and prod startup will FAIL until the `GitHubIssuesToken` Key Vault
+secret exists — create the fine-grained PAT (imagile-app, Issues R/W),
+store it, add the `DISCORD_WEBHOOK` Actions secret, create the `lead`
+label, then merge. Also still owed: Context Overflow `IMAGILE` org-code
+seeding (az command below), Turnstile hostname check for the apex domain.
+
 Running log of decisions, deviations from the original brief, and state. Not
 part of the public site; lives in this repo so the record travels with the
 code. Update this file as work proceeds — don't let it go stale.
