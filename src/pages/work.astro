@@ -7,36 +7,22 @@ import ProofItem from '../components/ProofItem.astro';
 import Prose from '../components/Prose.astro';
 import CtaBand from '../components/CtaBand.astro';
 
-const currentRole = {
-  role: 'Staff Engineer / Developer Experience Guild Leader',
-  company: 'Verifiable',
-  dates: '2025–Present',
-  bullets: [
-    'Built an AI-powered code review pipeline targeting the Claude platform with automatic fallback to Codex — a reusable GitHub Actions workflow that keeps reviews running through provider service disruptions and cut PR review time by 30+ minutes per pull request.',
-    'Shipped Source Warden to production: an AI ops pipeline that proactively triages Datadog alerts and surfaces the fix and the investigation behind it — with proof in the form of embedded screenshots — directly to engineers.',
-    'Architected the Engineering Internal Developer Portal in .NET and Blazor WASM — AI-native, with agent skills, self-healing workflows, and E2E test history so engineers and coding agents work against a fully realistic environment.',
-  ],
-};
-
-const earlierRoles = [
+const highlights = [
   {
-    role: 'Principal Software Engineer',
-    company: 'Arcoro',
-    dates: '2021–2025',
+    area: 'AI engineering, in production',
     bullets: [
-      "Pioneered Arcoro Hub — now the company's central product platform — a technical vision to scale 10x in .NET, Blazor Hybrid WASM, and .NET MAUI with a live sync bridge to legacy applications.",
-      'Tripled feature delivery speed across all product teams by building a new SPA and API for ExakTime in Angular and .NET while preserving a seamless experience for existing users.',
-      'Rewrote a bug-ridden event-driven architecture on Azure Event Hubs, Functions, and Storage — 98% performance improvement and stopped customer data loss.',
+      'Built an AI-powered code review pipeline with automatic fallback across model providers — cut review time by 30+ minutes per pull request, and it keeps working through provider outages.',
+      'Shipped an AI ops pipeline that triages production alerts and hands engineers the fix with the investigation behind it — screenshots included — before anyone asks.',
+      'Architected an AI-native internal developer portal with agent skills, self-healing workflows, and end-to-end test history, so engineers and coding agents work against a fully realistic environment.',
     ],
   },
   {
-    role: 'Principal Software Engineer',
-    company: 'PNC Bank',
-    dates: '2016–2021',
+    area: 'Platforms and rewrites',
     bullets: [
-      'Led rewrites of two legacy institutional asset management systems into .NET — 86%+ performance improvement on workloads handling millions of dollars per hour, passing internal audit.',
-      'Increased QA deployment frequency from once per month to 4+ per day by building CI/CD pipelines with Azure DevOps and IBM UrbanCode Deploy.',
-      'Mentored a developer focused on code quality and simplicity — who now leads a team of 7 on the same applications.',
+      'Set the technical vision for a company-wide product platform designed to scale 10x, with a live sync bridge to the legacy applications it replaced.',
+      'Rewrote a failing event-driven architecture — 98% performance improvement and an end to customer data loss.',
+      'Led rewrites of institutional finance systems handling millions of dollars per hour — 86%+ faster, passing internal audit.',
+      'Took QA deployments from once a month to 4+ per day by rebuilding CI/CD from the ground up.',
     ],
   },
 ];
@@ -61,23 +47,16 @@ const publicBuilds = [
     href: '/blog',
     linkLabel: 'Read the posts →',
   },
-  {
-    index: 'BUILD-04',
-    title: 'pncli',
-    body: 'An open-source CLI tool.',
-    href: 'https://github.com/kolatts/pncli',
-    linkLabel: 'github.com/kolatts/pncli ↗',
-  },
 ];
 ---
 
-<Layout title="Work" description="A decade of shipped engineering work — AI pipelines, platform rewrites, measurable outcomes at Verifiable, Arcoro, and PNC Bank — plus Imagile's own public builds you can inspect today.">
+<Layout title="Work" description="Two decades of shipped engineering outcomes — AI pipelines, platform rewrites, measurable results — plus Imagile's own public builds you can inspect today.">
   <SiteHeader />
   <main>
     <Hero
       eyebrow="Proof"
-      title="A <em>decade</em> of shipped work. All of it checkable."
-      subtitle="Ten years of the work Imagile does — AI pipelines, platform rewrites, delivery systems that hold up in production — with the outcomes attached and the companies named. Plus the builds shipped under the Imagile name, live and open for inspection right now."
+      title="Two decades of shipped work. The <em>recent stuff is public.</em>"
+      subtitle="Outcomes from staff and principal engineering roles across banking, HR tech, health tech, and ed tech — plus the builds shipped under the Imagile name, live and open for inspection right now."
       size="md"
     />
 
@@ -85,9 +64,10 @@ const publicBuilds = [
       <div class="container">
         <Prose>
           <p>
-            Two kinds of evidence here: outcomes from a decade in staff and principal roles, attributed to the
-            companies where I shipped them — and builds released under the Imagile name, open for you to judge
-            firsthand.
+            Two kinds of evidence here. First, outcomes from twenty years in staff and principal roles —
+            described without naming employers or clients, deliberately. Discretion is part of the service,
+            and the work you'd hire Imagile for gets the same treatment. Second, builds released under the
+            Imagile name, open for you to judge firsthand.
           </p>
         </Prose>
       </div>
@@ -97,49 +77,32 @@ const publicBuilds = [
       <div class="container">
         <p class="eyebrow">The headline numbers</p>
         <div class="stats__grid">
-          <ProofItem stat="30+ min" label="cut from PR review time, per pull request" source="AI code review pipeline, Verifiable" />
-          <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite, Arcoro" />
-          <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild, PNC Bank" />
-          <ProofItem stat="86%+" label="performance improvement on institutional asset management workloads" source="Legacy system rewrite, PNC Bank" />
-          <ProofItem stat="Hours/wk" label="of engineering time returned by agentic workflows and self-healing systems" source="Developer experience work, Verifiable" />
+          <ProofItem stat="30+ min" label="cut from PR review time, per pull request" source="AI code review pipeline" />
+          <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite" />
+          <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild" />
+          <ProofItem stat="86%+" label="performance improvement on institutional finance workloads" source="Legacy system rewrite" />
+          <ProofItem stat="Hours/wk" label="of engineering time returned by agentic workflows and self-healing systems" source="Developer experience work" />
         </div>
       </div>
     </section>
 
     <section class="section role-section" data-reveal>
       <div class="container">
-        <p class="eyebrow">Current role</p>
-        <h2 class="role-section__title">What I'm shipping right now</h2>
+        <p class="eyebrow">The track record</p>
+        <h2 class="role-section__title">Where the numbers come from</h2>
         <p class="role-section__note">
-          Done as Staff Engineer at Verifiable — the same AI-native engineering Imagile brings to every
-          engagement, running in production today.
+          Selected outcomes from two decades of staff- and principal-level work. No names, no dates —
+          just what shipped and what it changed.
         </p>
 
-        <div class="role-block">
-          <div class="role-block__header">
-            <h3>{currentRole.role}</h3>
-            <p class="role-block__meta">{currentRole.company} · {currentRole.dates}</p>
-          </div>
-          <ul class="role-block__list">
-            {currentRole.bullets.map((b) => <li>{b}</li>)}
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--tight role-section" data-reveal>
-      <div class="container">
-        <p class="eyebrow">Earlier roles</p>
-        <h2 class="role-section__title">The decade before that</h2>
         <div class="role-block__group">
-          {earlierRoles.map((r) => (
+          {highlights.map((h) => (
             <div class="role-block">
               <div class="role-block__header">
-                <h3>{r.role}</h3>
-                <p class="role-block__meta">{r.company} · {r.dates}</p>
+                <h3>{h.area}</h3>
               </div>
               <ul class="role-block__list">
-                {r.bullets.map((b) => <li>{b}</li>)}
+                {h.bullets.map((b) => <li>{b}</li>)}
               </ul>
             </div>
           ))}
@@ -189,12 +152,6 @@ const publicBuilds = [
 
   .role-block__header { margin-bottom: var(--space-sm); }
   .role-block__header h3 { font-size: var(--text-xl); }
-  .role-block__meta {
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    color: var(--color-muted);
-    margin-top: 0.25rem;
-  }
 
   .role-block__list { display: grid; gap: var(--space-sm); }
   .role-block__list li {
