@@ -35,6 +35,7 @@ const related = (await getCollection('blog'))
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '/work', label: 'See the work' }}
       size="md"
+      markImage="/images/services/custom-software.webp"
     />
 
     <section class="section section--tight who">
@@ -72,6 +73,12 @@ const related = (await getCollection('blog'))
             This isn't theoretical. <a href="/work">Imagile-app and Context Overflow are public</a> — you can
             read the code, see the deploy pipeline, and judge the engineering for yourself instead of taking
             my word for it. That's the standard the work you're paying for is held to as well.
+          </p>
+          <p>
+            If the software itself needs AI in it — not just AI used to build it — that's a platform decision as
+            much as a coding one. I can help you choose and wire up AWS Bedrock, Azure AI Foundry, or Microsoft's
+            Agent Framework, or bill directly against Anthropic's or OpenAI's APIs, depending on what your
+            compliance, cost, and latency constraints actually require.
           </p>
         </Prose>
       </div>
@@ -121,8 +128,8 @@ const related = (await getCollection('blog'))
           </table>
         </div>
         <p class="pricing__note">
-          Every engagement starts with a $900 Strategy Intensive — three focused hours and a written
-          recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
+          Most engagements start with a short AI transformation strategy session — a focused conversation and a
+          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
           on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are
           real numbers, not a "contact us" form.
         </p>
@@ -150,10 +157,7 @@ const related = (await getCollection('blog'))
       </section>
     )}
 
-    <CtaBand
-      title="Scope the build before you commit to it."
-      body="A strategy intensive is three hours and $900 — not a sales call."
-    />
+    <CtaBand title="Scope the build before you commit to it." />
   </main>
   <SiteFooter />
 </Layout>

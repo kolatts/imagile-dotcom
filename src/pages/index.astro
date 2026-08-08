@@ -6,7 +6,6 @@ import SiteFooter from '../components/SiteFooter.astro';
 import Hero from '../components/Hero.astro';
 import PathPicker from '../components/PathPicker.astro';
 import ServiceCard from '../components/ServiceCard.astro';
-import ProofItem from '../components/ProofItem.astro';
 import PostCard from '../components/PostCard.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { readingTime } from '../lib/reading-time';
@@ -73,22 +72,6 @@ const latestPosts = (await getCollection('blog'))
       </div>
     </section>
 
-    <section class="section section--tight proof grid-ground">
-      <div class="container">
-        <p class="eyebrow">Proof, honestly framed</p>
-        <h2 class="proof__title">No client list yet. A decade of verifiable work instead.</h2>
-        <p class="proof__body">
-          Imagile is new. The track record isn't — it's a decade of shipping this exact kind of work under someone
-          else's letterhead. <a href="/work">See it in full →</a>
-        </p>
-        <div class="proof__grid">
-          <ProofItem stat="30+ min" label="cut from PR review time, per pull request" source="AI-assisted code review pipeline, current role" />
-          <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite, Arcoro" />
-          <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild, PNC Bank" />
-        </div>
-      </div>
-    </section>
-
     <section class="section section--tight method">
       <div class="container">
         <p class="eyebrow">How an engagement starts</p>
@@ -97,8 +80,8 @@ const latestPosts = (await getCollection('blog'))
           <li data-reveal>
             <span class="method__num">01</span>
             <div>
-              <h3>Strategy intensive</h3>
-              <p>Three focused hours and a written recommendation. $900, and it credits toward whatever comes next.</p>
+              <h3>AI transformation strategy</h3>
+              <p>A short, focused session to figure out what's actually worth doing — and a written recommendation you keep either way.</p>
             </div>
           </li>
           <li data-reveal>
@@ -156,10 +139,7 @@ const latestPosts = (await getCollection('blog'))
       </div>
     </section>
 
-    <CtaBand
-      title="Talk it through before you commit to it."
-      body="A strategy intensive is three hours and $900 — not a sales call."
-    />
+    <CtaBand title="Talk it through before you commit to it." />
   </main>
   <SiteFooter />
 </Layout>

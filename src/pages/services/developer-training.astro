@@ -17,7 +17,7 @@ const relatedPosts = (await getCollection('blog'))
   .slice(0, 3);
 
 const pricingRows = [
-  { name: 'Strategy Intensive', detail: '3 focused hours + written recommendation, credited toward what comes next', price: '$900' },
+  { name: 'AI Transformation Strategy', detail: 'A focused session + written recommendation, credited toward what comes next', price: '$900' },
   { name: 'Half-day workshop', detail: 'Up to 12 developers, single focused topic', price: '$3,000' },
   { name: 'Full-day workshop', detail: 'Up to 12 developers, full workflow arc', price: '$5,000' },
   { name: '4-week enablement cohort', detail: 'Up to 12 developers, habits that outlast the training', price: 'from $15,000' },
@@ -31,9 +31,10 @@ const pricingRows = [
       size="md"
       eyebrow="Service 01"
       title="Train engineers to build with AI — <em>judgment</em>, not tool tutorials."
-      subtitle="Anyone can demo Claude Code or Copilot in a lunch-and-learn. The harder job is teaching a team when to trust the suggestion, when to stop and read the diff, and how review discipline has to change once the code is drafted in seconds instead of hours."
+      subtitle="Anyone can demo Claude Code, Codex, or Copilot in a lunch-and-learn. The harder job is teaching a team when to trust the suggestion, when to stop and read the diff, and how review discipline has to change once the code is drafted in seconds instead of hours."
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '#pricing', label: 'See pricing' }}
+      markImage="/images/services/developer-training.webp"
     />
 
     <section class="section section--tight who" data-reveal>
@@ -43,7 +44,7 @@ const pricingRows = [
         <div class="who__grid">
           <div class="who__card card">
             <h3>The engineering director rolling out a coding assistant org-wide</h3>
-            <p>Claude Code or Copilot is already approved and already installed. What's missing is a shared standard for how the team uses it — so ten engineers don't invent ten different habits, half of them bad.</p>
+            <p>Claude Code, Codex, or Copilot is already approved and already installed. What's missing is a shared standard for how the team uses it — so ten engineers don't invent ten different habits, half of them bad.</p>
           </div>
           <div class="who__card card">
             <h3>The team lead protecting code review discipline</h3>
@@ -130,10 +131,10 @@ const pricingRows = [
           </table>
         </div>
         <p class="pricing__philosophy">
-          Every engagement starts with a $900 Strategy Intensive — three focused hours and a written recommendation,
-          credited toward whatever comes next. Remote work is priced the same as the work; on-site carries a
-          day-rate premium plus travel at cost, never a surprise change order. These are real numbers, not a
-          "contact us" form.
+          Most engagements start with a short AI transformation strategy session — a focused conversation and a
+          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
+          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are real
+          numbers, not a "contact us" form.
         </p>
       </div>
     </section>
@@ -159,10 +160,7 @@ const pricingRows = [
       </section>
     )}
 
-    <CtaBand
-      title="Bring this to your team."
-      body="Start with a three-hour strategy intensive — we'll figure out whether a workshop or a full cohort fits."
-    />
+    <CtaBand title="Bring this to your team." />
   </main>
   <SiteFooter />
 </Layout>

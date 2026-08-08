@@ -17,7 +17,7 @@ const relatedPosts = (await getCollection('blog'))
   .slice(0, 3);
 
 const pricing = [
-  { name: 'Strategy Intensive', detail: '3 focused hours, written recommendation, credits forward', price: '$900' },
+  { name: 'AI Transformation Strategy', detail: 'A focused session, written recommendation, credits forward', price: '$900' },
   { name: 'AI Readiness / Discovery Sprint', detail: '2 weeks, remote-first, fixed fee', price: '$8,500' },
   { name: 'Agentic workflow pilot', detail: 'Single use case, 4–8 weeks, scoped', price: '$25,000–$50,000' },
   { name: 'Ongoing retainer', detail: '~20 hrs/mo, 3-month minimum', price: '$6,000/mo' },
@@ -38,6 +38,7 @@ const pricing = [
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '/work', label: 'See the work' }}
       size="md"
+      markImage="/images/services/agentic-workflows.webp"
     />
 
     <section class="section section--tight who">
@@ -151,10 +152,10 @@ const pricing = [
           </table>
         </div>
         <p class="pricing__philosophy">
-          Every engagement starts with a $900 Strategy Intensive — three focused hours and a written recommendation,
-          credited toward whatever comes next. Remote work is priced the same as the work; on-site carries a
-          day-rate premium plus travel at cost, never a surprise change order. These are real numbers, not a
-          "contact us" form.
+          Most engagements start with a short AI transformation strategy session — a focused conversation and a
+          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
+          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are real
+          numbers, not a "contact us" form.
         </p>
       </div>
     </section>
@@ -180,10 +181,7 @@ const pricing = [
       </section>
     )}
 
-    <CtaBand
-      title="Bring the workflow that's actually broken."
-      body="A strategy intensive is three hours and $900 — walk out with a written recommendation either way."
-    />
+    <CtaBand title="Bring the workflow that's actually broken." />
   </main>
   <SiteFooter />
 </Layout>
