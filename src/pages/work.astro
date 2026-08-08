@@ -11,6 +11,7 @@ const highlights = [
   {
     area: 'AI engineering, in production',
     bullets: [
+      'Built automated fix workflows that detect and triage bugs and propose code fixes automatically — wired into Datadog, Sentry, and App Insights — now covering 30% of fixes.',
       'Built an AI-powered code review pipeline with automatic fallback across model providers — cut review time by 30+ minutes per pull request, and it keeps working through provider outages.',
       'Shipped an AI ops pipeline that triages production alerts and hands engineers the fix with the investigation behind it — screenshots included — before anyone asks.',
       'Architected an AI-native internal developer portal with agent skills, self-healing workflows, and end-to-end test history, so engineers and coding agents work against a fully realistic environment.',
@@ -22,7 +23,7 @@ const highlights = [
       'Set the technical vision for a company-wide product platform designed to scale 10x, with a live sync bridge to the legacy applications it replaced.',
       'Rewrote a failing event-driven architecture — 98% performance improvement and an end to customer data loss.',
       'Led rewrites of institutional finance systems handling millions of dollars per hour — 86%+ faster, passing internal audit.',
-      'Took QA deployments from once a month to 4+ per day by rebuilding CI/CD from the ground up.',
+      'Quadrupled deployment frequency by rebuilding CI/CD from the ground up.',
     ],
   },
 ];
@@ -50,12 +51,12 @@ const publicBuilds = [
 ];
 ---
 
-<Layout title="Work" description="Two decades of shipped engineering outcomes — AI pipelines, platform rewrites, measurable results — plus Imagile's own public builds you can inspect today.">
+<Layout title="Work" description="Over a decade of shipped engineering outcomes — AI pipelines, platform rewrites, measurable results — plus Imagile's own public builds you can inspect today.">
   <SiteHeader />
   <main>
     <Hero
       eyebrow="Proof"
-      title="Two decades of shipped work. The <em>recent stuff is public.</em>"
+      title="Over a decade of shipped work. The <em>recent stuff is public.</em>"
       subtitle="Outcomes from staff and principal engineering roles across banking, HR tech, health tech, and ed tech — plus the builds shipped under the Imagile name, live and open for inspection right now."
       size="md"
     />
@@ -64,7 +65,7 @@ const publicBuilds = [
       <div class="container">
         <Prose>
           <p>
-            Two kinds of evidence here. First, outcomes from twenty years in staff and principal roles —
+            Two kinds of evidence here. First, outcomes from over a decade in staff and principal roles —
             described without naming employers or clients, deliberately. Discretion is part of the service,
             and the work you'd hire Imagile for gets the same treatment. Second, builds released under the
             Imagile name, open for you to judge firsthand.
@@ -77,9 +78,10 @@ const publicBuilds = [
       <div class="container">
         <p class="eyebrow">The headline numbers</p>
         <div class="stats__grid">
+          <ProofItem stat="30%" label="of bugs detected, triaged, and fixed by automated fix workflows" source="Datadog · Sentry · App Insights" />
           <ProofItem stat="30+ min" label="cut from PR review time, per pull request" source="AI code review pipeline" />
           <ProofItem stat="98%" label="performance improvement on a rewritten event-driven system" source="Event-architecture rewrite" />
-          <ProofItem stat="4+/day" label="deployments, up from once a month" source="CI/CD rebuild" />
+          <ProofItem stat="4x" label="improvement in deployment frequency" source="CI/CD rebuild" />
           <ProofItem stat="86%+" label="performance improvement on institutional finance workloads" source="Legacy system rewrite" />
           <ProofItem stat="Hours/wk" label="of engineering time returned by agentic workflows and self-healing systems" source="Developer experience work" />
         </div>
@@ -91,7 +93,7 @@ const publicBuilds = [
         <p class="eyebrow">The track record</p>
         <h2 class="role-section__title">Where the numbers come from</h2>
         <p class="role-section__note">
-          Selected outcomes from two decades of staff- and principal-level work. No names, no dates —
+          Selected outcomes from over a decade of staff- and principal-level work. No names, no dates —
           just what shipped and what it changed.
         </p>
 
@@ -185,6 +187,6 @@ const publicBuilds = [
   }
 
   @media (min-width: 980px) {
-    .stats__grid { grid-template-columns: repeat(5, 1fr); }
+    .stats__grid { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
