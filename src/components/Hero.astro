@@ -37,22 +37,19 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
 
     {showMark && !markImage && (
       <div class="hero__mark" aria-hidden="true">
-        <svg viewBox="0 0 400 400" width="100%" height="100%">
-          <g data-parallax="0.03" opacity="0.4">
-            <circle cx="200" cy="200" r="160" fill="none" stroke="var(--color-ink)" stroke-width="1.25" stroke-dasharray="2 10" />
-          </g>
-          <g data-parallax="0.08" opacity="0.6">
-            <circle cx="200" cy="200" r="105" fill="none" stroke="var(--color-ink)" stroke-width="1.5" stroke-dasharray="2 7" />
-          </g>
-          <g data-parallax="0.15">
-            <circle cx="200" cy="200" r="52" fill="none" stroke="var(--color-ink)" stroke-width="2" />
-            <line x1="200" y1="122" x2="200" y2="162" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
-            <line x1="200" y1="238" x2="200" y2="278" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
-            <line x1="122" y1="200" x2="162" y2="200" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
-            <line x1="238" y1="200" x2="278" y2="200" stroke="var(--color-ink)" stroke-width="2" stroke-linecap="round" />
-            <circle cx="200" cy="200" r="5" fill="var(--color-accent)" />
-          </g>
+        <svg class="hero__mark-ring" viewBox="0 0 400 400" data-parallax="0.03">
+          <circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-ink)" stroke-width="1.25" stroke-dasharray="2 10" opacity="0.35" />
         </svg>
+        <img
+          class="hero__mark-instrument"
+          data-parallax="0.1"
+          src="/images/hero-instrument.webp"
+          alt=""
+          width="720"
+          height="774"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     )}
   </div>
@@ -107,11 +104,35 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
   .hero__mark {
     display: none;
     position: absolute;
-    top: -8%;
-    right: -6%;
-    width: min(480px, 42vw);
+    top: 50%;
+    right: -2%;
+    width: min(430px, 36vw);
     aspect-ratio: 1;
+    transform: translateY(-52%);
     pointer-events: none;
+  }
+
+  .hero__mark-ring {
+    position: absolute;
+    inset: -9%;
+    width: 118%;
+    height: 118%;
+  }
+
+  .hero__mark-instrument {
+    position: relative;
+    width: 100%;
+    height: auto;
+    opacity: 0.94;
+  }
+
+  /* Line art is warm near-black over transparency; in dark mode flip its
+     lightness while keeping the terracotta accent roughly in place. */
+  @media (prefers-color-scheme: dark) {
+    .hero__mark-instrument {
+      filter: invert(1) hue-rotate(180deg) saturate(1.3) brightness(1.05);
+      opacity: 0.9;
+    }
   }
 
   /* A generated technical drawing, mounted like a print pinned to the board:

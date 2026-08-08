@@ -20,10 +20,10 @@ const services = [
   },
   {
     index: '02',
-    title: 'Agentic Workflow Building',
-    body: 'Design and ship the agents, pipelines, and automations that remove the operational busywork — with a verification loop, not a demo that never ships.',
+    title: 'Automate Your Business Processes',
+    body: 'The repetitive work your team does by hand — intake, triage, reporting, follow-ups — designed into reliable automation that gets verified before anything ships.',
     href: '/services/agentic-workflows',
-    priceSignal: 'Discovery Sprint $8,500 · Pilot from $25,000',
+    priceSignal: 'Scoped after a two-week discovery sprint',
   },
   {
     index: '03',
@@ -31,6 +31,13 @@ const services = [
     body: 'The software behind it, built by the person who builds it. .NET, Azure, AWS — senior-led, no handoffs.',
     href: '/services/custom-software',
     priceSignal: '$300/hr · Production builds from $50,000',
+  },
+  {
+    index: '04',
+    title: 'Technical Advisory & Fractional CTO',
+    body: 'Senior technical judgment on retainer — architecture reviews, AI strategy, vendor and hiring calls — without the full-time hire.',
+    href: '/contact',
+    priceSignal: 'Monthly retainer · scoped to your cadence',
   },
 ];
 
@@ -65,10 +72,25 @@ const latestPosts = (await getCollection('blog'))
     <section class="section services">
       <div class="container">
         <p class="eyebrow">What Imagile does</p>
-        <h2 class="services__title">Three ways in</h2>
+        <h2 class="services__title">Four ways in</h2>
         <div class="services__grid">
           {services.map((s) => <ServiceCard {...s} />)}
         </div>
+      </div>
+    </section>
+
+    <section class="section section--tight context-overflow grid-ground" data-reveal>
+      <div class="container context-overflow__inner">
+        <div>
+          <p class="eyebrow">Free, self-serve</p>
+          <h2 class="context-overflow__title">New to agentic development? Start there, not here.</h2>
+          <p class="context-overflow__body">
+            <a href="https://context-overflow.dev" target="_blank" rel="noopener">Context Overflow</a> is a free,
+            self-paced way to get fluent in how these tools actually work — no sales call required. Enroll with
+            org code <code class="context-overflow__code">IMAGILE</code> for the Imagile track.
+          </p>
+        </div>
+        <a href="https://context-overflow.dev" target="_blank" rel="noopener" class="btn btn--ghost">Start understanding AI ↗</a>
       </div>
     </section>
 
@@ -124,21 +146,6 @@ const latestPosts = (await getCollection('blog'))
       </section>
     )}
 
-    <section class="section section--tight context-overflow grid-ground" data-reveal>
-      <div class="container context-overflow__inner">
-        <div>
-          <p class="eyebrow">Free, self-serve</p>
-          <h2 class="context-overflow__title">New to agentic development? Start there, not here.</h2>
-          <p class="context-overflow__body">
-            <a href="https://context-overflow.dev" target="_blank" rel="noopener">Context Overflow</a> is a free,
-            self-paced way to get fluent in how these tools actually work — no sales call required. Enroll with
-            org code <code class="context-overflow__code">IMAGILE</code> for the Imagile track.
-          </p>
-        </div>
-        <a href="https://context-overflow.dev" target="_blank" rel="noopener" class="btn btn--ghost">Start understanding AI ↗</a>
-      </div>
-    </section>
-
     <CtaBand title="Talk it through before you commit to it." />
   </main>
   <SiteFooter />
@@ -185,7 +192,7 @@ const latestPosts = (await getCollection('blog'))
   }
 
   @media (min-width: 720px) {
-    .services__grid { grid-template-columns: repeat(3, 1fr); }
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
     .proof__grid { grid-template-columns: repeat(3, 1fr); }
     .method__list { grid-template-columns: repeat(3, 1fr); }
   }

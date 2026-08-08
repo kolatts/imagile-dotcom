@@ -16,10 +16,10 @@ const services = [
   },
   {
     index: '02',
-    title: 'Agentic Workflow Building',
-    body: 'Design and ship the agents, pipelines, and automations that remove the operational busywork — with a verification loop, not a demo that never ships.',
+    title: 'Automate Your Business Processes',
+    body: 'The repetitive work your team does by hand — intake, triage, reporting, follow-ups — designed into reliable automation that gets verified before anything ships.',
     href: '/services/agentic-workflows',
-    priceSignal: 'Discovery Sprint $8,500 · Pilot from $25,000',
+    priceSignal: 'Scoped after a two-week discovery sprint',
   },
   {
     index: '03',
@@ -27,6 +27,13 @@ const services = [
     body: 'The software behind it, built by the person who builds it. .NET, Azure, AWS — senior-led, no handoffs.',
     href: '/services/custom-software',
     priceSignal: '$300/hr · Production builds from $50,000',
+  },
+  {
+    index: '04',
+    title: 'Technical Advisory & Fractional CTO',
+    body: 'Senior technical judgment on retainer — architecture reviews, AI strategy, vendor and hiring calls — without the full-time hire.',
+    href: '/contact',
+    priceSignal: 'Monthly retainer · scoped to your cadence',
   },
 ];
 ---
@@ -37,7 +44,7 @@ const services = [
     <Hero
       eyebrow="What Imagile does"
       title="Train the team, build the workflow, ship the <em>software.</em>"
-      subtitle="Three lines of work, one person doing all of them — pick the one that matches where you're stuck."
+      subtitle="Four ways to work together, one person doing all of them — pick the one that matches where you're stuck."
       size="md"
     />
 
@@ -61,6 +68,6 @@ const services = [
   .services__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
 
   @media (min-width: 720px) {
-    .services__grid { grid-template-columns: repeat(3, 1fr); }
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
