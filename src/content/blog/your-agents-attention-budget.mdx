@@ -6,32 +6,28 @@ author: "Sunny Kolattukudy"
 tags: ["ai", "context-management", "agentic-ai", "agentic-workflows"]
 ---
 
-Every agent session I've watched drift looks the same from the outside. It was following your conventions perfectly an hour ago. Then it started ignoring half of them, and the assumption is always that something broke.
+An agent session that's been running a couple of hours starts to feel different from one that just started. It's still producing output, still passing the eye test on individual diffs, but it's stopped holding on to things you told it thirty exchanges ago. For a while I assumed something had broken under the hood. What's actually happening is simpler: the context window has a budget, and it's been spending down the whole session.
 
-Nothing broke. There was no moment. There was a slope, and you'd been standing on it the whole time.
+## What Actually Happens As Context Fills
 
-## Context Rot Is a Gradient, Not a Cliff
+A model's attention isn't unlimited, and it doesn't fail the way a program crashes. Every token sitting in the window — old file contents, a tool call that didn't work, a correction you already gave once — is competing for the same fixed pool of attention as everything else in there.
 
-A model has a fixed working surface and a finite attention budget, the same way a person does. Every token spent holding old file contents, failed correction attempts, and tool output in the window is a token no longer spent noticing what mattered forty exchanges back.
+Chroma measured this across a range of leading models, and the [research is public](https://research.trychroma.com/context-rot): recall starts slipping well before a context window is anywhere near full, and how much depends on where the relevant fact sits and how much other material is crowding around it. Nothing collapses. The tenth file you had it read doesn't erase the second one — it just makes the second one a little harder to reach.
 
-That decline doesn't wait for the window to fill before it shows up. Chroma's research on long-context performance — run across leading models, not eyeballed from a few bad sessions — found recall degrading well before a context window is technically full, and unevenly: it depends on where the relevant fact sits and how much competing material surrounds it. Reading a dozen files doesn't break your agent. It just makes the thirteenth thing you said quieter than the first.
+## Compaction Buys Space, Not Memory
 
-## Compaction Resets the Counter, Not the Recall
+Compaction is the tool most people reach for once a session starts to drag, and it does shrink the number — the token count drops and the context bar goes back to green. What it doesn't do is restore the recall you already lost getting there.
 
-This is where the gradient gets dangerous, because it hides behind a tool that looks like a fix. Compaction rewrites your session's history into a summary, and the token count drops. It looks like the whiteboard got wiped.
+Check accuracy right before a compaction and right after, and they're roughly the same. A session that had drifted through a couple of ignored corrections is still drifted after compaction — it just has more room to keep drifting in. The only thing that actually resets recall is a genuinely new session.
 
-It didn't. Recall accuracy right before compaction is roughly the recall accuracy right after — the counter reset, the degradation didn't. A session that had already drifted through two failed correction attempts is still drifting after compaction, just with more room to keep drifting in. Only a genuinely new session buys the recall back.
+## Curating the Window
 
-## The Fix Is a Smaller Window, Not a Fuller One
+Anthropic's own guidance on this puts it well: aim for the [smallest set of high-signal tokens](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) that make the outcome you want likely. That's a curation problem, not a capacity problem — the goal isn't fitting more in, it's making sure only the right things are in there at all.
 
-The governing principle here is worth writing down somewhere permanent: find the smallest set of high-signal tokens that maximizes the likelihood of your desired outcome.
+In practice, that means fetching a file or running a query at the moment it's needed rather than pre-loading everything that might matter later. It also means treating your folder structure as information the model reads, not scaffolding it politely ignores: `test_utils.py` sitting under `tests/` tells a human something different than the same file under `src/core_logic/`, and it hands the model the same signal for free, before it's opened either one.
 
-In practice that means favoring just-in-time retrieval over pre-loading everything that might be relevant. A file path or a query fetched at the moment it's needed costs less than the same file sitting in context for forty turns on the chance it becomes relevant later. It also means treating your own folder structure as a real input, not scaffolding the model politely ignores. `test_utils.py` under `tests/` tells a human reader something different than the same file under `src/core_logic/` — and it tells the model the same thing, for free, before it reads a single line.
+Reasoning effort draws on this same account. Turning it up costs more of the window before you see anything readable, though it can pay for itself — get the answer right on the first attempt and there's less retried, failed output left in context arguing for attention it didn't earn.
 
-Effort spends from this same account. A higher reasoning setting burns more of the window before it produces anything you can read, though it can pay that back: get the answer right in fewer turns and there's less retried, failed output left in context arguing for attention it hasn't earned.
+None of this matters much while someone's watching every turn. It starts to matter a great deal once an agent runs unattended, because a long session with no curation isn't autonomy — it's a bag someone kept stuffing things into without ever taking anything back out, until nobody, including the model, can find what actually matters. That's usually how the wrong module gets confidently refactored at 3 a.m., with a tidy little pull request waiting for you when you check in the next morning.
 
-None of this is optional as autonomy goes up. An unattended run with no context curation isn't autonomy — it's a full whiteboard with nobody managing it, which is how the wrong module gets confidently refactored at 3 a.m., with a polite pull request opened about it by morning.
-
-Context engineering is mise en place. Restaurants don't chop onions during service — everything is staged before the ticket arrives, which is the entire reason service looks effortless from the dining room. A CLAUDE.md, a written spec, tools scoped to the task at hand: that's your prep station. Skip it and you're chopping onions mid-service, and wondering later how they ended up in the dessert.
-
-Curation doesn't make the attention budget bigger. It just makes sure what's in the window has earned its place there.
+Curating context doesn't make the budget any bigger. It just makes sure that whatever's sitting in the window has earned its place there.

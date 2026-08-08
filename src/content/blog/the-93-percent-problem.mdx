@@ -6,42 +6,30 @@ author: "Sunny Kolattukudy"
 tags: ["ai", "claude-code", "security", "developer-training"]
 ---
 
-Anthropic looked at its own telemetry and found something uncomfortable: people approve roughly 93 percent of the permission prompts Claude Code shows them. Ninety-three percent isn't a security posture. It's a reflex.
+Anthropic put out telemetry on real Claude Code sessions recently, and one number stood out: people approve roughly 93 percent of the permission prompts they're shown. Anthropic's own engineering write-up on Claude Code usage ([worth reading in full](https://www.anthropic.com/engineering/claude-code-best-practices)) is where the figure comes from, and it's worth sitting with for a second. Ninety-three percent isn't evidence of careful review. It's what happens once a decision gets asked of you often enough that your brain quietly stops treating it as a decision.
 
-And the more prompts you see in a session, the less attention each one gets. Which means the rare surprising prompt — the one actually worth stopping for — is exactly the one a habituated yes will wave through on its way out the door.
+That's less a discipline problem than an attention one. Attention doesn't hold steady under repetition — it erodes. After the fortieth prompt that opens with "Bash command: npm test," your eyes learn to stop reading at the colon. The prompt that actually deserved a second look is sitting somewhere in that same 93 percent, and it doesn't look any different on screen.
 
-I've watched this happen to good engineers. Not careless ones — people who genuinely know better. By hour three of a long session, the thumb has taken over from the judgment.
+## Two questions, decided in advance
 
-## Volume Kills Attention, Not Diligence
+Most permission prompts sort cleanly if you ask two things before the prompt ever shows up, rather than while it's waiting on you: can this be undone, and how far does it reach if it's wrong.
 
-Every prompt looks the same on screen: a command, a one-line reason, three options. After the fortieth one that starts "Bash command: npm test," your brain files "Bash command:" as safe and stops reading past the colon.
+`git status`, a `SELECT` against a read replica, `Get-Process` — nothing here changes state, so making a person click through it buys zero safety and pure latency. Set the pattern to auto-approve and let it run.
 
-That's not a discipline failure. That's how attention works under repetition. The fix isn't reading harder — it's designing so fewer things need reading at all.
+An install, a push to a feature branch, an `UPDATE` with a `WHERE` clause scoped to staging — reversible, bounded, and genuinely worth a human glance each time. This is the actual home of judgment in the whole system, not the read-only stuff above it.
 
-## Decide the Defaults Once, Not Every Time
+Anything irreversible, anything with production in reach, anything you didn't write and haven't read yourself — a script copied from a forum thread, a `curl | sudo bash` — belongs in a deny rule written into the tool's config. Not in your memory of what you meant to refuse at 3am, because that memory won't be there at 3am.
 
-The fix is a policy, set before you're tired, not a vow to concentrate harder next time. Almost everything you'll ever see in a coding agent sorts cleanly into one of three buckets.
+## The grant outlives the moment you gave it
 
-Anything read-only gets a standing yes, forever. `git status`, `git diff`, a `SELECT` against a replica, `Get-Process` — none of these can change state, so asking a human is pure latency. Allowlist the pattern and stop paying attention tax on it. The queue moves faster, and that's the actual point of automating the boring part.
+One thing catches even careful people off guard: approving a pattern approves everything that will ever match it, not just the line sitting in front of you right now.
 
-Anything that changes state but is bounded and reversible — an install, a push, an `UPDATE` with a `WHERE` clause on staging, a service restart on a dev box — gets approved per use, every time, by a person who's actually looking. This is where the judgment lives. Not in the read-only stuff.
+Say the first request is `docker rm test-container-7`, tidying up after a run. Allowlist `docker rm *` instead of that exact call, and you've quietly pre-approved every future removal that matches — including the one six weeks from now that you'd have wanted to stop and look at. The scope you write down is a decision made on behalf of a session you can't see yet.
 
-Anything irreversible, anything touching production, anything sourced from content you didn't write yourself — a "cleanup script" someone pasted in, a `curl | sudo bash` — gets denied by default, written as a deny rule in the tool's settings. Not because you'll remember to say no at 3am. Because a tired person shouldn't be able to misclick past it.
+The fix is narrower rules than feel necessary: `npm run test *` rather than `npm *`, the specific thing you actually read rather than the wildcard that happens to cover it too.
 
-## The Grant Is Bigger Than the Request
+## Build the reflex somewhere cheap
 
-Here's the rule people get wrong even when they're paying attention: an allow decision doesn't approve the command sitting in front of you. It approves the pattern.
+If you don't have a fast, confident read on which of these a request belongs to, the better move isn't to push through prompts hoping the judgment shows up mid-session. It's to work in plan mode until it does — the [official documentation on permission modes](https://code.claude.com/docs/en/permission-modes) describes it plainly: the agent can read and reason but can't act. That's a reasonable place to get calibrated before anything is actually on the line.
 
-Say yes to `rm -rf node_modules` today, and if you allowlisted the pattern instead of the instance, you've also said yes to `rm -rf src` next Thursday — without ever seeing that prompt.
-
-The discipline is narrow allowlisting. Approve exactly the specifier you read, not a wildcard that happens to also cover it. If the tool lets you scope a rule to `npm run test *` instead of `npm *`, use the narrower one, every time. You're not saving yourself a future prompt. You're deciding, in advance and without looking, what a future version of the agent is allowed to do.
-
-## If You're Still Calibrating, Default to Plan Mode
-
-If you don't yet have a fast, confident read on which bucket a command belongs in, don't try to build that judgment live, mid-session, with a prompt already waiting on you. Work in plan mode instead — the agent can read and reason but can't touch anything — until you can sort requests into the three buckets without hesitating.
-
-Calibrate somewhere the mistakes are free. Then turn the agent loose with defaults you set while you were thinking clearly, not ones you improvise under pressure.
-
-None of this requires reading every prompt closely. It requires deciding, once, which prompts don't need reading at all — so the attention you do have is available for the 7 percent that actually deserve it. If you want to drill that judgment somewhere the mistakes are free, [context-overflow.dev](https://context-overflow.dev) has an arcade module built around exactly this: a queue of permission prompts you have to sort correctly, fast, before the next one arrives.
-
-That queue never stops. Neither does yours.
+None of this asks you to read every prompt harder. It asks you to settle the boring 93 percent in advance, so whatever attention you have left is pointed at the fraction that actually needs it. I built a small module on [context-overflow.dev](https://context-overflow.dev) that drills this same sorting under a timer, mostly because I wanted somewhere to get it wrong that wasn't a real system. The queue in it never really ends — which, now that I think about it, might be the most honest part of the whole exercise.

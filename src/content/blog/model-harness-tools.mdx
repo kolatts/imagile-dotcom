@@ -6,32 +6,28 @@ author: "Sunny Kolattukudy"
 tags: ["ai", "claude-code", "developer-tools", "developer-training"]
 ---
 
-"The AI did it" is not a sentence an engineer gets to say. Not because it's imprecise — because it's wrong. "The AI" is three different things doing three different jobs, and until you know which one moved, you don't have a diagnosis. You have a shrug.
+"The AI did it" doesn't hold up as an explanation. Not because it's imprecise — because "the AI" is actually three different components with three different jobs, and figuring out which one acted is the difference between fixing the problem and guessing at it.
 
-## It's Not One Machine, It's Three
+## Three parts, one label
 
-The model predicts text. That's the entire job description. Claude, GPT, Gemini — pick your family — each one takes tokens in and produces tokens out. A model has never opened a file, run a command, or touched anything outside its own weights. Feed it a question about your codebase and it will answer confidently whether or not it has ever seen your codebase, because seeing things was never in the job description.
+The **model** predicts text. That's the whole job. Claude, GPT, Gemini — whichever family — takes tokens in and returns tokens out. It has never opened a file, run a command, or reached outside its own weights. Ask it something about your codebase and it will answer with total confidence whether or not it has ever seen that codebase, because seeing was never part of the job.
 
-The harness is the software wrapped around the model that runs the loop: assemble context, send it to the model, read what comes back, execute any tool calls in it, repeat. Claude Code is a harness. Claude.ai is a harness. Cursor and GitHub Copilot are harnesses. The same model can sit inside any of them and behave completely differently, because the harness decides what the model gets to see and what it's allowed to do about it.
+The **harness** is the program built around the model that runs the loop: gather context, send it to the model, read the response, execute whatever tool calls come back, repeat. Claude Code is a harness. So is Claude.ai. So are Cursor and GitHub Copilot. Put the same model inside different harnesses and behavior changes every time, because the harness decides what the model can see and what it's permitted to do about it.
 
-The tools are the only part that touches anything real. Read a file. Run a command. Hit an API. Everything else is prediction and plumbing.
+The **tools** are the only piece that reaches anything real — a file read, a shell command, an API call. Everything upstream of that is prediction and routing.
 
-This is why the same model produces different behavior in different products — identical weights, completely different wiring around them. It's why an agent "deciding" to run your tests is really the model emitting a structured string that the harness parses and executes; the model has never executed anything in its life. And it's the first question of every diagnosis: wrong output, look at the context the harness assembled. Nothing happened, check whether a tool call actually fired, or was merely described — confidently, in prose.
+Anthropic's own engineering writeup on agent design, [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents), draws roughly the same line: an LLM becomes useful for real work once it's augmented with retrieval, tools, and memory, with an orchestration layer deciding how those augmentations get used. The model supplies judgment; everything that touches the world sits outside it.
 
-## The Terminal Is a Master Key
+That split explains a few things that otherwise look mysterious. A model producing different results in different products isn't the model changing — it's the wiring around it. An agent "deciding" to run your test suite is really the model emitting a structured string and the harness choosing to execute it; the model itself has never run anything. It's also where debugging starts: wrong output means check the context the harness assembled before the call, and nothing happening means check whether a tool call actually fired versus just got described, convincingly, in prose.
 
-Here's where the distinction stops being academic. Give a coding agent a terminal and a filesystem, and you haven't handed it one new tool. You've handed it every tool already installed on the machine.
+## What a terminal actually hands over
 
-`gh` hands it the whole forge — PRs, issues, releases. `az` hands it everything in the subscription. `aws` hands it the same idea under a different flag. None of these were built for the agent. The moment it can open a shell, it inherits all three, instantly, with zero integration work from anyone.
+A chat interface gives the model a fixed menu — search, maybe render a document, nothing more. A coding agent's harness gives the model a shell, and that one difference is bigger than it looks. A shell isn't a single capability. It's access to every command-line program already sitting on that machine.
 
-That's the entire difference between a chatbot in a browser tab and a coding agent in a terminal. The chatbot's harness hands the model a fixed menu — search the web, render an artifact, maybe read a document. The coding agent's harness hands the model a shell prompt, and a shell prompt isn't a tool. It's a door to every tool the machine has ever had installed on it, present and future.
+Point it at `gh` and it can open PRs, close issues, and cut releases across every repo you can reach. Point it at `az` or `aws` and it can spin up or tear down whatever's in that account. None of these tools were built with an agent in mind — the agent inherits all of them the moment it can run a command, with zero integration work from anyone. An authenticated CLI in an agent's hands can do exactly what that CLI can do, nothing less. That's the entire reason permission prompts exist, and it's worth pausing on before clicking through them out of habit.
 
-An authenticated CLI in the hands of an agent can do whatever that CLI can do: open PRs across every repo in the org, spin up or tear down cloud resources, ship whatever's sitting in the current directory. This is the whole reason permission prompts exist, and the whole reason clicking "approve all" is a decision and not a formality.
+## Where responsibility actually sits
 
-## Somebody Granted That Access
+When something breaks — a branch force-pushed, a resource group gone — "the AI did it" isn't wrong so much as incomplete. The model emitted a call. The harness ran it. Somebody, earlier, decided that harness should hold those credentials.
 
-So when something goes wrong — a branch force-pushed, a resource group gone, prod written to — "the AI did it" describes nothing. The model emitted a tool call. The harness executed it. And a human, earlier, decided that harness got to hold those credentials in the first place.
-
-Every postmortem I've read that stops at "the AI did it" stops one sentence before the useful part. The model doesn't get root-cause credit or root-cause blame — it can't, it never touched anything. Accountability lives in the harness and in whoever configured its access, because those are the only two things in the sentence actually capable of doing damage.
-
-Next time it happens, don't ask what the AI did. Ask what the harness was allowed to run, and who allowed it. That's usually the whole incident report.
+The model can't take the blame, because it never touched anything to be blamed for. Responsibility sits with the harness and with whoever configured its access — those are the two parts of the sentence actually capable of doing damage. The more useful question after an incident isn't what the AI did. It's what the harness was allowed to run, and who set that up.

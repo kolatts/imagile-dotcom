@@ -154,12 +154,25 @@ button, input, textarea, select {
 .prose { max-width: var(--measure); }
 
 /* Fine drafting grid — an ambient background texture, never decorative on
-   its own; it reads as "instrumented" precisely because it's this quiet. */
+   its own; it reads as "instrumented" precisely because it's this quiet.
+   A very slow drift keeps it from reading as static wallpaper without ever
+   calling attention to itself — one full cell over two minutes. */
 .grid-ground {
   background-image:
     linear-gradient(var(--color-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .grid-ground {
+    animation: grid-drift 120s linear infinite;
+  }
+}
+
+@keyframes grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size); }
 }
 
 .eyebrow {

@@ -6,38 +6,34 @@ author: "Sunny Kolattukudy"
 tags: ["ai", "agentic-ai", "agentic-workflows", "product-engineering"]
 ---
 
-Every team I've watched adopt AI tooling ends up with the same unspoken belief: autonomy is a ladder, and the goal is to climb it. Start in a chat window, graduate to a human-in-the-loop setup, and eventually "arrive" at a fully autonomous agent running unattended. Progress means moving right.
+Most teams treat autonomy like a ladder: start in a chat window, move up to a supervised agent, eventually "graduate" to something fully autonomous. Progress means climbing.
 
-That belief is wrong, and it's wrong in a way that costs real money.
+I've come to think that's the wrong picture. Autonomy behaves more like a mixing board than a ladder — levels you set per task, not one fader pushed toward the top. Four positions are worth naming, and none outranks the others.
 
-Autonomy isn't a ladder. It's a dial with four positions, and you set it per task — today, and again tomorrow for a different task.
+## Four Positions, Not Four Stages
 
-## The Four Positions, Plainly
+A **chatbot** has no hands: it gives you an answer, and you carry it into whatever system the model can't reach. Fine for questions — nothing here can act without you.
 
-A **chatbot** is a conversation with no hands. It answers; you read the answer and act on it yourself, in whatever system the model can't touch. Good for questions. Nothing here has hands, so nothing here can do damage on its own.
+**Human-in-the-loop** means someone stays present for the session — watching, reachable, able to step in — while routine steps clear without asking. That presence is the definition, not how many approval prompts you clicked. It's also where you learn what the model is weak at — which files need pointing out, which instructions it over-follows.
 
-**Human-in-the-loop** means a person is present for the session — watching, available, able to interrupt — even though the routine steps clear without asking. Presence is the definition, not how many prompts you clicked through. This is where you learn what the model is actually bad at: which files it needs pointed out, which instructions it over-follows.
+An **agentic workflow** runs off a trigger — a cron schedule, a pull request, a filed issue — along a path someone designed in advance. The path is fixed; the reasoning inside each step isn't — unlike a shell script on a timer. Claude Code's GitHub Actions integration and OpenAI's Codex both ship a runner built for this: a person sets the trigger and allowed tools, the runner disappears after each run, and the model underneath can be swapped without touching the workflow.
 
-An **agentic workflow** is a fixed path a human designed in advance, set running by a trigger — a cron schedule, a pull request, a filed issue. The path is predetermined; the reasoning inside each step isn't, which is what makes it nothing like a shell script on a timer. Both Anthropic and OpenAI now ship a runner for exactly this shape, and the bet is the same from both: a human declares the trigger and the allowed tools, the runner gets thrown away after each run, and the model underneath can be swapped without anyone touching the workflow file.
+An **autonomous agent** decides its own next step with nobody watching in real time. It suits open-ended work — but only work you're set up to check afterward, because when this mode fails, it tends to fail expensively, with no one around to catch it early.
 
-An **autonomous agent** decides its own steps as it goes, running with nobody in the room while it happens. Good for open-ended work — but only work you can actually verify, because when it fails, it fails expensively, and the expense compounds while nobody's watching.
+## What Doesn't Transfer
 
-## The Far End Isn't the Prize
+The pull toward the far end is strong, partly because industry language treats "more autonomous" as automatically more impressive. Worth noticing: the people building these systems don't say to default to it. Anthropic's own engineering guidance ([Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)) is direct — find the simplest approach that works, and add complexity only once it earns its keep, because "this might mean not building agentic systems at all." Andrew Ng has made a related point [on X](https://x.com/AndrewYNg/status/1801295202788983136), arguing against defaulting to agentic architectures when a simpler pipeline would do. One of those two has every incentive to sell you on autonomy; the other has no stake in the answer at all — and they land in the same place.
 
-Here's the part teams skip: the vendors with the most to gain from you running everything unattended are on record telling you not to. Anthropic's own guidance on building agents says to find the simplest thing that works and add complexity only when it demonstrably improves the outcome — "this might mean not building agentic systems at all." Agentic systems trade latency and cost for task performance. That's a trade worth making sometimes, not by default.
+Moving rightward, research and planning hand over easily, and most early implementation does too — that's most of the value on offer. Verification is the piece that doesn't transfer cleanly. At best, at the far end, it's shared custody: the agent checks its own output, and a person still signs off before anything ships. That only happens if someone built the checking step on purpose. Skip it, and running unattended doesn't buy you autonomy — it buys you a process nobody happens to be watching.
 
-Notice what actually moves as you go from chatbot toward full autonomy: research, planning, and implementation hand themselves over readily. Verification doesn't. At the far right it becomes joint custody at best — the agent checks its own work, a human still signs off on what ships — and that only happens if someone deliberately built the self-checking half. Skip that step and sliding to "autonomous" doesn't give you autonomy. It gives you an unattended process with nobody assigned to notice when it's wrong.
+## A Second Dial, Set Separately
 
-Think of it the way you think about math. Arithmetic didn't get replaced by calculus — you still balance a checkbook by hand, because nobody derivates a grocery bill. Calculus gets reached for when a problem genuinely calls for it, and the person using it still needs the arithmetic underneath. Treating "how autonomous is our AI" as a scoreboard is a category error for the same reason ranking arithmetic below calculus is: they're for different problems, not different skill tiers.
+There's another dial, easy to confuse with the first: effort, meaning how hard a model works on a given turn. It's a reasoning-depth setting, not a choice of model — [Claude's effort parameter](https://platform.claude.com/docs/en/build-with-claude/effort) controls it directly. Turn it up and the model spends more computation before committing to an answer; turn it down and you get something faster and shallower, out of the same model either way.
 
-## Effort Is a Second Dial, and It's Not the Same One
+Raise it for multi-step reasoning, or an agentic run where an early wrong turn is costly to unwind — counterintuitively, more effort can lower the total bill, because it heads off wrong turns rather than speeding through more of them. Lower it for small, bounded work — a lookup, a format change — where the extra depth just sits there unused.
 
-Separately from which position you're in, there's a second dial: how hard the model works on this particular turn. That's effort — a reasoning-depth setting, not a model choice. Turn it up and the model spends more computation working the problem before committing to an answer. Turn it down and you get faster, cheaper, shallower.
+What effort doesn't fix is worth being clear about, since it's the mix-up I run into most. It doesn't fix verbosity: a rambling answer at high effort is just a more careful ramble. And it doesn't fix missing context — a model never told what it needed to know will think longer and still guess.
 
-Raise effort for multi-step reasoning or any agentic run where a wrong turn is expensive to unwind. This is the counterintuitive part: higher effort can lower total task cost, because it cuts the number of wrong turns instead of speeding through more of them. Lower it for simple, bounded work — a lookup, a format conversion — where paying for depth nothing required is the quiet failure, not the loud one.
+Model choice and effort aren't substitutes; they compound. A cheap model thinking hard still has less judgment than a strong one. A strong model rushed through on low effort leaves most of what you paid for on the table.
 
-What effort doesn't fix is worth saying plainly, because it's the mistake I see most often. It doesn't fix verbosity — a rambling answer at high effort just rambled more carefully. And it doesn't fix missing context. A model that was never told what it needed to know will think harder and still guess.
-
-Model and effort don't trade off against each other. They multiply. A cheap model thinking hard is still working with less judgment than an expensive one; an expensive model rushed through at low effort leaves depth on the table it was priced for.
-
-Set both dials per task. Neither one gets set once for the org and left alone.
+Set both dials for the task in front of you, not once for the whole org. If a tool you rely on doesn't expose the effort dial at all, that's worth finding out before you need it, not after.
