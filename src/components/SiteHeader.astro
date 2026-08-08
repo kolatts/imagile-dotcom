@@ -64,7 +64,17 @@ const current = Astro.url.pathname;
     letter-spacing: -0.01em;
   }
 
-  .site-header__mark { display: block; flex: none; }
+  .site-header__mark {
+    display: block;
+    flex: none;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .site-header__logo:hover .site-header__mark { transform: rotate(-8deg) scale(1.08); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__logo:hover .site-header__mark { transform: none; }
+  }
 
   .site-header__toggle-input { display: none; }
 

@@ -1,21 +1,18 @@
 ---
 const paths = [
   {
-    tag: 'PATH-A',
     label: 'I lead an engineering org',
     body: 'Stacks, mechanisms, and what actually changes in the SDLC. No vague AI-pilot promises.',
     href: '/services/developer-training',
     cta: 'See the training approach',
   },
   {
-    tag: 'PATH-B',
     label: 'I run a business',
     body: 'Get hours back every week by handing repetitive work to AI — explained in plain terms, with proof it works and a price attached.',
     href: '/services',
     cta: 'See what Imagile does',
   },
   {
-    tag: 'PATH-C',
     label: 'I want to build an app',
     body: 'You know your industry and the product it\'s missing. One senior engineer turns it into software real customers can use.',
     href: '/services/custom-software',
@@ -26,10 +23,10 @@ const paths = [
 
 <section class="section section--tight path-picker">
   <div class="container">
+    <h2 class="path-picker__heading">Which one sounds like you?</h2>
     <div class="path-picker__grid">
       {paths.map((p) => (
         <a href={p.href} class="path-picker__card card" data-reveal>
-          <span class="card-tag">{p.tag}</span>
           <h2 class="path-picker__label">{p.label}</h2>
           <p class="path-picker__body">{p.body}</p>
           <span class="path-picker__link">{p.cta} →</span>
@@ -48,18 +45,23 @@ const paths = [
     border: 1px solid var(--color-line);
   }
 
+  .path-picker__heading {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
+  }
+
   .path-picker__card {
     background: var(--color-surface);
     padding: var(--space-lg) var(--space-md);
     border: none;
-    transition: background var(--duration-fast) var(--ease-out);
+    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   }
 
-  .path-picker__card:hover { background: var(--color-bg); }
+  .path-picker__card:hover { background: var(--color-bg); transform: translateY(-2px); }
 
   .path-picker__label {
     font-size: var(--text-xl);
-    margin: 0.6rem 0 0.5rem;
+    margin: 0 0 0.5rem;
   }
 
   .path-picker__body { color: var(--color-muted); margin-bottom: 1.1rem; max-width: 40ch; }

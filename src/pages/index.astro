@@ -12,28 +12,24 @@ import { readingTime } from '../lib/reading-time';
 
 const services = [
   {
-    index: '01',
     title: 'AI Developer Training',
     body: "Your engineers, fluent in agentic development — judgment and workflow, not tool tutorials. On-site in Central Ohio or remote to a distributed team, equally first-class.",
     href: '/services/developer-training',
     priceSignal: 'Workshops from $3,000 · Cohorts from $15,000',
   },
   {
-    index: '02',
     title: 'Automate Your Business Processes',
-    body: 'The repetitive work your team does by hand — intake, triage, reporting, follow-ups — designed into reliable automation that gets verified before anything ships.',
+    body: 'The repetitive work your team does by hand — intake, triage, reporting, follow-ups — handed to AI from OpenAI and Anthropic, and proven trustworthy before it takes over.',
     href: '/services/agentic-workflows',
     priceSignal: 'Scoped after a free 15-minute consultation',
   },
   {
-    index: '03',
     title: 'Custom Software Development',
-    body: 'The software behind it, built by the person who builds it. .NET, Azure, AWS — senior-led, no handoffs.',
+    body: 'From idea to launched product — designed, built, and shipped by one senior engineer, explained in plain English the whole way.',
     href: '/services/custom-software',
     priceSignal: '$300/hr · Builds scoped after discovery',
   },
   {
-    index: '04',
     title: 'Technical Advisory & Fractional CTO',
     body: 'Senior technical judgment on retainer — architecture reviews, AI strategy, vendor and hiring calls — without the full-time hire.',
     href: '/contact',
@@ -51,8 +47,8 @@ const latestPosts = (await getCollection('blog'))
   <main>
     <Hero
       eyebrow="AI consulting · Columbus, Ohio"
-      title="AI that actually <em>ships.</em>"
-      subtitle="Training for engineering teams, agentic workflows that hold up in production, and custom software — all of it from the person who does the work, not a bench you never meet."
+      title="AI that actually <em>works.</em>"
+      subtitle="Training for your team, automation that does real work, and custom software — all of it from the person who does the work, not a bench you never meet."
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '/work', label: 'See the work' }}
     />
