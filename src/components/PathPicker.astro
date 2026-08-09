@@ -75,5 +75,9 @@ const paths = [
 
   @media (min-width: 760px) {
     .path-picker__grid { grid-template-columns: repeat(3, 1fr); }
+
+    /* Three-up panels are narrow enough that the hairline crowds the text —
+       even inset matches the breathing room of the service cards below. */
+    .path-picker__card { padding: var(--space-lg); }
   }
 </style>
