@@ -12,8 +12,8 @@ import { readingTime } from '../../lib/reading-time';
 const RELEVANT_TAGS = ['azure', 'dotnet', 'architecture', 'cloud', 'software-engineering'];
 
 const pricing = [
-  { row: 'Advisory / hands-on hourly', price: '$300/hr' },
-  { row: 'Day engagements, remote or on-site', price: 'Quoted up front' },
+  { row: 'Advisory / hands-on hourly', price: 'Hourly, rate quoted up front' },
+  { row: 'Day engagements, remote or on-site', price: 'Day rate, quoted up front' },
   { row: 'Production build with integrations', price: 'Scoped after discovery' },
   { row: 'Ongoing retainer', price: 'Scoped to your cadence' },
 ];
@@ -117,11 +117,11 @@ const related = (await getCollection('blog'))
     <section class="section section--tight pricing grid-ground">
       <div class="container">
         <p class="eyebrow">How pricing works</p>
-        <h2 class="pricing__title">Real numbers, not a "contact us" form</h2>
+        <h2 class="pricing__title">A number in writing before any code gets written</h2>
         <div class="pricing__table-wrap">
           <table class="pricing__table">
             <thead>
-              <tr><th>Engagement</th><th>Price</th></tr>
+              <tr><th>Engagement</th><th>How it's priced</th></tr>
             </thead>
             <tbody>
               {pricing.map((p) => (
@@ -134,10 +134,11 @@ const related = (await getCollection('blog'))
           </table>
         </div>
         <p class="pricing__note">
-          Most engagements start with a short AI transformation strategy session — a focused conversation and a
-          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
-          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are
-          real numbers, not a "contact us" form.
+          Advisory and hands-on work is hourly; a build gets a fixed scope and a fixed number, both agreed before
+          any code is written. Most engagements start with a short AI transformation strategy session — a focused
+          conversation and a written recommendation, credited toward whatever comes next. Remote work is priced the
+          same as the work; on-site carries a day-rate premium plus travel at cost, never a surprise change order.
+          Ask and you'll get the number the same day, in writing.
         </p>
       </div>
     </section>

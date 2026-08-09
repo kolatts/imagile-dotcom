@@ -17,10 +17,10 @@ const relatedPosts = (await getCollection('blog'))
   .slice(0, 3);
 
 const pricingRows = [
-  { name: 'AI Transformation Strategy', detail: 'A focused session + written recommendation, credited toward what comes next', price: '$900' },
-  { name: 'Half-day workshop', detail: 'Up to 12 developers, single focused topic', price: '$3,000' },
-  { name: 'Full-day workshop', detail: 'Up to 12 developers, full workflow arc', price: '$5,000' },
-  { name: '4-week enablement cohort', detail: 'Up to 12 developers, habits that outlast the training', price: 'from $15,000' },
+  { name: 'AI Transformation Strategy', detail: 'A focused session + written recommendation, credited toward what comes next', price: 'Flat fee, credited forward' },
+  { name: 'Half-day workshop', detail: 'Up to 12 developers, single focused topic', price: 'Flat fee per session' },
+  { name: 'Full-day workshop', detail: 'Up to 12 developers, full workflow arc', price: 'Flat fee per session' },
+  { name: '4-week enablement cohort', detail: 'Up to 12 developers, habits that outlast the training', price: 'Flat fee, scoped to team size' },
 ];
 ---
 
@@ -33,7 +33,7 @@ const pricingRows = [
       title="Train engineers to build with AI — <em>judgment</em>, not tool tutorials."
       subtitle="Anyone can demo Claude Code, Codex, or Copilot in a lunch-and-learn. The harder job is teaching a team when to trust the suggestion, when to stop and read the diff, and how review discipline has to change once the code is drafted in seconds instead of hours."
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
-      secondaryCta={{ href: '#pricing', label: 'See pricing' }}
+      secondaryCta={{ href: '#pricing', label: 'See how it works' }}
       markImage="/images/services/developer-training.webp"
     />
 
@@ -109,14 +109,14 @@ const pricingRows = [
     <section id="pricing" class="section section--tight pricing grid-ground">
       <div class="container">
         <p class="eyebrow">How pricing works</p>
-        <h2 class="pricing__title">Real numbers, not a contact form</h2>
+        <h2 class="pricing__title">Flat fees, quoted before anything starts</h2>
         <div class="pricing__table-wrap">
           <table class="pricing__table">
             <thead>
               <tr>
                 <th>Engagement</th>
                 <th>What it is</th>
-                <th>Price</th>
+                <th>How it's priced</th>
               </tr>
             </thead>
             <tbody>
@@ -124,7 +124,7 @@ const pricingRows = [
                 <tr>
                   <td data-label="Engagement">{row.name}</td>
                   <td data-label="What it is">{row.detail}</td>
-                  <td data-label="Price" class="pricing__price">{row.price}</td>
+                  <td data-label="How it's priced" class="pricing__price">{row.price}</td>
                 </tr>
               ))}
             </tbody>
@@ -132,9 +132,10 @@ const pricingRows = [
         </div>
         <p class="pricing__philosophy">
           Most engagements start with a short AI transformation strategy session — a focused conversation and a
-          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
-          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are real
-          numbers, not a "contact us" form.
+          written recommendation, credited toward whatever comes next. Every format is a flat fee agreed before the
+          first session — remote is priced the same as on-site work, on-site carries a day-rate premium plus travel
+          at cost, and nothing turns into a surprise change order later. Tell me the team and the format and you'll
+          get the number in writing.
         </p>
       </div>
     </section>

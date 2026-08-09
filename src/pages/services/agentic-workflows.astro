@@ -17,11 +17,11 @@ const relatedPosts = (await getCollection('blog'))
   .slice(0, 3);
 
 const pricing = [
-  { name: 'AI Transformation Strategy', detail: 'A focused session, written recommendation, credits forward', price: '$900' },
-  { name: 'AI Readiness / Discovery Sprint', detail: '2 weeks, remote-first, fixed fee', price: '$8,500' },
-  { name: 'Automation pilot', detail: 'Single process, 4–8 weeks, scoped', price: '$25,000–$50,000' },
+  { name: 'AI Transformation Strategy', detail: 'A focused session, written recommendation, credits forward', price: 'Flat fee, credited forward' },
+  { name: 'AI Readiness / Discovery Sprint', detail: '2 weeks, remote-first', price: 'Fixed fee for the two weeks' },
+  { name: 'Automation pilot', detail: 'Single process, 4–8 weeks', price: 'Fixed fee, scoped after discovery' },
   { name: 'Ongoing retainer', detail: 'Continuing improvement after the build ships', price: 'Scoped to your cadence' },
-  { name: 'Fractional AI leadership', detail: 'Up to 3 days/week, scoped', price: 'from $10,000/mo' },
+  { name: 'Fractional AI leadership', detail: 'Up to 3 days/week', price: 'Monthly retainer, scoped to days' },
 ];
 ---
 
@@ -126,14 +126,14 @@ const pricing = [
     <section class="section section--tight pricing">
       <div class="container">
         <p class="eyebrow">How pricing works</p>
-        <h2 class="pricing__title">Real numbers, not a contact form</h2>
+        <h2 class="pricing__title">Fixed scope, fixed fee, agreed up front</h2>
         <div class="pricing__table-wrap">
           <table class="pricing__table">
             <thead>
               <tr>
                 <th>Engagement</th>
                 <th>Detail</th>
-                <th>Price</th>
+                <th>How it's priced</th>
               </tr>
             </thead>
             <tbody>
@@ -149,9 +149,9 @@ const pricing = [
         </div>
         <p class="pricing__philosophy">
           Most engagements start with a short AI transformation strategy session — a focused conversation and a
-          written recommendation, credited toward whatever comes next. Remote work is priced the same as the work;
-          on-site carries a day-rate premium plus travel at cost, never a surprise change order. These are real
-          numbers, not a "contact us" form.
+          written recommendation, credited toward whatever comes next. Everything after that is a fixed fee against
+          a written scope — remote is priced the same as on-site work, on-site carries a day-rate premium plus travel
+          at cost, and the number doesn't move mid-engagement. You'll have it in writing before anyone starts.
         </p>
       </div>
     </section>
