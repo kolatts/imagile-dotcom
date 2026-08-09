@@ -1,0 +1,139 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('file:///C:/Code/imagile-dotcom/node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-600-normal.woff2') format('woff2');
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: 'Source Serif 4';
+    src: url('file:///C:/Code/imagile-dotcom/node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-700-normal.woff2') format('woff2');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('file:///C:/Code/imagile-dotcom/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Fira Code';
+    src: url('file:///C:/Code/imagile-dotcom/node_modules/@fontsource/fira-code/files/fira-code-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg: #faf8f4;
+    --ink: #1c1915;
+    --muted: #6b6459;
+    --accent: #c25d33;
+    --grid: rgba(28, 25, 21, 0.045);
+    --line: rgba(28, 25, 21, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #fff; }
+
+  .banner {
+    position: relative;
+    width: 1128px;
+    height: 191px;
+    overflow: hidden;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Drafting art: multiply-blended so its ivory paper ground melts into ours,
+     with the left edge feathered out so the construction arc trails off. */
+  .banner__art {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 181px;
+    mix-blend-mode: multiply;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 30%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 30%);
+  }
+
+  /* Registration marks, blueprint-style */
+  .reg {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+  }
+  .reg::before, .reg::after {
+    content: '';
+    position: absolute;
+    background: var(--line);
+  }
+  .reg::before { left: 50%; top: 0; width: 1px; height: 100%; }
+  .reg::after { top: 50%; left: 0; height: 1px; width: 100%; }
+  .reg--tl { left: 16px; top: 16px; }
+  .reg--tr { right: 16px; top: 16px; }
+  .reg--bl { left: 16px; bottom: 16px; }
+  .reg--br { right: 16px; bottom: 16px; }
+
+  .banner__content {
+    position: absolute;
+    left: 208px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink);
+  }
+
+  /* Mark-to-wordmark ratio mirrors SiteHeader's lockup: 32px mark, 1.4rem text. */
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 5px;
+  }
+  .lockup img { width: 34px; height: 34px; display: block; }
+  .lockup span {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .headline {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .headline em { font-style: normal; color: var(--accent); }
+
+  .sub {
+    margin-top: 9px;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.3;
+    color: var(--muted);
+  }
+
+</style>
+
+<div class="banner" id="shot">
+  <img class="banner__art" src="file:///C:/Code/imagile-dotcom/.claude/image-generation/260809-linkedin-banner-art/banner-art-prepped.png" alt="" />
+
+  <i class="reg reg--tl"></i>
+  <i class="reg reg--tr"></i>
+  <i class="reg reg--bl"></i>
+  <i class="reg reg--br"></i>
+
+  <div class="banner__content">
+    <div class="lockup">
+      <img src="file:///C:/Code/imagile-dotcom/public/images/imagile-mark.png" alt="" />
+      <span>imagile</span>
+    </div>
+    <div class="headline">AI that actually <em>works.</em></div>
+    <div class="sub">Training for your team, automation that does real work, and custom software.</div>
+  </div>
+</div>
