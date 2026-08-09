@@ -1,0 +1,84 @@
+---
+/**
+ * Explicit light/dark switch. Until it's clicked the site follows the visitor's
+ * system preference (and keeps following it, live); a click writes the choice
+ * to localStorage and <html data-theme>, which outranks the media query.
+ * Hidden without JS, where it would be a button that does nothing.
+ */
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">
+  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z" />
+  </svg>
+  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.2" />
+    <path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M6.5 6.5 4.9 4.9M19.1 19.1l-1.6-1.6M17.5 6.5l1.6-1.6M4.9 19.1l1.6-1.6" />
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: none;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  }
+
+  :global(html[data-js]) .theme-toggle { display: grid; }
+
+  .theme-toggle:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+  .theme-toggle__icon { grid-area: 1 / 1; }
+  .theme-toggle__icon--moon { display: var(--when-light); }
+  .theme-toggle__icon--sun { display: var(--when-dark); }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function stored(): string | null {
+    try {
+      return localStorage.getItem('theme');
+    } catch {
+      return null;
+    }
+  }
+
+  /** What the visitor is actually looking at, chosen or inherited. */
+  function active(): 'light' | 'dark' {
+    const explicit = root.dataset.theme;
+    if (explicit === 'light' || explicit === 'dark') return explicit;
+    return systemDark.matches ? 'dark' : 'light';
+  }
+
+  function label() {
+    button?.setAttribute('aria-label', active() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+
+  button?.addEventListener('click', () => {
+    const next = active() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    label();
+  });
+
+  // Still inheriting? Then a system flip mid-visit should carry through.
+  systemDark.addEventListener('change', () => {
+    if (!stored()) label();
+  });
+
+  label();
+</script>

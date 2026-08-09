@@ -45,6 +45,21 @@ const siteTitle = title === 'Imagile' ? title : `${title} — Imagile`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+
+    {/* Runs before first paint so a chosen theme never flashes the other one.
+        Nothing stored means no attribute, which leaves prefers-color-scheme in
+        charge. data-js reveals the toggle only where it can actually work. */}
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.dataset.js = '';
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') root.dataset.theme = stored;
+        } catch (e) {}
+      })();
+    </script>
+
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalURL} />

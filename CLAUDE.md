@@ -36,3 +36,22 @@ those are not Imagile's prices and are exempt from this rule.
 **Audience voice.** Only the developer-training path reads technical. The
 business-owner and founder paths stay plain-English — no jargon, no stack names
 unless they're doing work in the sentence.
+
+## Theming
+
+Light/dark follows `prefers-color-scheme` until the visitor uses the header
+toggle, which writes `light` or `dark` to `localStorage.theme` and to
+`<html data-theme>`. No attribute means the system is still in charge, so the
+default state and the no-JS state both track the OS.
+
+Two consequences when touching theme CSS:
+
+- `src/styles/global.css` declares the dark palette **twice** — once under
+  `@media (prefers-color-scheme: dark) :root:not([data-theme='light'])` and once
+  under `:root[data-theme='dark']`. Edit both or the toggle and the system path
+  drift apart.
+- Components must not add their own `prefers-color-scheme` queries, and media
+  attributes on `<picture><source>` can't see `data-theme` at all. Anything that
+  swaps per theme reads a token instead: `--when-light` / `--when-dark` for
+  display switching (see the header logomark and the toggle glyph), or a
+  purpose-built token like `--clock-face-filter` for the hero dial.

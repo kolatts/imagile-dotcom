@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+
 const nav = [
   { href: '/services', label: 'Services' },
   { href: '/work', label: 'Work' },
@@ -11,12 +13,12 @@ const current = Astro.url.pathname;
 <header class="site-header">
   <div class="container site-header__inner">
     <a href="/" class="site-header__logo" aria-label="Imagile home">
-      <picture>
-        <source srcset="/images/imagile-mark-dark.png" media="(prefers-color-scheme: dark)" />
-        <img src="/images/imagile-mark.png" width="26" height="26" alt="" class="site-header__mark" />
-      </picture>
+      <img src="/images/imagile-mark.png" width="32" height="32" alt="" class="site-header__mark site-header__mark--light" />
+      <img src="/images/imagile-mark-dark.png" width="32" height="32" alt="" class="site-header__mark site-header__mark--dark" />
       imagile
     </a>
+
+    <ThemeToggle />
 
     <input type="checkbox" id="nav-toggle" class="site-header__toggle-input" aria-hidden="true" />
     <label for="nav-toggle" class="site-header__toggle" aria-label="Open menu">
@@ -60,15 +62,18 @@ const current = Astro.url.pathname;
     margin-right: auto;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     letter-spacing: -0.01em;
   }
 
+  /* Two marks, one per theme — a <picture> media source can't see data-theme. */
   .site-header__mark {
-    display: block;
     flex: none;
     transition: transform var(--duration-base) var(--ease-out);
   }
+
+  .site-header__mark--light { display: var(--when-light); }
+  .site-header__mark--dark { display: var(--when-dark); }
 
   .site-header__logo:hover .site-header__mark { transform: rotate(-8deg) scale(1.08); }
 

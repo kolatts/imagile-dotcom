@@ -147,10 +147,13 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
     aspect-ratio: 1;
   }
 
+  /* Filter and opacity are theme tokens (see global.css) so the dial follows
+     an explicit toggle, not just the system preference. */
   .hero__clock-face {
     width: 100%;
     height: auto;
-    opacity: 0.94;
+    filter: var(--clock-face-filter, none);
+    opacity: var(--clock-face-opacity, 0.94);
   }
 
   .hero__clock-hand {
@@ -227,16 +230,6 @@ const { eyebrow, title, subtitle, primaryCta, secondaryCta, size = 'lg', showMar
   @keyframes sweep-hr {
     from { transform: rotate(var(--hr0, 305deg)); }
     to { transform: rotate(calc(var(--hr0, 305deg) + 360deg)); }
-  }
-
-  /* Dial art is warm near-black over transparency; in dark mode flip its
-     lightness while keeping the terracotta accent roughly in place. The
-     hands live outside the img so they take theme tokens directly. */
-  @media (prefers-color-scheme: dark) {
-    .hero__clock-face {
-      filter: invert(1) hue-rotate(180deg) saturate(1.3) brightness(1.05);
-      opacity: 0.9;
-    }
   }
 
   /* Blurred speed streaks: three soft trails drifting through the hero on
