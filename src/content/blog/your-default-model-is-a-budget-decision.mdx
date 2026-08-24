@@ -1,0 +1,47 @@
+---
+title: "Your Default Model Is a Budget Decision You Never Made"
+description: "Four fixed assignments, every current model, every effort setting, three attempts each — and the grades barely move while the bill moves by a factor of four hundred."
+publishDate: 2026-08-24
+author: "Sunny Kolattukudy"
+tags: ["ai", "developer-training", "developer-tools", "agentic-ai", "claude-code"]
+---
+
+Ask a developer which model they're using and you'll usually get one of two answers: whichever one the tool opened with, or the biggest one on the list, set to the highest effort it offers. Both are defaults. Neither is a decision, and one of them is quietly expensive.
+
+I wanted to know how expensive, so I built a small comparison lab and published the whole thing: [context-overflow.dev/lab](https://context-overflow.dev/lab).
+
+## What's actually in there
+
+Four fixed assignments — a cartoon SVG, a sorting algorithm of the model's own choosing, a physics simulation, and a music-player interface. Every current model on the roster, at every reasoning effort it exposes, attempted each one three times. Identical prompt, byte for byte. Single shot, no tools, no retries, no cleanup beyond stripping a stray markdown fence. That's 112 cells, each one run three times.
+
+Two choices there matter more than the rest. The first is that every published figure is the **median** of the three attempts, with a whisker spanning the best and worst — so a model that's brilliant on Tuesday and broken on Wednesday reads as exactly that instead of hiding behind its best day. Leaderboards tend to publish best-of-many. An ordinary day is the more useful thing to plan around.
+
+The second is that the models don't grade themselves. One external examiner marks all three attempts of every cell from the code plus a rendered screenshot, reliability first: does it work and honor the deliverable contract, then robustness, then presentation. Anything that crashes or renders blank is capped at 2 regardless of how elegant the source looks. Runs went through each vendor's coding agent in non-interactive mode rather than raw API calls, which is how developers actually consume these things — harness overhead and all. The dollar figures are computed from reported token counts at published list prices; the runs themselves were on subscription plans, so nothing was billed at those numbers. [The methodology page](https://context-overflow.dev/lab/methodology) has the rest, including a fairly blunt section on what a four-chore sample can't tell you.
+
+## The part worth staring at
+
+The grades cluster. The costs don't.
+
+On the physics assignment, the top mark was a 9, earned by the frontier model at maximum effort for about **$2.48** a run. One point below it, at an 8, sits the cheapest small model on the board at medium effort — **$0.0061**. That's roughly four hundred times less money for one point of grade, on a chore where "it runs and the balls bounce correctly" was most of the rubric.
+
+The interface assignment is worse, because there the money actively bought a failure. The single best grade on that task — an 8 — went to a mid-tier model at high effort, at about **$0.097**. Meanwhile a balanced model at maximum effort spent **$3.79** and scored a **2**, having violated the deliverable contract outright. Nearly forty times the spend for a result you'd have to throw away and re-run.
+
+Sorting told the same story more calmly: seventeen different configurations tied at the top grade, and the cheapest of them cost about a fiftieth of the most expensive. And on the SVG task, the highest mark on the board belonged to a premium-tier model at high effort — while the frontier model at maximum effort, costing nearly twenty times more, came in a point lower.
+
+There's a pattern underneath all four. **The effort dial moves the outcome, and the bill, more than the nameplate does.** More than once in this sweep, a mid-tier model turned all the way up out-spent a genuinely better model running one tier below it, and lost. If you only change one habit after reading this, look at what medium effort produces before you pay for maximum.
+
+## "The best model" has a shelf life of about a quarter
+
+The other reason a default is a bad idea: the ranking is not stable. Model families ship revisions on their own schedule, prices get cut, effort ladders get renamed, and a configuration that was the obvious pick in March is an odd choice by August. Every figure I quoted above carries a verification date for exactly that reason — it's a snapshot of one sweep, not a standing truth, and it'll need re-running.
+
+Which means the durable skill isn't knowing which model is best. It's knowing how to check, and knowing that the question has an answer per task rather than one answer forever. A developer who has internalized "always pick the top of the list" has learned a rule that decays. A developer who has internalized "match the model to the difficulty of the work, then verify" has learned something that survives the next release.
+
+## Quotas are the budget, and nobody sees them
+
+Most developers aren't watching a per-token meter. They're on a monthly subscription, which makes the cost signal invisible right up until the moment it isn't — the window runs dry mid-afternoon on Thursday, and the work stops.
+
+That's the practical shape of this problem inside a team. Nobody's expense report blows up; somebody's Thursday does. Every routine chore run at frontier tier and maximum effort is quota spent on something a smaller configuration would have graded the same on, and the person who runs out first is usually the one who never thought about it, because nothing in the tool ever asked them to.
+
+A fixed quota and a bit of training work well together here. The quota supplies a real constraint that a policy document can't fake, and the training supplies the routing instinct: cheap and fast for boilerplate, refactors, test scaffolding, and the tenth variation on a component you've already built; the expensive tier for genuinely hard reasoning, gnarly debugging, and architecture you'll live with for years. Get that instinct into a team and the same subscription stretches considerably further, without anyone having to police model choice in code review.
+
+The lab is public, the prompts are published verbatim, and the failures are on the wall next to the successes — including a few configurations that produced nothing usable at all. Go look at where the marks stop climbing and the prices keep going: [context-overflow.dev/lab](https://context-overflow.dev/lab).
