@@ -1,0 +1,40 @@
+---
+title: "The School Attached to the Lab Is Open Now"
+description: "The model bake-off got its final standings. The training platform behind it is now free to read — every module, both games, no account required."
+publishDate: 2026-08-30
+author: "Sunny Kolattukudy"
+tags: ["ai", "ai-fluency", "developer-training", "agentic-ai", "context-overflow"]
+---
+
+Last week I published a small comparison lab — four fixed assignments, every current model at every effort setting, three attempts each, graded by an external examiner and hung on a public wall. The most common response wasn't about the models at all. It was some version of: *fine, but how do I get the judgment to make these calls myself?*
+
+That's the right question, and a leaderboard can't answer it. So this post does two things: closes the loop on what the lab found, and opens the door on the thing the lab was always attached to.
+
+## The standings, since you'll ask
+
+The [previous post](/blog/your-default-model-is-a-budget-decision/) walked through the per-task surprises. Here's the overall picture the sweep settled on, summed across all four assignments (median of three attempts each, out of 40):
+
+- The frontier model at maximum effort topped the board at **32/40** — for about **$8.19** in list-price tokens across the four chores.
+- The same model at **medium** effort scored 31 for about $2.00. One point, four times the money.
+- A budget-tier model at high effort scored **29/40 for $0.18**. That's 91% of the top score at roughly **45× less** cost.
+- The full per-point spread across the board runs from about a tenth of a cent to a quarter of a dollar — a ~280× range, for grades that differ by at most a third.
+
+And the finding I keep coming back to: **variance is what a single leaderboard number hides**. One configuration scored 1, 2, and 8 on the same brief — identical prompt, identical settings, three runs. The wall shows the median with the range visible, and the failures hang next to the successes, including the ones where a maximum-effort run spent 36 minutes producing a file that didn't render at all. Every number is downloadable as CSV, prompts published verbatim: [context-overflow.dev/lab](https://context-overflow.dev/lab).
+
+The rankings will decay — models revise, prices move, and a snapshot from August is an odd thing to trust in November. Which is exactly why the durable skill isn't memorizing the standings.
+
+## The school
+
+The lab lives inside [Context Overflow](https://context-overflow.dev), a training platform I built where the instruction is delivered by a cast of deadpan corporate robots who have seen your org chart and filed it. Behind the jokes it's a real curriculum, in two tracks: one for knowledge workers who want to use these tools well without ever touching a terminal, and one for people who want to build things — ending with an actual folder on the actual internet.
+
+As of this week, **all of it is free to read with no account**. Every module, every section, every worked example and interactive exhibit: [context-overflow.dev/modules](https://context-overflow.dev/modules). The arcade is open to visitors too — two games that teach by making you do the job: one where you triage an AI agent's permission requests under time pressure, and one where you assemble an agent from parts and watch your configuration succeed or fail on its own merits.
+
+The curriculum teaches the thing the lab can only illustrate: how these models actually work — next-token prediction, context windows, the autonomy spectrum, why a wrong answer arrives with the same confident prose as a right one — and how to match the tool to the work instead of defaulting to the biggest name at the loudest setting.
+
+## What the account is actually for
+
+Reading requires nothing. Enrolling exists for one reason: it opens a personnel file, and the file is where your progress lives — sections completed, credits earned, badges issued, and a record that remembers exactly where you stopped so the next visit resumes there. Pass a robot's assessment and the approval goes on the record permanently, which the institution finds very satisfying.
+
+If you came here from LinkedIn, the referral code is exactly what you'd guess: **LINKED-IN**. Bring it to the enrollment form, pick a first name and a throwaway PIN, and you have a file. No email required, nothing to unsubscribe from — the institution does not write first.
+
+Read it all without one, though. That was the point of opening the doors: the fluency matters more than the paperwork, and the paperwork was never supposed to be the gate.
