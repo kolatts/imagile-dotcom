@@ -1,9 +1,11 @@
 ---
 // LinkedIn Insight Tag — builds retargeting audiences and conversion tracking
 // for LinkedIn Campaign Manager. The Partner ID is public by design (it ships
-// in page source), so it lives in a repo variable, not a secret.
-// Renders nothing when PUBLIC_LINKEDIN_PARTNER_ID is unset (local dev, forks).
-const partnerId = import.meta.env.PUBLIC_LINKEDIN_PARTNER_ID?.trim();
+// in page source). Defaults to Imagile's production Partner ID (ad account
+// 557354817); set PUBLIC_LINKEDIN_PARTNER_ID to override, or to "off" to
+// disable the tag (e.g. local dev).
+const configured = import.meta.env.PUBLIC_LINKEDIN_PARTNER_ID?.trim();
+const partnerId = configured === 'off' ? '' : configured || '10216148';
 ---
 
 {partnerId && (
