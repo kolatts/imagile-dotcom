@@ -1,0 +1,200 @@
+---
+// Tracking consent gate.
+//
+// Visitors outside the US have to opt in before anything that tracks them
+// loads (GDPR/UK GDPR and friends treat retargeting and analytics cookies as
+// consent-first). US visitors are on the opt-out footing the FTC/state laws
+// assume, so nothing interrupts them — but a Global Privacy Control or
+// Do Not Track signal is honoured everywhere, with no banner shown.
+//
+// Region comes from the browser's own IANA time zone, which needs no network
+// call and no IP lookup. Anything not on the US list — including a zone we
+// can't read at all — counts as outside the US, so the failure mode is the
+// private one.
+//
+// Everything that tracks registers through the gate this installs:
+//
+//   window.imagileConsent.whenGranted(function () { /* load tracker */ });
+//
+// The inline script runs in <head> so the gate exists before any deferred or
+// end-of-body script asks for it.
+---
+
+<script is:inline>
+  (function () {
+    var KEY = 'tracking-consent';
+
+    // IANA zones in the US and its territories, legacy aliases included.
+    var US_ZONES = [
+      'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville',
+      'America/Kentucky/Monticello', 'America/Indiana/Indianapolis',
+      'America/Indiana/Vincennes', 'America/Indiana/Winamac',
+      'America/Indiana/Marengo', 'America/Indiana/Petersburg',
+      'America/Indiana/Vevay', 'America/Indiana/Tell_City',
+      'America/Indiana/Knox', 'America/Chicago', 'America/Menominee',
+      'America/North_Dakota/Center', 'America/North_Dakota/New_Salem',
+      'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise',
+      'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage',
+      'America/Juneau', 'America/Sitka', 'America/Metlakatla',
+      'America/Yakutat', 'America/Nome', 'America/Adak',
+      'Pacific/Honolulu', 'America/Puerto_Rico', 'America/St_Thomas',
+      'Pacific/Guam', 'Pacific/Saipan', 'Pacific/Pago_Pago',
+      'US/Eastern', 'US/Central', 'US/Mountain', 'US/Pacific',
+      'US/Alaska', 'US/Hawaii', 'US/Arizona', 'US/East-Indiana',
+      'America/Indianapolis', 'America/Fort_Wayne', 'America/Knox_IN',
+      'America/Louisville', 'America/Shiprock', 'Navajo',
+    ];
+
+    function stored() {
+      try {
+        var v = localStorage.getItem(KEY);
+        return v === 'granted' || v === 'denied' ? v : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function remember(value) {
+      try {
+        localStorage.setItem(KEY, value);
+      } catch (e) {}
+    }
+
+    function optedOutBySignal() {
+      return (
+        navigator.globalPrivacyControl === true ||
+        navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1'
+      );
+    }
+
+    function inUS() {
+      try {
+        var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        return !!zone && US_ZONES.indexOf(zone) !== -1;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    var queue = [];
+    var state = optedOutBySignal()
+      ? 'denied'
+      : stored() || (inUS() ? 'granted' : 'pending');
+
+    function flush() {
+      while (queue.length) {
+        try {
+          queue.shift()();
+        } catch (e) {}
+      }
+    }
+
+    function resolve(value) {
+      state = value;
+      remember(value);
+      if (value === 'granted') flush();
+      else queue.length = 0;
+      var banner = document.getElementById('tracking-consent');
+      if (banner) banner.hidden = true;
+    }
+
+    window.imagileConsent = {
+      /** 'granted' | 'denied' | 'pending' */
+      get state() {
+        return state;
+      },
+      /** Runs fn now if consent is in hand, otherwise if and when it arrives. */
+      whenGranted: function (fn) {
+        if (state === 'granted') fn();
+        else if (state === 'pending') queue.push(fn);
+      },
+      grant: function () {
+        resolve('granted');
+      },
+      deny: function () {
+        resolve('denied');
+      },
+    };
+
+    if (state === 'pending') {
+      document.addEventListener('DOMContentLoaded', function () {
+        var banner = document.getElementById('tracking-consent');
+        if (!banner || window.imagileConsent.state !== 'pending') return;
+        banner.hidden = false;
+        banner
+          .querySelector('[data-consent="grant"]')
+          .addEventListener('click', function () {
+            window.imagileConsent.grant();
+          });
+        banner
+          .querySelector('[data-consent="deny"]')
+          .addEventListener('click', function () {
+            window.imagileConsent.deny();
+          });
+      });
+    }
+  })();
+</script>
+
+{/* Server-rendered hidden; the script above reveals it only where consent is
+    needed and hasn't been given, so a no-JS visitor never sees a dead bar. */}
+<aside
+  class="consent"
+  id="tracking-consent"
+  role="region"
+  aria-label="Tracking consent"
+  hidden
+>
+  <p class="consent__copy">
+    We'd like to load LinkedIn and Microsoft analytics to see which pages bring
+    people here. Nothing loads until you say yes, and declining changes nothing
+    about the site.
+  </p>
+  <div class="consent__actions">
+    <button class="btn btn--primary btn--sm" type="button" data-consent="grant">
+      Allow
+    </button>
+    <button class="btn btn--ghost btn--sm" type="button" data-consent="deny">
+      Decline
+    </button>
+  </div>
+</aside>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 60;
+    inset-inline: var(--space-sm);
+    bottom: var(--space-sm);
+    margin-inline: auto;
+    max-width: 44rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(28, 25, 21, 0.18);
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  .consent__copy {
+    flex: 1 1 22rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    color: var(--color-muted);
+  }
+
+  .consent__actions {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+</style>

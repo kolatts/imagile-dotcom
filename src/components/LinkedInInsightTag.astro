@@ -4,13 +4,18 @@
 // in page source). Defaults to Imagile's production Partner ID (ad account
 // 557354817); set PUBLIC_LINKEDIN_PARTNER_ID to override, or to "off" to
 // disable the tag (e.g. local dev).
+//
+// Loading goes through the consent gate in TrackingConsent.astro: outside the
+// US nothing is requested until the visitor opts in. There's deliberately no
+// <noscript> pixel — it would fire before any gate could stop it, and a
+// no-JS visitor can't be asked.
 const configured = import.meta.env.PUBLIC_LINKEDIN_PARTNER_ID?.trim();
 const partnerId = configured === 'off' ? '' : configured || '10216148';
 ---
 
 {partnerId && (
-  <>
-    <script is:inline define:vars={{ partnerId }}>
+  <script is:inline define:vars={{ partnerId }}>
+    window.imagileConsent.whenGranted(function () {
       window._linkedin_partner_id = partnerId;
       window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
       window._linkedin_data_partner_ids.push(partnerId);
@@ -26,15 +31,6 @@ const partnerId = configured === 'off' ? '' : configured || '10216148';
         b.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
         s.parentNode.insertBefore(b, s);
       })(window.lintrk);
-    </script>
-    <noscript>
-      <img
-        height="1"
-        width="1"
-        style="display:none;"
-        alt=""
-        src={`https://px.ads.linkedin.com/collect/?pid=${encodeURIComponent(partnerId)}&fmt=gif`}
-      />
-    </noscript>
-  </>
+    });
+  </script>
 )}
