@@ -13,6 +13,7 @@ import '@fontsource/fira-code/400.css';
 import '@fontsource/fira-code/500.css';
 import '@fontsource/archivo/500.css';
 import '@fontsource/archivo/600.css';
+import LinkedInInsightTag from '../components/LinkedInInsightTag.astro';
 
 interface Props {
   title: string;
@@ -165,6 +166,7 @@ const siteTitle = title === 'Imagile' ? title : `${title} — Imagile`;
     <slot />
     <script src="../scripts/motion.js"></script>
     <script src="../scripts/relative-time.js"></script>
+    <LinkedInInsightTag />
   </body>
 </html>
 
