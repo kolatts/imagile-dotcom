@@ -12,7 +12,7 @@ env:
 
 # ─────────────────────────────────────────────────────────────────────────────
 # WRITE JOB — fires when the `write` label is applied to an issue that also
-# has the `blog` label. Uses the sunny:write-blog plugin skill to draft the
+# has the `blog` label. Uses the sunny:write plugin skill to draft the
 # post, commits it to src/content/blog/, and opens a draft PR.
 # ─────────────────────────────────────────────────────────────────────────────
 jobs:
@@ -72,9 +72,9 @@ jobs:
           track_progress: true
           prompt: ${{ steps.read-write-prompt.outputs.content }}
           plugin_marketplaces: |
-            https://github.com/kolatts/claude-marketplace.git
+            https://github.com/imagile-dev/claude-plugins.git
           plugins: |
-            sunny@kolatts-marketplace
+            sunny@imagile
           claude_args: --model sonnet --max-turns 30 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git checkout -b:*),Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr create:*),Bash(gh issue comment:*),Bash(gh issue edit:*),Bash(gh label create:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
 
       - name: Retry wait — write phase
@@ -91,9 +91,9 @@ jobs:
           track_progress: true
           prompt: ${{ steps.read-write-prompt.outputs.content }}
           plugin_marketplaces: |
-            https://github.com/kolatts/claude-marketplace.git
+            https://github.com/imagile-dev/claude-plugins.git
           plugins: |
-            sunny@kolatts-marketplace
+            sunny@imagile
           claude_args: --model sonnet --max-turns 30 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git checkout -b:*),Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr create:*),Bash(gh issue comment:*),Bash(gh issue edit:*),Bash(gh label create:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
 
       - name: Cleanup — remove write label
@@ -192,9 +192,9 @@ jobs:
           track_progress: true
           prompt: ${{ steps.read-feedback-prompt.outputs.content }}
           plugin_marketplaces: |
-            https://github.com/kolatts/claude-marketplace.git
+            https://github.com/imagile-dev/claude-plugins.git
           plugins: |
-            sunny@kolatts-marketplace
+            sunny@imagile
           claude_args: --model sonnet --max-turns 20 --allowedTools "Read,Glob,Grep,Edit,Write,Bash(git add src:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git log:*),Bash(gh pr comment:*),Bash(gh pr view:*),Bash(ls:*),Bash(date:*),Bash(find:*)"
 
       - name: Job summary
