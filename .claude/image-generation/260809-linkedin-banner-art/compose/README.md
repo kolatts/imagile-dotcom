@@ -14,7 +14,7 @@ in the actual brand fonts here and rendered pixel-exact, the same way
 3. `npm i playwright && npx playwright install chromium`, then from this folder:
 
    ```bash
-   node shoot.mjs '[["banner.html","linkedin-banner.png",1128,191,2],["logo.html","linkedin-logo.png",400,400,2],["logo-dark.html","linkedin-logo-dark.png",400,400,2]]'
+   node shoot.mjs '[["banner.html","linkedin-banner.png",1128,191,2],["logo.html","linkedin-logo.png",400,400,2],["logo-dark.html","linkedin-logo-dark.png",400,400,2],["profile-banner.html","linkedin-profile-banner.png",1584,396,2]]'
    ```
 
 4. Palette-optimize the logo (quantizing to 128 colors is visually lossless here —
@@ -25,6 +25,7 @@ in the actual brand fonts here and rendered pixel-exact, the same way
 | File | Size | Where |
 |---|---|---|
 | `public/images/linkedin-banner.png` | 2256×382 | LinkedIn company page cover (1128×191 @2x) |
+| `public/images/linkedin-profile-banner.png` | 3168×792 | Personal profile background (1584×396 @2x) |
 | `public/images/linkedin-logo.png` | 800×800 | LinkedIn company logo (300×300 recommended) |
 | `../linkedin-logo-dark-alt.png` | 800×800 | Ink-ground alternate, unshipped |
 
@@ -38,5 +39,13 @@ in the actual brand fonts here and rendered pixel-exact, the same way
   feed size).
 - The banner keeps its left ~18% clear because LinkedIn's own logo tile overlaps
   the cover's bottom-left corner.
+- The profile banner is the same composition at LinkedIn's 4:1 profile size, with
+  the text starting ~28% in so the round profile photo (left edge, lower half)
+  never covers it. The company cover is ~6:1, so uploading it to a profile crops
+  the compass and puts the photo over the headline.
+- Without Playwright, headless Chrome renders the same file:
+  `chrome --headless=new --allow-file-access-from-files --window-size=1584,396
+  --force-device-scale-factor=2 --virtual-time-budget=3000
+  --screenshot=linkedin-profile-banner.png file:///…/profile-banner.html`
 - `@font-face` and `<img>` in the HTML use absolute `file:///C:/Code/imagile-dotcom/…`
   paths — fix those up if the repo lives somewhere else.
