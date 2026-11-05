@@ -1,9 +1,11 @@
 /* ============================================================
    Imagile — design tokens & base styles ("Workbench, refined")
    The drafting-board bones stay — faint grid, measured spacing, one
-   accent — but the finish is warm and editorial: ivory paper, a serif
-   display face, terracotta-leaning accent, softened corners. Mono is
-   an accent voice (labels, prices), never the navigation.
+   accent — but the finish is warm and editorial: drafting-vellum paper, a
+   serif display face, a red-pencil accent, softened corners. The grid is
+   drawn in non-photo blue, the drafter's sketch pencil, and blueprint blue
+   carries inline links so the accent marks only the action. Mono is an
+   accent voice (labels, prices), never the navigation.
    Dark mode follows prefers-color-scheme until the visitor picks a side
    with the header toggle; that choice lands on <html data-theme> and wins.
    ============================================================ */
@@ -13,15 +15,16 @@
 
 :root {
   /* ---- color: light (default) ---- */
-  --color-bg: #faf8f4;
-  --color-surface: #fffefb;
+  --color-bg: #f6f6f3;
+  --color-surface: #fcfcfa;
   --color-ink: #1c1915;
   --color-muted: #6b6459;
-  --color-accent: #c25d33;
+  --color-accent: #b4452c;
   --color-accent-ink: #ffffff;
+  --color-link: #1763cc;
   --color-line: rgba(28, 25, 21, 0.14);
   --color-line-strong: rgba(28, 25, 21, 0.3);
-  --color-grid: rgba(28, 25, 21, 0.045);
+  --color-grid: rgba(74, 150, 200, 0.11);
   --color-focus: #1b6fe0;
 
   /* Per-theme display switches, so components that swap an asset or an icon
@@ -90,11 +93,12 @@
     --color-surface: #201c17;
     --color-ink: #ece7df;
     --color-muted: #a89e91;
-    --color-accent: #e08356;
+    --color-accent: #e26f52;
     --color-accent-ink: #16130f;
+    --color-link: #6fb2ff;
     --color-line: rgba(236, 231, 223, 0.15);
     --color-line-strong: rgba(236, 231, 223, 0.28);
-    --color-grid: rgba(236, 231, 223, 0.04);
+    --color-grid: rgba(111, 178, 255, 0.06);
     --color-focus: #6fb2ff;
 
     --when-light: none;
@@ -110,11 +114,12 @@
   --color-surface: #201c17;
   --color-ink: #ece7df;
   --color-muted: #a89e91;
-  --color-accent: #e08356;
+  --color-accent: #e26f52;
   --color-accent-ink: #16130f;
+  --color-link: #6fb2ff;
   --color-line: rgba(236, 231, 223, 0.15);
   --color-line-strong: rgba(236, 231, 223, 0.28);
-  --color-grid: rgba(236, 231, 223, 0.04);
+  --color-grid: rgba(111, 178, 255, 0.06);
   --color-focus: #6fb2ff;
 
   --when-light: none;

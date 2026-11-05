@@ -21,6 +21,24 @@ store it, add the `DISCORD_WEBHOOK` Actions secret, create the `lead`
 label, then merge. Also still owed: Context Overflow `IMAGILE` org-code
 seeding (az command below), Turnstile hostname check for the apex domain.
 
+## Refinement 2026-10-20: drafting vellum and red pencil
+
+Warm cream, a serif display and a terracotta accent became one of the most
+common generated-site looks after launch, and `#c25d33` sat close to the clay
+accent those sites default to. Four token moves push Workbench back toward a
+drafting table without a rebrand: vellum paper (`#f6f6f3`), the grid in
+non-photo blue, a red-pencil accent (`#b4452c`, dark `#e26f52`), and
+blueprint blue (`--color-link`) for inline links so the accent marks only the
+action. The accent change also fixed white button text, which was 4.3:1 on
+the old accent and is 5.5:1 now. Dark mode barely moves. The logomark and
+the clock-face art keep their baked-in terracotta (about 7° of hue from the
+new accent; invisible at header size). Same PR: the mobile menu toggle was
+`display: none` and so unreachable from the keyboard; it is now a focusable,
+visually hidden checkbox named "Menu", and the closed menu leaves the tab
+order. Before/after sheets live in `2026-10-drafting-palette/`. Still to
+consider: patent "Fig." captions instead of eyebrows, mono only on real data,
+and a display-face retest by mockup.
+
 Running log of decisions, deviations from the original brief, and state. Not
 part of the public site; lives in this repo so the record travels with the
 code. Update this file as work proceeds — don't let it go stale.
