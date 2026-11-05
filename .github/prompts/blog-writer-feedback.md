@@ -28,7 +28,7 @@ If that returns nothing, run: ls -t src/content/blog/*.mdx | head -5
 Pick the most recently modified .mdx file — this is the blog post for this PR.
 
 STEP 2 — READ THE BLOG POST AND THE STYLE GUIDE.
-Read the current blog post file. The sunny:write-blog skill's style guide defines
+Read the current blog post file. The sunny:write skill's style guide defines
 Sunny's voice: direct, opinionated, short paragraphs, one analogy max, no hedging.
 
 Key reminders when editing:
