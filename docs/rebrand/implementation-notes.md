@@ -21,6 +21,27 @@ store it, add the `DISCORD_WEBHOOK` Actions secret, create the `lead`
 label, then merge. Also still owed: Context Overflow `IMAGILE` org-code
 seeding (az command below), Turnstile hostname check for the apex domain.
 
+## Refinement 2026-11-10: public builds lead, shorter path to Get in touch
+
+The home page had "Get in touch" in the hero and the closing band with
+nothing between, and current work was a text-only Context Overflow band; on
+`/work` the public builds were the last section. Now a "Built in the open"
+section sits right after the path picker with toil (Toil UI screenshot) and
+Context Overflow, through the new `BuildCard.astro`; it replaces the
+standalone Context Overflow cross-promo and the `IMAGILE` org code moved into
+that card. "Get in touch" prompts follow that section and the engagement
+steps. `/work` leads with the builds, renumbered BUILD-01 toil, BUILD-02 Toil
+UI, BUILD-03 Context Overflow, BUILD-04 imagile-app (private, described not
+shown), BUILD-05 blog pipeline, and its hero gained "Get in touch" and "See
+the public builds" (`#builds`). The header button reads "Get in touch"
+instead of "Contact", and toil joined the footer's Elsewhere list.
+Screenshots live in `public/images/work/` — dark captures of the live sites,
+Toil UI on its sample data. BuildCard's window frame is dark in both themes
+on purpose (the captures are dark); it swaps nothing per theme, so it reads
+no theme token. Open question: which voice `/work` speaks. It is reached by
+every path, so each build now opens in plain English and keeps the stack
+detail for a second sentence.
+
 ## Refinement 2026-10-20: drafting vellum and red pencil
 
 Warm cream, a serif display and a terracotta accent became one of the most

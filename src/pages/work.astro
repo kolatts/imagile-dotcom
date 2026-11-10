@@ -33,7 +33,7 @@ const otherBuilds = [
   {
     index: 'BUILD-04',
     title: 'imagile-app',
-    body: 'The multi-tenant B2B SaaS platform behind Imagile itself: .NET, Blazor WASM, Azure Container Apps.',
+    body: 'The multi-tenant B2B SaaS platform behind Imagile itself: .NET, Blazor WASM, Azure Container Apps. Private — it runs the business, so this one is described rather than shown.',
   },
   {
     index: 'BUILD-05',
@@ -45,13 +45,13 @@ const otherBuilds = [
 ];
 ---
 
-<Layout title="Work" description="Over a decade of shipped engineering outcomes — AI pipelines, platform rewrites, measurable results — plus Imagile's own public builds you can inspect today.">
+<Layout title="Work" description="Imagile's public builds — toil, Toil UI and Context Overflow, live and open to inspect — plus over a decade of shipped engineering outcomes: AI pipelines, platform rewrites, measurable results.">
   <SiteHeader />
   <main>
     <Hero
       eyebrow="Proof"
       title="Over a decade of shipped work. The <em>recent stuff is public.</em>"
-      subtitle="Outcomes from staff and principal engineering roles across banking, HR tech, health tech, and ed tech — plus the builds shipped under the Imagile name, live and open for inspection right now."
+      subtitle="Builds shipped under the Imagile name, live and open for inspection right now — plus outcomes from staff and principal engineering roles across banking, HR tech, health tech, and ed tech."
       size="md"
       primaryCta={{ href: '/contact', label: 'Get in touch' }}
       secondaryCta={{ href: '#builds', label: 'See the public builds' }}
@@ -75,8 +75,8 @@ const otherBuilds = [
         <p class="eyebrow">Public builds</p>
         <h2 class="role-section__title">Built under the Imagile name</h2>
         <p class="role-section__note">
-          Shipped and maintained in the open. Don't take my word for any of it — every screenshot below
-          opens the real thing.
+          Don't take my word for any of it — every screenshot below opens the real thing, live and
+          maintained in the open.
         </p>
 
         <div class="builds__features">
@@ -87,17 +87,18 @@ const otherBuilds = [
             address="imagile-dev.github.io/toil"
             image={{ src: '/images/work/toil-cli.webp', alt: 'The toil home page: a diagram with AI agents, people and CI/CD on the left, one toil command in the middle, and the tools it reaches on the right, including Jira, GitHub, Jenkins and databases.', width: 1262, height: 770 }}
             links={[
-              { href: 'https://imagile-dev.github.io/toil', label: 'See toil ↗' },
+              { href: 'https://imagile-dev.github.io/toil/', label: 'See toil ↗' },
               { href: 'https://github.com/imagile-dev/toil', label: 'Source on GitHub ↗' },
             ]}
           >
             <p>
-              The token-efficient alternative to MCP: one CLI between whoever asks — an AI agent, a person,
-              a pipeline — and your enterprise tools and databases. One command in, one JSON answer back.
+              One tool that lets AI assistants — and people — look things up across the systems a team
+              already runs on: Jira, GitHub, Jenkins, your databases and more, 32 so far. One question in,
+              one clean answer back.
             </p>
             <p>
-              It reaches 32 tools so far, from Jira and Azure DevOps to GitHub, Jenkins, SQL databases and
-              Dynatrace.
+              For engineers: it's a single CLI, built as the token-efficient alternative to MCP, and every
+              command returns one JSON answer.
             </p>
           </BuildCard>
 
@@ -139,8 +140,8 @@ const otherBuilds = [
               it's a real curriculum on how these models work — plus an arcade and a public model-comparison lab.
             </p>
             <p>
-              React 19 SPA on a .NET 9 Azure Functions API. Enroll with org code <code>IMAGILE</code> for
-              the Imagile track.
+              Enroll with org code <code>IMAGILE</code> for the Imagile track. Under the hood: a React 19
+              app on a .NET 9 Azure Functions API.
             </p>
           </BuildCard>
         </div>
@@ -259,13 +260,13 @@ const otherBuilds = [
     .stats__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (min-width: 760px) {
-    .builds__ask { flex-direction: row; align-items: center; justify-content: space-between; }
-  }
-
   @media (min-width: 720px) {
     .role-block__group { grid-template-columns: repeat(2, 1fr); }
     .builds__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 760px) {
+    .builds__ask { flex-direction: row; align-items: center; justify-content: space-between; }
   }
 
   @media (min-width: 980px) {

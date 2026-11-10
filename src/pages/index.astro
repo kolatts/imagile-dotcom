@@ -67,19 +67,19 @@ const latestPosts = (await getCollection('blog'))
 
         <div class="open-work__grid">
           <BuildCard
-            tag="Open source · Beta"
+            tag="Free and open · In beta"
             title="toil"
             address="imagile-dev.github.io/toil/ui"
             image={{ src: '/images/work/toil-ui-briefing.webp', alt: 'Toil UI on a sample project. The briefing reads: Behind, 18 of 21 points are left and 3 working days remain, followed by three cards on what needs attention.', width: 912, height: 624 }}
             links={[
               { href: 'https://imagile-dev.github.io/toil/ui/', label: 'Try the live demo ↗' },
-              { href: 'https://imagile-dev.github.io/toil', label: 'See how toil works ↗' },
+              { href: 'https://imagile-dev.github.io/toil/', label: 'See how toil works ↗' },
             ]}
           >
             <p>
-              Ask where a project really stands and get a straight answer. toil connects AI — and the people
-              working beside it — to the tools your team already uses, then puts the sprint, the reviews and
-              the releases on one screen.
+              Ask where a project really stands and get a straight answer — progress, what's stuck, and what
+              ships next, on one screen. That screen is Toil UI. Underneath it, toil connects AI — and the
+              people working beside it — to the tools your team already uses.
             </p>
           </BuildCard>
 
@@ -187,11 +187,6 @@ const latestPosts = (await getCollection('blog'))
   .services__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-md); }
   .services__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); }
 
-  .proof__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.8rem; max-width: 32ch; }
-  .proof__body { color: var(--color-muted); max-width: 58ch; margin-bottom: var(--space-lg); }
-  .proof__body a { color: var(--color-link); text-decoration: underline; }
-  .proof__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
-
   .method__title { font-size: var(--text-2xl); margin: 0.5rem 0 var(--space-lg); }
   .method__list { display: grid; grid-template-columns: 1fr; gap: var(--space-lg); }
   .method__list li { display: flex; gap: var(--space-sm); align-items: flex-start; }
@@ -223,7 +218,6 @@ const latestPosts = (await getCollection('blog'))
 
   @media (min-width: 720px) {
     .services__grid { grid-template-columns: repeat(2, 1fr); }
-    .proof__grid { grid-template-columns: repeat(3, 1fr); }
     .method__list { grid-template-columns: repeat(3, 1fr); }
   }
 

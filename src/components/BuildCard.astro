@@ -14,7 +14,8 @@ interface Props {
   image: { src: string; alt: string; width: number; height: number };
   /** Short address shown in the frame's title bar. */
   address: string;
-  links: Link[];
+  /** At least one; the first is where the screenshot goes. */
+  links: [Link, ...Link[]];
   /** 'wide' puts the screenshot beside the copy on large screens. */
   layout?: 'stack' | 'wide';
   flip?: boolean;
@@ -26,19 +27,24 @@ const [primary] = links;
 ---
 
 <article class:list={['build', `build--${layout}`, { 'build--flip': flip }]} data-reveal>
-  <a
-    class="build__shot"
-    href={primary.href}
-    target={isExternal(primary.href) ? '_blank' : undefined}
-    rel={isExternal(primary.href) ? 'noopener' : undefined}
-    aria-label={`${title} — ${primary.label.replace(/\s*[↗→]\s*$/, '')}`}
-  >
+  <div class="build__shot">
     <span class="build__bar" aria-hidden="true">
       <i></i><i></i><i></i>
       <span class="build__address">{address}</span>
     </span>
     <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
-  </a>
+    {/* A mouse convenience only: the first text link below is the same
+        destination, so this one stays out of the tab order and the
+        accessibility tree, and the image keeps its own alt text. */}
+    <a
+      class="build__shot-link"
+      href={primary.href}
+      target={isExternal(primary.href) ? '_blank' : undefined}
+      rel={isExternal(primary.href) ? 'noopener' : undefined}
+      tabindex="-1"
+      aria-hidden="true"
+    ></a>
+  </div>
 
   <div class="build__copy">
     {tag && <p class="build__tag">{tag}</p>}
@@ -58,7 +64,7 @@ const [primary] = links;
   .build { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); align-content: start; }
 
   .build__shot {
-    display: block;
+    position: relative;
     overflow: hidden;
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-md);
@@ -97,6 +103,7 @@ const [primary] = links;
   }
 
   .build__shot img { display: block; width: 100%; height: auto; }
+  .build__shot-link { position: absolute; inset: 0; }
 
   .build__tag {
     font-family: var(--font-mono);
