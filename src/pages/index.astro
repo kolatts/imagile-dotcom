@@ -7,6 +7,7 @@ import Hero from '../components/Hero.astro';
 import PathPicker from '../components/PathPicker.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import PostCard from '../components/PostCard.astro';
+import BuildCard from '../components/BuildCard.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { readingTime } from '../lib/reading-time';
 
@@ -55,6 +56,59 @@ const latestPosts = (await getCollection('blog'))
 
     <PathPicker />
 
+    <section class="section section--tight open-work grid-ground">
+      <div class="container">
+        <p class="eyebrow">Built in the open</p>
+        <h2 class="open-work__title">Don't take the pitch on faith. Open the work.</h2>
+        <p class="open-work__note">
+          Two things Imagile ships and keeps running in public. Both are live right now — click through
+          and judge for yourself.
+        </p>
+
+        <div class="open-work__grid">
+          <BuildCard
+            tag="Open source · Beta"
+            title="toil"
+            address="imagile-dev.github.io/toil/ui"
+            image={{ src: '/images/work/toil-ui-briefing.webp', alt: 'Toil UI on a sample project. The briefing reads: Behind, 18 of 21 points are left and 3 working days remain, followed by three cards on what needs attention.', width: 912, height: 624 }}
+            links={[
+              { href: 'https://imagile-dev.github.io/toil/ui/', label: 'Try the live demo ↗' },
+              { href: 'https://imagile-dev.github.io/toil', label: 'See how toil works ↗' },
+            ]}
+          >
+            <p>
+              Ask where a project really stands and get a straight answer. toil connects AI — and the people
+              working beside it — to the tools your team already uses, then puts the sprint, the reviews and
+              the releases on one screen.
+            </p>
+          </BuildCard>
+
+          <BuildCard
+            tag="Free, self-serve"
+            title="Context Overflow"
+            address="context-overflow.dev"
+            image={{ src: '/images/work/context-overflow.webp', alt: 'The Context Overflow home page: the headline Learn AI before your org chart does, beside an illustration of a crowd of cartoon robots throwing paperwork.', width: 1126, height: 770 }}
+            links={[
+              { href: 'https://context-overflow.dev', label: 'Start understanding AI ↗' },
+            ]}
+          >
+            <p>
+              New to AI at work? Start there, not here. A free, self-paced course on how these tools actually
+              work — no sales call required. Enroll with org code <code>IMAGILE</code> for the Imagile track.
+            </p>
+          </BuildCard>
+        </div>
+
+        <div class="open-work__ask" data-reveal>
+          <p>Want this kind of work pointed at your problem?</p>
+          <div class="open-work__actions">
+            <a href="/contact" class="btn btn--primary">Get in touch</a>
+            <a href="/work" class="btn btn--ghost">See all the work →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section services">
       <div class="container">
         <p class="eyebrow">What Imagile does</p>
@@ -62,21 +116,6 @@ const latestPosts = (await getCollection('blog'))
         <div class="services__grid">
           {services.map((s) => <ServiceCard {...s} />)}
         </div>
-      </div>
-    </section>
-
-    <section class="section section--tight context-overflow grid-ground" data-reveal>
-      <div class="container context-overflow__inner">
-        <div>
-          <p class="eyebrow">Free, self-serve</p>
-          <h2 class="context-overflow__title">New to agentic development? Start there, not here.</h2>
-          <p class="context-overflow__body">
-            <a href="https://context-overflow.dev" target="_blank" rel="noopener">Context Overflow</a> is a free,
-            self-paced way to get fluent in how these tools actually work — no sales call required. Enroll with
-            org code <code class="context-overflow__code">IMAGILE</code> for the Imagile track.
-          </p>
-        </div>
-        <a href="https://context-overflow.dev" target="_blank" rel="noopener" class="btn btn--ghost">Start understanding AI ↗</a>
       </div>
     </section>
 
@@ -107,6 +146,10 @@ const latestPosts = (await getCollection('blog'))
             </div>
           </li>
         </ol>
+        <div class="method__ask" data-reveal>
+          <p>Step one starts with a short conversation.</p>
+          <a href="/contact" class="btn btn--primary">Get in touch</a>
+        </div>
       </div>
     </section>
 
@@ -160,17 +203,23 @@ const latestPosts = (await getCollection('blog'))
   .writing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); margin-bottom: var(--space-md); }
   .writing__more { display: inline-flex; }
 
-  .context-overflow__inner { display: flex; flex-direction: column; gap: var(--space-md); align-items: flex-start; }
-  .context-overflow__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.7rem; max-width: 26ch; }
-  .context-overflow__body { color: var(--color-muted); max-width: 46ch; }
-  .context-overflow__body a { color: var(--color-link); text-decoration: underline; }
-  .context-overflow__code {
-    font-family: var(--font-mono);
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    padding: 0.1em 0.4em;
-    color: var(--color-ink);
+  .open-work__title { font-size: var(--text-2xl); margin: 0.5rem 0 0.6rem; max-width: 26ch; }
+  .open-work__note { color: var(--color-muted); max-width: 54ch; margin-bottom: var(--space-lg); }
+  .open-work__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-lg); }
+  .open-work__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  .open-work__ask,
+  .method__ask {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-line);
   }
+  .open-work__ask p,
+  .method__ask p { font-family: var(--font-display); font-size: var(--text-xl); max-width: 30ch; }
 
   @media (min-width: 720px) {
     .services__grid { grid-template-columns: repeat(2, 1fr); }
@@ -186,6 +235,8 @@ const latestPosts = (await getCollection('blog'))
   }
 
   @media (min-width: 760px) {
-    .context-overflow__inner { flex-direction: row; align-items: center; justify-content: space-between; }
+    .open-work__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .open-work__ask,
+    .method__ask { flex-direction: row; align-items: center; justify-content: space-between; }
   }
 </style>

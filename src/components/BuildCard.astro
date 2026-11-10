@@ -1,0 +1,147 @@
+---
+/** A public build, shown the way it actually looks: a screenshot mounted in a
+    plain window frame, then what it is and where to go. The frame keeps its
+    own dark chrome in both themes on purpose — the screenshots are dark, and
+    a mounted artifact shouldn't repaint itself to match the wall. */
+interface Link {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  tag?: string;
+  title: string;
+  image: { src: string; alt: string; width: number; height: number };
+  /** Short address shown in the frame's title bar. */
+  address: string;
+  links: Link[];
+  /** 'wide' puts the screenshot beside the copy on large screens. */
+  layout?: 'stack' | 'wide';
+  flip?: boolean;
+}
+
+const { tag, title, image, address, links, layout = 'stack', flip = false } = Astro.props;
+const isExternal = (href: string) => href.startsWith('http');
+const [primary] = links;
+---
+
+<article class:list={['build', `build--${layout}`, { 'build--flip': flip }]} data-reveal>
+  <a
+    class="build__shot"
+    href={primary.href}
+    target={isExternal(primary.href) ? '_blank' : undefined}
+    rel={isExternal(primary.href) ? 'noopener' : undefined}
+    aria-label={`${title} — ${primary.label.replace(/\s*[↗→]\s*$/, '')}`}
+  >
+    <span class="build__bar" aria-hidden="true">
+      <i></i><i></i><i></i>
+      <span class="build__address">{address}</span>
+    </span>
+    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+  </a>
+
+  <div class="build__copy">
+    {tag && <p class="build__tag">{tag}</p>}
+    <h3 class="build__title">{title}</h3>
+    <div class="build__body"><slot /></div>
+    <p class="build__links">
+      {links.map((l) => (
+        <a href={l.href} target={isExternal(l.href) ? '_blank' : undefined} rel={isExternal(l.href) ? 'noopener' : undefined}>
+          {l.label}
+        </a>
+      ))}
+    </p>
+  </div>
+</article>
+
+<style>
+  .build { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); align-content: start; }
+
+  .build__shot {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: #0f1115;
+    box-shadow: 0 12px 32px rgba(10, 12, 14, 0.14);
+    transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .build__shot:hover { transform: translateY(-3px); border-color: var(--color-accent); }
+
+  .build__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    background: #181b21;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .build__bar i {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .build__address {
+    margin-left: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: #a9b1bb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .build__shot img { display: block; width: 100%; height: auto; }
+
+  .build__tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .build__title { font-size: var(--text-xl); margin-bottom: 0.5rem; }
+  .build__body { color: var(--color-muted); max-width: 52ch; }
+  .build__body :global(p + p) { margin-top: 0.7rem; }
+  .build__body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    padding: 0.1em 0.4em;
+    color: var(--color-ink);
+  }
+
+  .build__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    margin-top: var(--space-sm);
+    font-family: var(--font-action);
+    font-weight: 500;
+    font-size: var(--text-sm);
+  }
+
+  .build__links a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 0.2em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .build__shot:hover { transform: none; }
+  }
+
+  @media (min-width: 860px) {
+    .build--wide {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: center;
+    }
+    .build--wide .build__title { font-size: var(--text-2xl); }
+    .build--wide.build--flip .build__shot { order: 2; }
+  }
+</style>

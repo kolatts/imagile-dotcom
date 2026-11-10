@@ -4,6 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import Hero from '../components/Hero.astro';
 import ProofItem from '../components/ProofItem.astro';
+import BuildCard from '../components/BuildCard.astro';
 import Prose from '../components/Prose.astro';
 import CtaBand from '../components/CtaBand.astro';
 
@@ -28,21 +29,14 @@ const highlights = [
   },
 ];
 
-const publicBuilds = [
+const otherBuilds = [
   {
-    index: 'BUILD-01',
-    title: 'Context Overflow',
-    body: 'A gamified AI-fluency learning platform — React 19 SPA and a .NET 9 Azure Functions API, four shipped training modules on agentic development.',
-    href: 'https://context-overflow.dev',
-    linkLabel: 'context-overflow.dev ↗',
-  },
-  {
-    index: 'BUILD-02',
+    index: 'BUILD-04',
     title: 'imagile-app',
     body: 'The multi-tenant B2B SaaS platform behind Imagile itself: .NET, Blazor WASM, Azure Container Apps.',
   },
   {
-    index: 'BUILD-03',
+    index: 'BUILD-05',
     title: "This site's blog pipeline",
     body: 'A GitHub Actions workflow where a Claude Code agent drafts posts from filed issues, opens a PR, and iterates on review feedback.',
     href: '/blog',
@@ -59,22 +53,119 @@ const publicBuilds = [
       title="Over a decade of shipped work. The <em>recent stuff is public.</em>"
       subtitle="Outcomes from staff and principal engineering roles across banking, HR tech, health tech, and ed tech — plus the builds shipped under the Imagile name, live and open for inspection right now."
       size="md"
+      primaryCta={{ href: '/contact', label: 'Get in touch' }}
+      secondaryCta={{ href: '#builds', label: 'See the public builds' }}
     />
 
     <section class="section section--tight intro">
       <div class="container">
         <Prose>
           <p>
-            Two kinds of evidence here. First, outcomes from over a decade in staff and principal roles —
-            described without naming employers or clients, deliberately. Discretion is part of the service,
-            and the work you'd hire Imagile for gets the same treatment. Second, builds released under the
-            Imagile name, open for you to judge firsthand.
+            Two kinds of evidence here. First, builds released under the Imagile name — live, open, and
+            yours to click through and judge firsthand. Second, outcomes from over a decade in staff and
+            principal roles, described without naming employers or clients, deliberately. Discretion is
+            part of the service, and the work you'd hire Imagile for gets the same treatment.
           </p>
         </Prose>
       </div>
     </section>
 
-    <section class="section section--tight stats grid-ground">
+    <section id="builds" class="section section--tight builds grid-ground">
+      <div class="container">
+        <p class="eyebrow">Public builds</p>
+        <h2 class="role-section__title">Built under the Imagile name</h2>
+        <p class="role-section__note">
+          Shipped and maintained in the open. Don't take my word for any of it — every screenshot below
+          opens the real thing.
+        </p>
+
+        <div class="builds__features">
+          <BuildCard
+            layout="wide"
+            tag="BUILD-01 · Open source · Beta"
+            title="toil"
+            address="imagile-dev.github.io/toil"
+            image={{ src: '/images/work/toil-cli.webp', alt: 'The toil home page: a diagram with AI agents, people and CI/CD on the left, one toil command in the middle, and the tools it reaches on the right, including Jira, GitHub, Jenkins and databases.', width: 1262, height: 770 }}
+            links={[
+              { href: 'https://imagile-dev.github.io/toil', label: 'See toil ↗' },
+              { href: 'https://github.com/imagile-dev/toil', label: 'Source on GitHub ↗' },
+            ]}
+          >
+            <p>
+              The token-efficient alternative to MCP: one CLI between whoever asks — an AI agent, a person,
+              a pipeline — and your enterprise tools and databases. One command in, one JSON answer back.
+            </p>
+            <p>
+              It reaches 32 tools so far, from Jira and Azure DevOps to GitHub, Jenkins, SQL databases and
+              Dynatrace.
+            </p>
+          </BuildCard>
+
+          <BuildCard
+            layout="wide"
+            flip
+            tag="BUILD-02 · Live demo on sample data"
+            title="Toil UI"
+            address="imagile-dev.github.io/toil/ui"
+            image={{ src: '/images/work/toil-ui-board.webp', alt: 'Toil UI showing a sample card-payments project: a sprint board with To do, In progress and Done columns, each story flagged with what needs attention.', width: 1262, height: 700 }}
+            links={[
+              { href: 'https://imagile-dev.github.io/toil/ui/', label: 'Take it for a spin ↗' },
+            ]}
+          >
+            <p>
+              Your projects on one screen: the sprint, the board, pull requests, builds and deployments — and
+              a chat that cites every item it reads. It opens with a one-sentence briefing on where the
+              sprint stands and why.
+            </p>
+            <p>
+              Runs on your own machine through toil, with your own connections, and changes nothing unless
+              you ask. The demo is the real app on sample data.
+            </p>
+          </BuildCard>
+
+          <BuildCard
+            layout="wide"
+            tag="BUILD-03 · Free to read, no account"
+            title="Context Overflow"
+            address="context-overflow.dev"
+            image={{ src: '/images/work/context-overflow.webp', alt: 'The Context Overflow home page: the headline Learn AI before your org chart does, beside an illustration of a crowd of cartoon robots throwing paperwork.', width: 1126, height: 770 }}
+            links={[
+              { href: 'https://context-overflow.dev', label: 'Open Context Overflow ↗' },
+              { href: 'https://context-overflow.dev/modules', label: 'Browse the modules ↗' },
+            ]}
+          >
+            <p>
+              A gamified AI-fluency platform, taught by a cast of deadpan corporate robots. Behind the jokes
+              it's a real curriculum on how these models work — plus an arcade and a public model-comparison lab.
+            </p>
+            <p>
+              React 19 SPA on a .NET 9 Azure Functions API. Enroll with org code <code>IMAGILE</code> for
+              the Imagile track.
+            </p>
+          </BuildCard>
+        </div>
+
+        <div class="builds__grid">
+          {otherBuilds.map((build) => (
+            <div class="card builds__card" data-reveal>
+              <span class="card-tag">{build.index}</span>
+              <h3 class="builds__title">{build.title}</h3>
+              <p class="builds__body">{build.body}</p>
+              {build.href && (
+                <a href={build.href} class="builds__link">{build.linkLabel}</a>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div class="builds__ask" data-reveal>
+          <p>Want something like this built for your team — or your team taught to build it?</p>
+          <a href="/contact" class="btn btn--primary">Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight stats">
       <div class="container">
         <p class="eyebrow">The headline numbers</p>
         <div class="stats__grid">
@@ -112,31 +203,6 @@ const publicBuilds = [
       </div>
     </section>
 
-    <section class="section section--tight builds grid-ground" data-reveal>
-      <div class="container">
-        <p class="eyebrow">Public builds</p>
-        <h2 class="role-section__title">Built under the Imagile name</h2>
-        <p class="role-section__note">
-          Shipped and maintained in the open. Don't take my word for any of it — click through and judge the
-          work yourself.
-        </p>
-        <div class="builds__grid">
-          {publicBuilds.map((build) => (
-            <div class="card builds__card" data-reveal>
-              <span class="card-tag">{build.index}</span>
-              <h3 class="builds__title">{build.title}</h3>
-              <p class="builds__body">{build.body}</p>
-              {build.href && (
-                <a href={build.href} class="builds__link" target={build.href.startsWith('http') ? '_blank' : undefined} rel={build.href.startsWith('http') ? 'noopener' : undefined}>
-                  {build.linkLabel}
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
     <CtaBand title="That's the proof. Want to talk about the work?" />
   </main>
   <SiteFooter />
@@ -163,7 +229,19 @@ const publicBuilds = [
     max-width: var(--measure);
   }
 
-  .builds__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-sm); margin-top: var(--space-lg); }
+  .builds { scroll-margin-top: 64px; }
+  .builds__features { display: grid; gap: var(--space-xl); margin-top: var(--space-lg); }
+  .builds__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); margin-top: var(--space-xl); }
+  .builds__ask {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-line);
+  }
+  .builds__ask p { font-family: var(--font-display); font-size: var(--text-xl); max-width: 34ch; }
 
   .builds__card { display: flex; flex-direction: column; gap: 0.6rem; }
   .builds__title { font-size: var(--text-lg); }
@@ -179,6 +257,10 @@ const publicBuilds = [
 
   @media (min-width: 640px) {
     .stats__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 760px) {
+    .builds__ask { flex-direction: row; align-items: center; justify-content: space-between; }
   }
 
   @media (min-width: 720px) {
